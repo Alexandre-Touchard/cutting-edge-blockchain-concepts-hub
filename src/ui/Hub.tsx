@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import EduTooltip from './EduTooltip';
 import { getConceptChip } from './concepts';
 import {
@@ -38,6 +38,11 @@ export default function Hub({
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [hoveredThumbnailDemoId, setHoveredThumbnailDemoId] = useState<string | null>(null);
+
+  const searchWrapRef = useRef<HTMLDivElement | null>(null);
+  const [isSuggestOpen, setIsSuggestOpen] = useState(false);
+  const [activeSuggestIndex, setActiveSuggestIndex] = useState(0);
+  const [hasInteractedWithSuggest, setHasInteractedWithSuggest] = useState(false);
 
   const categories = useMemo(
     () =>
@@ -109,12 +114,68 @@ export default function Hub({
     []
   );
 
+  const normalizedQuery = searchTerm.trim().toLowerCase();
+
+  const suggestions = useMemo(() => {
+    if (!normalizedQuery) return [] as Array<{ type: 'demo' | 'concept'; value: string; demoId?: string }>;
+
+    const items: Array<{ type: 'demo' | 'concept'; value: string; demoId?: string; score: number }> = [];
+
+    for (const d of demos) {
+      const title = d.title;
+      const titleLc = title.toLowerCase();
+      if (titleLc.includes(normalizedQuery)) {
+        const score = titleLc.startsWith(normalizedQuery) ? 100 : 60;
+        items.push({ type: 'demo', value: title, demoId: d.id, score });
+      }
+
+      for (const c of d.concepts) {
+        const cLc = c.toLowerCase();
+        if (cLc.includes(normalizedQuery)) {
+          const score = cLc.startsWith(normalizedQuery) ? 80 : 50;
+          items.push({ type: 'concept', value: c, demoId: d.id, score });
+        }
+      }
+    }
+
+    // Deduplicate by type+value and keep best score.
+    const best = new Map<string, (typeof items)[number]>();
+    for (const it of items) {
+      const key = `${it.type}:${it.value}`;
+      const prev = best.get(key);
+      if (!prev || it.score > prev.score) best.set(key, it);
+    }
+
+    return Array.from(best.values())
+      .sort((a, b) => b.score - a.score || a.value.localeCompare(b.value))
+      .slice(0, 8)
+      .map(({ score: _score, ...rest }) => rest);
+  }, [demos, normalizedQuery]);
+
+  useEffect(() => {
+    setActiveSuggestIndex(0);
+    setHasInteractedWithSuggest(false);
+  }, [normalizedQuery]);
+
+  useEffect(() => {
+    function onDocMouseDown(e: MouseEvent) {
+      const el = searchWrapRef.current;
+      if (!el) return;
+      if (e.target instanceof Node && !el.contains(e.target)) setIsSuggestOpen(false);
+    }
+    document.addEventListener('mousedown', onDocMouseDown);
+    return () => document.removeEventListener('mousedown', onDocMouseDown);
+  }, []);
+
   const filteredDemos = demos.filter((demo) => {
     const matchesCategory = selectedCategory === 'all' || demo.category === selectedCategory;
+    const q = normalizedQuery;
     const matchesSearch =
-      demo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      demo.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      demo.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      !q ||
+      demo.title.toLowerCase().includes(q) ||
+      demo.description.toLowerCase().includes(q) ||
+      demo.concepts.some((c) => c.toLowerCase().includes(q)) ||
+      demo.tags.some((tag) => tag.toLowerCase().includes(q));
     return matchesCategory && matchesSearch;
   });
 
@@ -161,7 +222,7 @@ export default function Hub({
         {/* Search */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1 relative">
+            <div ref={searchWrapRef} className="flex-1 relative">
               <Search
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400"
                 size={20}
@@ -170,9 +231,92 @@ export default function Hub({
                 type="text"
                 placeholder="Search demos, concepts, or tags..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setIsSuggestOpen(true);
+                }}
+                onFocus={() => {
+                  if (suggestions.length > 0) setIsSuggestOpen(true);
+                }}
+                onKeyDown={(e) => {
+                  if (!isSuggestOpen && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+                    if (suggestions.length > 0) setIsSuggestOpen(true);
+                    return;
+                  }
+
+                  if (!isSuggestOpen) return;
+
+                  if (e.key === 'Escape') {
+                    setIsSuggestOpen(false);
+                    return;
+                  }
+
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    setHasInteractedWithSuggest(true);
+                    setActiveSuggestIndex((i) => Math.min(i + 1, Math.max(0, suggestions.length - 1)));
+                    return;
+                  }
+
+                  if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    setHasInteractedWithSuggest(true);
+                    setActiveSuggestIndex((i) => Math.max(i - 1, 0));
+                    return;
+                  }
+
+                  if (e.key === 'Enter') {
+                    // Let Enter perform a normal search by default.
+                    // Only accept an autocomplete suggestion if the user explicitly interacted with the list.
+                    if (hasInteractedWithSuggest) {
+                      const picked = suggestions[activeSuggestIndex];
+                      if (picked) {
+                        e.preventDefault();
+                        setSearchTerm(picked.value);
+                        setIsSuggestOpen(false);
+                      }
+                    } else {
+                      setIsSuggestOpen(false);
+                    }
+                  }
+                }}
                 className="w-full pl-10 pr-4 py-3 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
               />
+
+              {isSuggestOpen && suggestions.length > 0 && (
+                <div className="absolute z-50 mt-2 w-full bg-slate-900 border border-slate-700 rounded-lg shadow-xl overflow-hidden">
+                  {suggestions.map((s, idx) => (
+                    <button
+                      key={`${s.type}:${s.value}`}
+                      type="button"
+                      onMouseEnter={() => {
+                        setHasInteractedWithSuggest(true);
+                        setActiveSuggestIndex(idx);
+                      }}
+                      onMouseDown={(e) => {
+                        // Prevent input blur before we set value.
+                        e.preventDefault();
+                        setSearchTerm(s.value);
+                        setIsSuggestOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 flex items-center justify-between gap-3 hover:bg-slate-800 ${
+                        idx === activeSuggestIndex ? 'bg-slate-800' : ''
+                      }`}
+                    >
+                      <span className="text-sm text-slate-200 truncate">{s.value}</span>
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded border ${
+                          s.type === 'demo'
+                            ? 'border-blue-600 text-blue-300'
+                            : 'border-emerald-600 text-emerald-300'
+                        }`}
+                      >
+                        {s.type}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
