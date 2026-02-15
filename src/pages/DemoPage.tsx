@@ -2,6 +2,8 @@ import React, { useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { loadDemos } from '../demos/loadDemos';
+import EduTooltip from '../ui/EduTooltip';
+import { getConceptChip } from '../ui/concepts';
 
 export default function DemoPage() {
   const { demoId } = useParams();
@@ -44,6 +46,27 @@ export default function DemoPage() {
       </div>
 
       <div className="max-w-7xl mx-auto p-6">
+        <div className="mb-6 rounded-xl border border-slate-800 bg-slate-900 p-4">
+          <div className="text-xs font-semibold text-slate-400 mb-2">Key concepts</div>
+          <div className="flex flex-wrap gap-2">
+            {demo.meta.concepts.map((concept) => {
+              const chip = getConceptChip(concept, demo.meta.category);
+              const Icon = chip.Icon;
+              const def = chip.definition ?? 'Definition coming soon.';
+              return (
+                <span
+                  key={concept}
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-sm text-slate-200"
+                >
+                  <Icon size={14} className="text-slate-300" />
+                  <span>{concept}</span>
+                  <EduTooltip text={def} />
+                </span>
+              );
+            })}
+          </div>
+        </div>
+
         <DemoComponent />
       </div>
     </div>

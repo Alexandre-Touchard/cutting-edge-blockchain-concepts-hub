@@ -1,27 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingDown, DollarSign, Droplet, ArrowRight, AlertCircle, Info } from 'lucide-react';
+import EduTooltip from '../../ui/EduTooltip';
+import LinkWithCopy from '../../ui/LinkWithCopy';
+import { define } from '../glossary';
 
-const Tooltip = ({ text, children }) => {
-  const [show, setShow] = useState(false);
-  
-  return (
-    <div className="relative inline-block">
-      <div
-        onMouseEnter={() => setShow(true)}
-        onMouseLeave={() => setShow(false)}
-        className="cursor-help"
-      >
-        {children || <Info size={14} className="text-blue-400 inline ml-1" />}
-      </div>
-      {show && (
-        <div className="absolute z-50 bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-slate-950 border border-blue-500 rounded-lg p-3 text-xs text-slate-200 shadow-xl">
-          {text}
-          <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-blue-500"></div>
-        </div>
-      )}
-    </div>
-  );
-};
+// Backwards-compatible alias so we don't have to rewrite all usages.
+const Tooltip = EduTooltip;
 
 const AMMDemo = () => {
   const [reserveA, setReserveA] = useState(1000);
@@ -105,7 +89,7 @@ const AMMDemo = () => {
               <Droplet size={16} className="text-blue-400" />
               <span className="text-xs text-slate-400">
                 Pool TVL
-                <Tooltip text="Total Value Locked - The total dollar value of all tokens currently deposited in this liquidity pool." />
+                <Tooltip text={define('Pool TVL')} />
               </span>
             </div>
             <div className="text-xl font-bold">${((reserveA * currentPrice) + reserveB).toFixed(2)}</div>
@@ -115,7 +99,7 @@ const AMMDemo = () => {
               <DollarSign size={16} className="text-emerald-400" />
               <span className="text-xs text-slate-400">
                 Price
-                <Tooltip text="The current exchange rate between tokens, determined by the ratio of reserves (Token B / Token A)." />
+                <Tooltip text={define('Price')} />
               </span>
             </div>
             <div className="text-xl font-bold">1 A = {currentPrice.toFixed(4)} B</div>
@@ -125,7 +109,7 @@ const AMMDemo = () => {
               <TrendingDown size={16} className="text-red-400" />
               <span className="text-xs text-slate-400">
                 Impermanent Loss
-                <Tooltip text="The temporary loss of funds compared to simply holding tokens, caused by price divergence. Loss becomes permanent only if you withdraw during unfavorable price ratios." />
+                <Tooltip text={define('Impermanent Loss')} />
               </span>
             </div>
             <div className={`text-xl font-bold ${il < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
@@ -135,7 +119,7 @@ const AMMDemo = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="text-xs text-slate-400 mb-2">
               Your LP Tokens
-              <Tooltip text="Liquidity Provider tokens represent your share of the pool. They can be redeemed for your portion of the pool's reserves plus accumulated fees." />
+              <Tooltip text={define('LP Tokens')} />
             </div>
             <div className="text-xl font-bold">{lpTokens.toFixed(2)}</div>
             <div className="text-xs text-slate-400">{((lpTokens / totalLpSupply) * 100).toFixed(2)}%</div>
@@ -147,7 +131,7 @@ const AMMDemo = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <h2 className="text-lg font-semibold mb-4">
               Pool Reserves
-              <Tooltip text="The amount of each token currently held by the liquidity pool. These reserves determine the exchange rate and are used in the constant product formula x × y = k." />
+              <Tooltip text={define('Pool Reserves')} />
             </h2>
             
             <div className="space-y-4">
@@ -180,7 +164,7 @@ const AMMDemo = () => {
               <div className="bg-slate-900 rounded p-3">
                 <div className="text-xs text-slate-400">
                   Constant Product (k)
-                  <Tooltip text="The invariant k = x × y must remain constant during swaps (before fees). This is the core mechanism of Uniswap V2 and similar AMMs. As one reserve increases, the other must decrease proportionally." />
+                  <Tooltip text={define('Constant Product (k)')} />
                 </div>
                 <div className="font-mono text-lg font-bold text-emerald-400">
                   {k.toLocaleString()}
@@ -193,7 +177,7 @@ const AMMDemo = () => {
               <div className="space-y-2">
                 <div className="text-sm text-slate-400">
                   Trading Fee: {feePercent}%
-                  <Tooltip text="The percentage fee charged on each swap. This fee is added to the reserves, benefiting liquidity providers. Typical values are 0.3% (Uniswap) or 0.05% (stable pairs)." />
+                  <Tooltip text={define('Trading Fee')} />
                 </div>
                 <input
                   type="range"
@@ -251,7 +235,7 @@ const AMMDemo = () => {
                   <div className="flex justify-between">
                     <span className="text-slate-400">
                       Price Impact
-                      <Tooltip text="How much the trade moves the price. Larger trades relative to pool size cause higher price impact. Formula: (execution_price - spot_price) / spot_price" />
+                      <Tooltip text={define('Price Impact')} />
                     </span>
                     <span className={`font-semibold ${priceImpact > 5 ? 'text-red-400' : 'text-emerald-400'}`}>
                       {priceImpact.toFixed(2)}%
@@ -260,14 +244,14 @@ const AMMDemo = () => {
                   <div className="flex justify-between">
                     <span className="text-slate-400">
                       Fee
-                      <Tooltip text="The trading fee deducted from your input amount. This fee goes to liquidity providers as compensation for providing liquidity." />
+                      <Tooltip text={define('Fee')} />
                     </span>
                     <span>{(inputAmount * feePercent / 100).toFixed(4)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">
                       Rate
-                      <Tooltip text="The effective exchange rate you're getting for this specific trade, including fees and price impact. May differ from the spot price for large trades." />
+                      <Tooltip text={define('Rate')} />
                     </span>
                     <span>1 = {(outputAmount / inputAmount).toFixed(4)}</span>
                   </div>
@@ -295,14 +279,14 @@ const AMMDemo = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <h2 className="text-lg font-semibold mb-4">
               Liquidity & IL
-              <Tooltip text="Liquidity provision involves depositing tokens to earn trading fees. IL (Impermanent Loss) is the opportunity cost vs simply holding the tokens." />
+              <Tooltip text={define('Liquidity & IL')} />
             </h2>
 
             <div className="space-y-4">
               <div>
                 <div className="text-sm text-slate-400 mb-2">
                   Add Liquidity
-                  <Tooltip text="Deposit tokens in the correct ratio to earn trading fees. You must provide both tokens proportionally to the current pool ratio." />
+                  <Tooltip text={define('Add Liquidity')} />
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <button
@@ -329,7 +313,7 @@ const AMMDemo = () => {
               <div className="bg-slate-700 rounded p-3">
                 <div className="text-xs text-slate-400 mb-2">
                   Pool Share
-                  <Tooltip text="The percentage of the total pool you own. Your share determines how much you can withdraw and what portion of trading fees you earn." />
+                  <Tooltip text={define('Pool Share')} />
                 </div>
                 <div className="text-xl font-bold">
                   {((lpTokens / totalLpSupply) * 100).toFixed(2)}%
@@ -342,13 +326,13 @@ const AMMDemo = () => {
               <div className="bg-slate-900 rounded p-3">
                 <div className="text-xs font-semibold text-yellow-300 mb-2">
                   Impermanent Loss Calculator
-                  <Tooltip text="Calculate potential IL by comparing initial deposit price with current price. IL is the difference between LP value and HODL value." />
+                  <Tooltip text={define('Impermanent Loss Calculator')} />
                 </div>
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-slate-400">
                       Initial Price
-                      <Tooltip text="The price ratio when you first deposited. Used as the baseline to calculate impermanent loss." />
+                      <Tooltip text={define('Initial Price')} />
                     </span>
                     <input
                       type="number"
@@ -361,14 +345,14 @@ const AMMDemo = () => {
                   <div className="flex justify-between">
                     <span className="text-slate-400">
                       Current Price
-                      <Tooltip text="The current exchange rate based on the pool's reserve ratio. Updated with every swap." />
+                      <Tooltip text={define('Current Price')} />
                     </span>
                     <span className="font-mono">{currentPrice.toFixed(4)}</span>
                   </div>
                   <div className="flex justify-between pt-2 border-t border-slate-700">
                     <span className="text-slate-400">
                       Price Change
-                      <Tooltip text="Percentage change from initial price. Larger price movements result in higher impermanent loss." />
+                      <Tooltip text={define('Price Change')} />
                     </span>
                     <span className={priceRatio > 1 ? 'text-emerald-400' : 'text-red-400'}>
                       {((priceRatio - 1) * 100).toFixed(1)}%
@@ -377,7 +361,7 @@ const AMMDemo = () => {
                   <div className="flex justify-between">
                     <span className="text-slate-400">
                       Impermanent Loss
-                      <Tooltip text="IL Formula: 2×√(price_ratio) / (1 + price_ratio) - 1. At 2x price change = -5.7% IL, at 5x = -25.5% IL. Trading fees can offset this over time." />
+                      <Tooltip text={define('IL Formula')} />
                     </span>
                     <span className={`font-bold ${il < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
                       {il.toFixed(2)}%
@@ -436,6 +420,7 @@ const AMMDemo = () => {
                 <div className="bg-slate-700 rounded p-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-bold text-blue-300">Uniswap V2</span>
+                    <LinkWithCopy href="https://docs.uniswap.org/" label={<>Docs →</>} className="text-xs text-blue-300 hover:text-blue-200 underline" />
                     <span className="text-xs bg-blue-600 px-2 py-1 rounded">$3B+ TVL</span>
                   </div>
                   <p className="text-xs text-slate-300">
@@ -447,6 +432,7 @@ const AMMDemo = () => {
                 <div className="bg-slate-700 rounded p-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-bold text-purple-300">SushiSwap</span>
+                    <LinkWithCopy href="https://docs.sushi.com/" label={<>Docs →</>} className="text-xs text-purple-300 hover:text-purple-200 underline" />
                     <span className="text-xs bg-purple-600 px-2 py-1 rounded">$500M+ TVL</span>
                   </div>
                   <p className="text-xs text-slate-300">
@@ -458,6 +444,7 @@ const AMMDemo = () => {
                 <div className="bg-slate-700 rounded p-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-bold text-pink-300">PancakeSwap</span>
+                    <LinkWithCopy href="https://docs.pancakeswap.finance/" label={<>Docs →</>} className="text-xs text-pink-300 hover:text-pink-200 underline" />
                     <span className="text-xs bg-pink-600 px-2 py-1 rounded">$2B+ TVL</span>
                   </div>
                   <p className="text-xs text-slate-300">
@@ -639,6 +626,34 @@ Price increases as x decreases`}
                 <strong className="text-emerald-400">✓ Transparent</strong> - All math is on-chain and verifiable. No hidden fees or manipulation.
               </div>
             </div>
+          </div>
+
+          {/* Further Reading */}
+          <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
+            <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <LinkWithCopy
+                  href="https://docs.uniswap.org/"
+                  label={<>Uniswap documentation →</>}
+                  className="text-blue-300 hover:text-blue-200 underline"
+                />
+              </li>
+              <li>
+                <LinkWithCopy
+                  href="https://uniswap.org/whitepaper.pdf"
+                  label={<>Uniswap V2 whitepaper →</>}
+                  className="text-blue-300 hover:text-blue-200 underline"
+                />
+              </li>
+              <li>
+                <LinkWithCopy
+                  href="https://ethereum.org/en/defi/"
+                  label={<>Ethereum.org: DeFi overview →</>}
+                  className="text-blue-300 hover:text-blue-200 underline"
+                />
+              </li>
+            </ul>
           </div>
         </div>
       </div>

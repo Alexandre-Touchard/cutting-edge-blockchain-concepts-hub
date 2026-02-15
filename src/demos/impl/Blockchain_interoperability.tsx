@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import EduTooltip from '../../ui/EduTooltip';
+import { define } from '../glossary';
+const T = EduTooltip;
 import { Send, CheckCircle, Clock, AlertTriangle, Shield, Zap, Lock, Eye } from 'lucide-react';
 
 const BlockchainInteropDemo = () => {
@@ -242,6 +245,9 @@ const BlockchainInteropDemo = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">🌉 Blockchain Interoperability Protocols</h1>
+<p className="text-slate-300 text-sm">
+  <T term="Interoperability" text={define('Interoperability')} />
+</p>
           <p className="text-slate-300">
             Compare IBC, CCIP, and LayerZero - different approaches to cross-chain messaging
           </p>
@@ -375,7 +381,10 @@ const BlockchainInteropDemo = () => {
                 {selectedProtocol === 'ibc' && (
                   <>
                     <div className="bg-slate-700 rounded p-3">
-                      <div className="font-semibold text-blue-400 mb-2">How IBC Works</div>
+                      <div className="font-semibold text-blue-400 mb-2">
+  <T term="IBC" text={define('IBC')} />
+  Works
+</div>
                       <ul className="space-y-1 text-xs text-slate-300">
                         <li>• Light clients verify chain state</li>
                         <li>• Cryptographic proofs ensure validity</li>
@@ -595,6 +604,17 @@ const BlockchainInteropDemo = () => {
           </div>
         </div>
 
+        {/* Further Reading */}
+        <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+          <ul className="space-y-2 text-sm">
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ibcprotocol.dev/" target="_blank" rel="noopener noreferrer">IBC protocol docs →</a></li>
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://docs.chain.link/ccip" target="_blank" rel="noopener noreferrer">Chainlink CCIP docs →</a></li>
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://layerzero.gitbook.io/docs/" target="_blank" rel="noopener noreferrer">LayerZero docs →</a></li>
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://rekt.news/" target="_blank" rel="noopener noreferrer">Bridge incident archive (rekt.news) →</a></li>
+          </ul>
+        </div>
+
         {/* Security Deep Dive */}
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4">
@@ -681,36 +701,88 @@ const BlockchainInteropDemo = () => {
           </div>
         </div>
 
-        {/* Use Cases */}
-        <div className="mt-6 bg-slate-800 rounded-lg p-4 border border-slate-700">
-          <h2 className="text-xl font-semibold mb-4">Real-World Use Cases</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-slate-700 rounded p-4">
-              <div className="font-semibold text-blue-400 mb-2">IBC Examples</div>
-              <ul className="space-y-1 text-sm text-slate-300">
-                <li className="text-xs">• Osmosis DEX trading Cosmos tokens</li>
-                <li className="text-xs">• Stride liquid staking across chains</li>
-                <li className="text-xs">• Interchain accounts & queries</li>
-                <li className="text-xs">• Cross-chain governance voting</li>
+        {/* Real-World Applications */}
+        <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+              <h3 className="font-semibold text-blue-400 mb-2">Cosmos IBC</h3>
+              <p className="text-xs text-slate-300 mb-3">
+                Trust-minimized cross-chain transfers and messaging inside the Cosmos ecosystem.
+              </p>
+              <ul className="space-y-1 text-xs text-slate-300 mb-3">
+                <li>• Osmosis DEX trading Cosmos tokens</li>
+                <li>• Stride liquid staking across chains</li>
+                <li>• Interchain accounts, queries, and governance</li>
               </ul>
+              <a
+                href="https://ibcprotocol.dev/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-300 hover:text-blue-200 underline"
+              >
+                Official docs →
+              </a>
             </div>
-            <div className="bg-slate-700 rounded p-4">
-              <div className="font-semibold text-purple-400 mb-2">CCIP Examples</div>
-              <ul className="space-y-1 text-sm text-slate-300">
-                <li className="text-xs">• Synthetix cross-chain liquidity</li>
-                <li className="text-xs">• Aave cross-chain lending</li>
-                <li className="text-xs">• ENS name resolution on L2s</li>
-                <li className="text-xs">• Enterprise multi-chain apps</li>
+
+            <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+              <h3 className="font-semibold text-purple-400 mb-2">Chainlink CCIP</h3>
+              <p className="text-xs text-slate-300 mb-3">
+                Cross-chain messaging with oracle consensus and additional risk management.
+              </p>
+              <ul className="space-y-1 text-xs text-slate-300 mb-3">
+                <li>• Cross-chain DeFi orchestration (liquidity, lending)</li>
+                <li>• Multi-chain apps with standardized messaging</li>
+                <li>• Enterprise / compliance-friendly deployments</li>
               </ul>
+              <a
+                href="https://docs.chain.link/ccip"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-purple-300 hover:text-purple-200 underline"
+              >
+                Official docs →
+              </a>
             </div>
-            <div className="bg-slate-700 rounded p-4">
-              <div className="font-semibold text-green-400 mb-2">LayerZero Examples</div>
-              <ul className="space-y-1 text-sm text-slate-300">
-                <li className="text-xs">• Stargate cross-chain swaps</li>
-                <li className="text-xs">• Omnichain NFTs (move across chains)</li>
-                <li className="text-xs">• Radiant multi-chain lending</li>
-                <li className="text-xs">• Cross-chain governance tokens</li>
+
+            <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+              <h3 className="font-semibold text-green-400 mb-2">LayerZero</h3>
+              <p className="text-xs text-slate-300 mb-3">
+                Omnichain messaging where the security model depends on independent Oracle + Relayer.
+              </p>
+              <ul className="space-y-1 text-xs text-slate-300 mb-3">
+                <li>• Omnichain NFTs & tokens</li>
+                <li>• Stargate cross-chain swaps</li>
+                <li>• Multi-chain governance and app coordination</li>
               </ul>
+              <a
+                href="https://layerzero.gitbook.io/docs/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-green-300 hover:text-green-200 underline"
+              >
+                Official docs →
+              </a>
+            </div>
+
+            <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+              <h3 className="font-semibold text-yellow-400 mb-2">Bridge Risk in Practice</h3>
+              <p className="text-xs text-slate-300 mb-3">
+                Many hacks historically targeted bridges. Choosing a trust model is a product decision: security vs speed vs cost.
+              </p>
+              <ul className="space-y-1 text-xs text-slate-300 mb-3">
+                <li>• Prefer light-client / proof-based verification when possible</li>
+                <li>• Add monitoring, rate limits, and circuit breakers</li>
+                <li>• Consider smaller transfer limits for higher-risk routes</li>
+              </ul>
+              <a
+                href="https://rekt.news/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-yellow-300 hover:text-yellow-200 underline"
+              >
+                Bridge incident archive →
+              </a>
             </div>
           </div>
         </div>

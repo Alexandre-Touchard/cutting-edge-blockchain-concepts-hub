@@ -1,27 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Upload, CheckCircle, XCircle, AlertCircle, Users, Database, Zap, Shield, Info } from 'lucide-react';
+import { Download, Upload, CheckCircle, XCircle, AlertCircle, Users, Database, Zap, Shield } from 'lucide-react';
+import EduTooltip from '../../ui/EduTooltip';
+import { define } from '../glossary';
 
-const Tooltip = ({ text, children }) => {
-  const [show, setShow] = useState(false);
-  
-  return (
-    <div className="relative inline-block">
-      <div
-        onMouseEnter={() => setShow(true)}
-        onMouseLeave={() => setShow(false)}
-        className="cursor-help"
-      >
-        {children || <Info size={14} className="text-blue-400 inline ml-1" />}
-      </div>
-      {show && (
-        <div className="absolute z-50 bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 bg-slate-950 border border-blue-500 rounded-lg p-3 text-xs text-slate-200 shadow-xl">
-          {text}
-          <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1 border-4 border-transparent border-t-blue-500"></div>
-        </div>
-      )}
-    </div>
-  );
-};
+// Backwards-compatible alias so we don't have to rewrite all usages.
+const Tooltip = EduTooltip;
 
 const PeerDASDemo = () => {
   // Network configuration
@@ -255,7 +238,7 @@ const PeerDASDemo = () => {
               <Users size={20} className="text-blue-400" />
               <span className="text-sm text-slate-400">
                 Network Nodes
-                <Tooltip text="The number of nodes participating in the network. Each node stores a subset of data columns and participates in sampling to verify availability." />
+                <Tooltip text={define('Network Nodes')} />
               </span>
             </div>
             <div className="text-2xl font-bold">{numNodes}</div>
@@ -266,7 +249,7 @@ const PeerDASDemo = () => {
               <Database size={20} className="text-purple-400" />
               <span className="text-sm text-slate-400">
                 Columns/Node
-                <Tooltip text="Number of data columns each node is assigned to store. With 64 total columns, if each node stores 16, that's 25% of the total data per node." />
+                <Tooltip text={define('Columns/Node')} />
               </span>
             </div>
             <div className="text-2xl font-bold">{columnsPerNode}</div>
@@ -277,7 +260,7 @@ const PeerDASDemo = () => {
               <Zap size={20} className="text-yellow-400" />
               <span className="text-sm text-slate-400">
                 Samples/Node
-                <Tooltip text="How many random columns each node samples to verify data availability. More samples = higher confidence but more bandwidth usage." />
+                <Tooltip text={define('Samples/Node')} />
               </span>
             </div>
             <div className="text-2xl font-bold">{samplingTarget}</div>
@@ -288,7 +271,7 @@ const PeerDASDemo = () => {
               <Shield size={20} className="text-emerald-400" />
               <span className="text-sm text-slate-400">
                 Coverage
-                <Tooltip text="Average redundancy factor - how many nodes store each column. Higher coverage means better fault tolerance if nodes go offline." />
+                <Tooltip text={define('Coverage')} />
               </span>
             </div>
             <div className="text-lg font-bold">{coverage.avg}x avg</div>
@@ -303,7 +286,7 @@ const PeerDASDemo = () => {
               )}
               <span className="text-sm text-slate-400">
                 Availability
-                <Tooltip text="Confirmed when all nodes successfully retrieve their samples. This statistically proves the entire blob is available with >99.9% confidence." />
+                <Tooltip text={define('Availability')} />
               </span>
             </div>
             <div className="text-lg font-bold">
@@ -552,6 +535,59 @@ const PeerDASDemo = () => {
                 })()}
               </div>
             ) : (
+              <>
+              {/* Real-World Applications */}
+              <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
+                <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+                    <h3 className="font-semibold text-lg mb-3 text-emerald-400">Where Data Sampling Matters</h3>
+                    <div className="space-y-3 text-sm">
+                      <div className="bg-slate-700 rounded p-3">
+                        <div className="font-bold text-blue-300">Ethereum Danksharding (Roadmap)</div>
+                        <p className="text-xs text-slate-300 mb-2">PeerDAS-style sampling helps clients verify that blob data is available without downloading everything.</p>
+                        <a href="https://ethereum.org/en/roadmap/danksharding/" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-300 hover:text-blue-200 underline">Ethereum roadmap →</a>
+                      </div>
+                      <div className="bg-slate-700 rounded p-3">
+                        <div className="font-bold text-purple-300">Rollup Data Availability</div>
+                        <p className="text-xs text-slate-300">Rollups depend on DA to let anyone reconstruct state. Sampling makes DA scalable to many validators/nodes.</p>
+                      </div>
+                      <div className="bg-slate-700 rounded p-3">
+                        <div className="font-bold text-pink-300">Light Clients</div>
+                        <p className="text-xs text-slate-300">Light nodes can participate in DA checks, increasing decentralization while keeping bandwidth low.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+                    <h3 className="font-semibold text-lg mb-3 text-yellow-400">Production Use Cases</h3>
+                    <div className="space-y-3 text-sm">
+                      <div className="bg-slate-700 rounded p-3">
+                        <div className="font-semibold text-blue-300 mb-1">📦 Large Batch Posting</div>
+                        <p className="text-xs text-slate-300">More blob capacity means rollups can post more transactions, reducing fees for end users.</p>
+                      </div>
+                      <div className="bg-slate-700 rounded p-3">
+                        <div className="font-semibold text-purple-300 mb-1">🌍 Decentralized Verification</div>
+                        <p className="text-xs text-slate-300">Sampling lets many nodes independently verify availability, reducing reliance on a small set of powerful nodes.</p>
+                      </div>
+                      <div className="bg-slate-700 rounded p-3">
+                        <div className="font-semibold text-emerald-300 mb-1">🧱 Fault Tolerance</div>
+                        <p className="text-xs text-slate-300">Redundant column distribution means the network can tolerate node outages while still recovering the full blob.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Further Reading */}
+              <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
+                <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+                <ul className="space-y-2 text-sm">
+                  <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ethereum.org/en/roadmap/danksharding/" target="_blank" rel="noopener noreferrer">Ethereum roadmap: Danksharding →</a></li>
+                  <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://notes.ethereum.org/@vbuterin/proto_danksharding_faq" target="_blank" rel="noopener noreferrer">Vitalik: Proto-danksharding FAQ →</a></li>
+                  <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://eips.ethereum.org/EIPS/eip-4844" target="_blank" rel="noopener noreferrer">EIP-4844 (proto-danksharding) →</a></li>
+                </ul>
+              </div>
+
               <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
                 <h2 className="text-xl font-semibold mb-4">How PeerDAS Works</h2>
                 
@@ -595,6 +631,7 @@ const PeerDASDemo = () => {
                   </div>
                 </div>
               </div>
+              </>
             )}
           </div>
         </div>

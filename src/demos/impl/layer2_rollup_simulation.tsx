@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import EduTooltip from '../../ui/EduTooltip';
+import LinkWithCopy from '../../ui/LinkWithCopy';
+import { define } from '../glossary';
+const T = EduTooltip;
 import { Plus, Upload, CheckCircle, Clock, Layers, ArrowUp, Shield, Zap } from 'lucide-react';
 
 const RollupSimulation = () => {
@@ -157,7 +161,10 @@ const RollupSimulation = () => {
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold mb-2">Layer 2 Rollup Simulation</h1>
+          <h1 className="text-3xl font-bold mb-2">
+  <T term="Layer 2 Rollup" text={define('Layer 2 Rollup')} />
+  Simulation
+</h1>
           <p className="text-slate-300">
             Watch how transactions are batched on L2 and submitted to L1 for security and cost savings
           </p>
@@ -192,7 +199,9 @@ const RollupSimulation = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <ArrowUp size={20} className="text-purple-400" />
-              <span className="text-sm text-slate-400">Gas Saved</span>
+              <span className="text-sm text-slate-400">
+  <T term="Gas Saved" text={define('Gas Saved')} />
+</span>
             </div>
             <div className="text-2xl font-bold text-emerald-400">{stats.gassSaved.toFixed(3)} ETH</div>
           </div>
@@ -402,11 +411,17 @@ const RollupSimulation = () => {
                       {selectedBatch === batch.id && (
                         <div className="mt-3 pt-3 border-t border-slate-600 space-y-2 text-xs">
                           <div>
-                            <div className="text-slate-400 mb-1">Merkle Root:</div>
+                            <div className="text-slate-400 mb-1">
+  <T term="Merkle Root" text={define('Merkle Root')} />
+  :
+</div>
                             <div className="font-mono text-blue-400 break-all">{batch.merkleRoot}</div>
                           </div>
                           <div>
-                            <div className="text-slate-400 mb-1">State Root:</div>
+                            <div className="text-slate-400 mb-1">
+  <T term="State Root" text={define('State Root')} />
+  :
+</div>
                             <div className="font-mono text-purple-400 break-all">{batch.stateRoot}</div>
                           </div>
                           <div className="text-slate-400">
@@ -420,6 +435,64 @@ const RollupSimulation = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Real-World Applications */}
+        <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+              <h3 className="font-semibold text-lg mb-3 text-emerald-400">Popular Rollups</h3>
+              <div className="space-y-3 text-sm">
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-bold text-blue-300">Optimism / Base</div>
+                  <p className="text-xs text-slate-300 mb-2">Optimistic rollups used for general-purpose apps (DeFi, NFTs). Post transaction data to L1 and use fraud proofs for security.</p>
+                  <LinkWithCopy href="https://docs.optimism.io/" label={<>Optimism docs →</>} className="text-xs text-blue-300 hover:text-blue-200 underline" />
+                </div>
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-bold text-purple-300">Arbitrum</div>
+                  <p className="text-xs text-slate-300 mb-2">High-throughput optimistic rollup with advanced fraud proof system, widely used for DeFi and gaming.</p>
+                  <LinkWithCopy href="https://docs.arbitrum.io/" label={<>Arbitrum docs →</>} className="text-xs text-purple-300 hover:text-purple-200 underline" />
+                </div>
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-bold text-pink-300">zkSync / Starknet</div>
+                  <p className="text-xs text-slate-300 mb-2">ZK rollups use validity proofs to prove correct execution, enabling fast finality with strong guarantees.</p>
+                  <div className="flex gap-3">
+                    <LinkWithCopy href="https://docs.zksync.io/" label={<>zkSync docs →</>} className="text-xs text-pink-300 hover:text-pink-200 underline" />
+                    <LinkWithCopy href="https://docs.starknet.io/" label={<>Starknet docs →</>} className="text-xs text-pink-300 hover:text-pink-200 underline" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+              <h3 className="font-semibold text-lg mb-3 text-yellow-400">Production Use Cases</h3>
+              <div className="space-y-3 text-sm">
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-semibold text-blue-300 mb-1">🧾 Cheaper DeFi Trading</div>
+                  <p className="text-xs text-slate-300">AMMs, perps, and lending become usable for smaller trades thanks to lower fees and faster confirmations.</p>
+                </div>
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-semibold text-purple-300 mb-1">🎮 Games & Social</div>
+                  <p className="text-xs text-slate-300">High-frequency interactions (mints, micro-transfers) become practical without L1 gas spikes.</p>
+                </div>
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-semibold text-emerald-300 mb-1">🏢 Enterprise Settlement</div>
+                  <p className="text-xs text-slate-300">Batch many transactions and settle periodically to L1 for auditability and security.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Further Reading */}
+        <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+          <ul className="space-y-2 text-sm">
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ethereum.org/en/developers/docs/scaling/layer-2-rollups/" target="_blank" rel="noopener noreferrer">Ethereum.org: Rollups overview →</a></li>
+            <li><LinkWithCopy href="https://l2beat.com/" label={<>L2BEAT: Rollup risk & stats →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+            <li><LinkWithCopy href="https://docs.optimism.io/" label={<>Optimism docs →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+            <li><LinkWithCopy href="https://docs.arbitrum.io/" label={<>Arbitrum docs →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+          </ul>
         </div>
 
         {/* Bottom Explanation */}

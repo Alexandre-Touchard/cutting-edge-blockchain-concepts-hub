@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import LinkWithCopy from '../../ui/LinkWithCopy';
+import EduTooltip from '../../ui/EduTooltip';
+import { define } from '../glossary';
+const T = EduTooltip;
 import { Plus, Play, RefreshCw, Zap, GitBranch, CheckCircle } from 'lucide-react';
 
 const DAGConsensus = () => {
@@ -220,7 +224,10 @@ const DAGConsensus = () => {
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">DAG Consensus Interactive Demo</h1>
+        <h1 className="text-3xl font-bold mb-2">
+  <T term="DAG Consensus" text={define('DAG Consensus')} />
+  Interactive Demo
+</h1>
         <p className="text-slate-300">
           Directed Acyclic Graph consensus - transactions reference previous ones, forming a web instead of a chain
         </p>
@@ -233,7 +240,9 @@ const DAGConsensus = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-3">
               <GitBranch size={18} className="text-emerald-400" />
-              <h2 className="text-lg font-semibold">Current Tips</h2>
+              <h2 className="text-lg font-semibold">
+  <T term="Current Tips" text={define('Current Tips')} />
+</h2>
             </div>
             <div className="flex flex-wrap gap-2">
               {tips.length > 0 ? (
@@ -502,7 +511,9 @@ const DAGConsensus = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-slate-700 rounded p-2">
-                    <div className="text-xs text-slate-400">Weight</div>
+                    <div className="text-xs text-slate-400">
+  <T term="Weight" text={define('Weight')} />
+</div>
                     <div className="font-semibold text-blue-400">{calculateWeight(selectedNode.id)}</div>
                   </div>
                   <div className="bg-slate-700 rounded p-2">
@@ -657,6 +668,60 @@ const DAGConsensus = () => {
             </svg>
           </div>
         </div>
+      </div>
+
+      {/* Real-World Applications */}
+      <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
+        <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+            <h3 className="font-semibold text-lg mb-3 text-emerald-400">Where DAGs Show Up</h3>
+            <div className="space-y-3 text-sm">
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-bold text-blue-300">IOTA (Tangle)</div>
+                <p className="text-xs text-slate-300 mb-2">DAG-based ledger designed for IoT-style micro-transactions and high throughput without traditional blocks.</p>
+                <LinkWithCopy href="https://wiki.iota.org/" label={<>IOTA docs →</>} className="text-xs text-blue-300 hover:text-blue-200 underline" />
+              </div>
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-bold text-purple-300">Avalanche (DAG family)</div>
+                <p className="text-xs text-slate-300 mb-2">Consensus inspired by repeated random sampling; includes DAG-like structures in parts of its design.</p>
+                <LinkWithCopy href="https://docs.avax.network/" label={<>Avalanche docs →</>} className="text-xs text-purple-300 hover:text-purple-200 underline" />
+              </div>
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-bold text-pink-300">Mempool / Block DAG research</div>
+                <p className="text-xs text-slate-300 mb-2">Many projects explore DAGs for parallel transaction ordering and faster confirmations.</p>
+                <LinkWithCopy href="https://eprint.iacr.org/" label={<>Cryptography ePrint (papers) →</>} className="text-xs text-pink-300 hover:text-pink-200 underline" />
+              </div>
+            </div>
+          </div>
+          <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+            <h3 className="font-semibold text-lg mb-3 text-yellow-400">Production Use Cases</h3>
+            <div className="space-y-3 text-sm">
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-semibold text-blue-300 mb-1">⚡ High-Throughput Payments</div>
+                <p className="text-xs text-slate-300">When many users create transactions simultaneously, DAGs can confirm in parallel instead of queuing behind a single block leader.</p>
+              </div>
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-semibold text-purple-300 mb-1">🤖 IoT & Micro-Transactions</div>
+                <p className="text-xs text-slate-300">Device-to-device payments or data exchange benefit from low fees and parallel confirmations.</p>
+              </div>
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-semibold text-emerald-300 mb-1">📈 Data & Event Ordering</div>
+                <p className="text-xs text-slate-300">DAG-style structures also appear in distributed systems for causal ordering and conflict resolution.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Further Reading */}
+      <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
+        <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+        <ul className="space-y-2 text-sm">
+          <li><LinkWithCopy href="https://wiki.iota.org/" label={<>IOTA documentation →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+          <li><LinkWithCopy href="https://docs.avax.network/" label={<>Avalanche documentation →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+          <li><LinkWithCopy href="https://eprint.iacr.org/" label={<>IACR ePrint (research papers) →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+        </ul>
       </div>
 
       {/* Bottom Info */}

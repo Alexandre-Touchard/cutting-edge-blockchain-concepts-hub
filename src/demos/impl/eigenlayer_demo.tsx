@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Lock, Unlock, Shield, Layers, TrendingUp, AlertCircle, CheckCircle, Zap, DollarSign } from 'lucide-react';
+import EduTooltip from '../../ui/EduTooltip';
+import LinkWithCopy from '../../ui/LinkWithCopy';
+import { define } from '../glossary';
+const T = EduTooltip;
 
 const EigenLayerDemo = () => {
   const [validators, setValidators] = useState([
@@ -257,7 +261,10 @@ const EigenLayerDemo = () => {
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold mb-2">EigenLayer Restaking Demo</h1>
+          <h1 className="text-3xl font-bold mb-2">
+  <T term="Restaking" text={define('Restaking')} />
+  Demo
+</h1>
           <p className="text-slate-300">
             Reuse your ETH stake to secure multiple protocols and earn additional rewards
           </p>
@@ -284,7 +291,9 @@ const EigenLayerDemo = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <Zap size={20} className="text-yellow-400" />
-              <span className="text-sm text-slate-400">Active AVS</span>
+              <span className="text-sm text-slate-400">
+  <T term="Active AVS" text={define('Active AVS')} />
+</span>
             </div>
             <div className="text-2xl font-bold">{avs.length}</div>
           </div>
@@ -536,6 +545,60 @@ const EigenLayerDemo = () => {
                   ))
                 )}
               </div>
+            </div>
+
+            {/* Real-World Applications */}
+            <div className="bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
+              <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+              <div className="grid grid-cols-1 gap-6">
+                <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+                  <h3 className="font-semibold text-lg mb-3 text-emerald-400">Typical AVS Categories</h3>
+                  <div className="space-y-3 text-sm">
+                    <div className="bg-slate-700 rounded p-3">
+                      <div className="font-bold text-blue-300">Data Availability (DA)</div>
+                      <p className="text-xs text-slate-300 mb-2">Services that make rollup data retrievable (e.g., DA layers). Restaked security can help deter withholding attacks.</p>
+                      <LinkWithCopy href="https://docs.eigenlayer.xyz/" label={<>EigenLayer docs →</>} className="text-xs text-blue-300 hover:text-blue-200 underline" />
+                    </div>
+                    <div className="bg-slate-700 rounded p-3">
+                      <div className="font-bold text-purple-300">Cross-Chain / Bridges</div>
+                      <p className="text-xs text-slate-300 mb-2">Bridge validators/operators can be backed by restaked ETH, increasing the cost of misbehavior.</p>
+                      <LinkWithCopy href="https://docs.eigenlayer.xyz/" label={<>EigenLayer docs →</>} className="text-xs text-purple-300 hover:text-purple-200 underline" />
+                    </div>
+                    <div className="bg-slate-700 rounded p-3">
+                      <div className="font-bold text-pink-300">Oracles & Coprocessors</div>
+                      <p className="text-xs text-slate-300 mb-2">Extra computation or data feeds verified by a validator set with slashing conditions.</p>
+                      <LinkWithCopy href="https://docs.eigenlayer.xyz/" label={<>EigenLayer docs →</>} className="text-xs text-pink-300 hover:text-pink-200 underline" />
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+                  <h3 className="font-semibold text-lg mb-3 text-yellow-400">Why Teams Use Restaking</h3>
+                  <div className="space-y-3 text-sm">
+                    <div className="bg-slate-700 rounded p-3">
+                      <div className="font-semibold text-blue-300 mb-1">🛡️ Bootstrapping Security</div>
+                      <p className="text-xs text-slate-300">New protocols can start with strong economic security without creating a new token and validator set from scratch.</p>
+                    </div>
+                    <div className="bg-slate-700 rounded p-3">
+                      <div className="font-semibold text-purple-300 mb-1">💸 Capital Efficiency</div>
+                      <p className="text-xs text-slate-300">Stakers can earn additional yields from multiple services using the same underlying stake.</p>
+                    </div>
+                    <div className="bg-slate-700 rounded p-3">
+                      <div className="font-semibold text-emerald-300 mb-1">⚠️ Shared Risk Awareness</div>
+                      <p className="text-xs text-slate-300">Protocols can define slashing rules so bad behavior is economically punished, but risks compound across services.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Further Reading */}
+            <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+              <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+              <ul className="space-y-2 text-sm">
+                <li><LinkWithCopy href="https://docs.eigenlayer.xyz/" label={<>EigenLayer docs →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+                <li><LinkWithCopy href="https://eigenlayer.xyz/" label={<>EigenLayer website →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+                <li><LinkWithCopy href="https://ethereum.org/en/staking/" label={<>Ethereum staking overview →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+              </ul>
             </div>
 
             {/* Info Panel */}

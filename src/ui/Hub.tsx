@@ -1,4 +1,6 @@
 import React, { useMemo, useState } from 'react';
+import EduTooltip from './EduTooltip';
+import { getConceptChip } from './concepts';
 import {
   ChevronRight,
   Database,
@@ -271,11 +273,22 @@ export default function Hub({
                   <div className="mb-4">
                     <div className="text-xs font-semibold text-slate-500 mb-2">Key Concepts:</div>
                     <div className="flex flex-wrap gap-1">
-                      {demo.concepts.slice(0, 3).map((concept) => (
-                        <span key={concept} className="text-xs px-2 py-1 bg-slate-700 rounded">
-                          {concept}
-                        </span>
-                      ))}
+                      {demo.concepts.slice(0, 3).map((concept) => {
+                        const chip = getConceptChip(concept, demo.category);
+                        const Icon = chip.Icon;
+                        const def = chip.definition ?? 'Definition coming soon.';
+
+                        return (
+                          <span
+                            key={concept}
+                            className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-slate-700 rounded text-slate-300"
+                          >
+                            <Icon size={12} className="text-slate-300" />
+                            <span>{concept}</span>
+                            <EduTooltip text={def} />
+                          </span>
+                        );
+                      })}
                       {demo.concepts.length > 3 && (
                         <span className="text-xs px-2 py-1 bg-slate-700 rounded text-slate-400">
                           +{demo.concepts.length - 3}

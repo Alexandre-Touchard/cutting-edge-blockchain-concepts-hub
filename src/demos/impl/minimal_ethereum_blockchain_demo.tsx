@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import EduTooltip from '../../ui/EduTooltip';
+import { define } from '../glossary';
+const T = EduTooltip;
 import { Plus, Pickaxe, Link, CheckCircle, AlertCircle, Wallet, ArrowRight, Zap } from 'lucide-react';
 
 // Simulating the Rust blockchain in JavaScript for the demo
@@ -210,7 +213,9 @@ const EthereumBlockchainDemo = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <Pickaxe size={20} className="text-purple-400" />
-              <span className="text-sm text-slate-400">Difficulty</span>
+              <span className="text-sm text-slate-400">
+  <T term="Difficulty" text={define('Difficulty')} />
+</span>
             </div>
             <div className="text-2xl font-bold">{difficulty}</div>
           </div>
@@ -444,7 +449,10 @@ const EthereumBlockchainDemo = () => {
                           <span className="font-semibold">{block.transactions.length}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-400">Nonce:</span>
+                          <span className="text-slate-400">
+  <T term="Nonce" text={define('Nonce')} />
+  :
+</span>
                           <span className="font-mono">{block.nonce}</span>
                         </div>
                         <div>
@@ -482,6 +490,58 @@ const EthereumBlockchainDemo = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Real-World Applications */}
+        <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+              <h3 className="font-semibold text-lg mb-3 text-emerald-400">How This Maps to Ethereum</h3>
+              <div className="space-y-3 text-sm">
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-bold text-blue-300">Blocks & State Transitions</div>
+                  <p className="text-xs text-slate-300 mb-2">Ethereum clients execute transactions to update state, then commit to results via block headers and roots.</p>
+                  <a href="https://ethereum.org/en/developers/docs/" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-300 hover:text-blue-200 underline">Ethereum dev docs →</a>
+                </div>
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-bold text-purple-300">Consensus & Finality</div>
+                  <p className="text-xs text-slate-300">Modern Ethereum uses Proof of Stake and finality gadgets; this demo shows the core chain/transaction ideas in a minimal way.</p>
+                </div>
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-bold text-pink-300">Mempool & Fees</div>
+                  <p className="text-xs text-slate-300">Real networks have fee markets, MEV, and propagation delays; the mempool concept is the same.</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+              <h3 className="font-semibold text-lg mb-3 text-yellow-400">Practical Uses of a Minimal Chain</h3>
+              <div className="space-y-3 text-sm">
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-semibold text-blue-300 mb-1">🎓 Education & Prototyping</div>
+                  <p className="text-xs text-slate-300">Teach cryptographic linking, block validation, and mining/consensus basics without production complexity.</p>
+                </div>
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-semibold text-purple-300 mb-1">🧪 Testnets / Private Chains</div>
+                  <p className="text-xs text-slate-300">Organizations build private ledgers or testnets to simulate transaction flows and smart contract interactions.</p>
+                </div>
+                <div className="bg-slate-700 rounded p-3">
+                  <div className="font-semibold text-emerald-300 mb-1">🔎 Client Understanding</div>
+                  <p className="text-xs text-slate-300">Helps new engineers reason about client architecture: networking → mempool → execution → block import.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Further Reading */}
+        <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+          <ul className="space-y-2 text-sm">
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ethereum.org/en/developers/docs/" target="_blank" rel="noopener noreferrer">Ethereum developer documentation →</a></li>
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ethereum.org/en/developers/docs/consensus-mechanisms/pow/" target="_blank" rel="noopener noreferrer">Proof of Work basics →</a></li>
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://bitcoin.org/bitcoin.pdf" target="_blank" rel="noopener noreferrer">Bitcoin whitepaper (foundations) →</a></li>
+          </ul>
         </div>
 
         {/* Info Panel */}

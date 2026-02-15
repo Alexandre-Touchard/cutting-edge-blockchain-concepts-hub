@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import EduTooltip from '../../ui/EduTooltip';
+import { define } from '../glossary';
+const T = EduTooltip;
 import { Play, Plus, Trash2, RefreshCw, Zap, AlertTriangle } from 'lucide-react';
 
 const ParallelExecutor = () => {
@@ -509,7 +512,10 @@ const ParallelExecutor = () => {
   return (
     <div className="w-full max-w-7xl mx-auto p-6 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-lg">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">Parallel Transaction Executor</h1>
+        <h1 className="text-3xl font-bold mb-2">
+  <T term="Parallel Execution" text={define('Parallel Execution')} />
+  Executor
+</h1>
         <p className="text-slate-300">
           Compare Conservative (Solana-style) vs Optimistic (Aptos Block-STM) parallel execution strategies
         </p>
@@ -538,7 +544,9 @@ const ParallelExecutor = () => {
             
             <div className="grid grid-cols-3 gap-4 mb-3">
               <div className="bg-slate-800 rounded p-3">
-                <div className="text-xs text-slate-400 mb-1">Conflict Rate</div>
+                <div className="text-xs text-slate-400 mb-1">
+  <T term="Conflict Rate" text={define('Conflict Rate')} />
+</div>
                 <div className={`text-2xl font-bold ${
                   parseFloat(analysis.conflictRate) < 20 ? 'text-emerald-400' :
                   parseFloat(analysis.conflictRate) > 50 ? 'text-red-400' : 'text-yellow-400'
@@ -968,6 +976,62 @@ const ParallelExecutor = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Real-World Applications */}
+      <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
+        <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+            <h3 className="font-semibold text-lg mb-3 text-emerald-400">Who Uses Parallel Execution</h3>
+            <div className="space-y-3 text-sm">
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-bold text-blue-300">Solana</div>
+                <p className="text-xs text-slate-300 mb-2">Uses a conservative model where transactions declare account access so the runtime can schedule non-conflicting transactions in parallel.</p>
+                <a href="https://solana.com/docs" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-300 hover:text-blue-200 underline">Solana docs →</a>
+              </div>
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-bold text-purple-300">Aptos / Sui-style research</div>
+                <p className="text-xs text-slate-300 mb-2">Optimistic approaches (like Block-STM) execute in parallel and re-run conflicting transactions to maximize throughput.</p>
+                <div className="flex gap-3">
+                  <a href="https://aptos.dev/" target="_blank" rel="noopener noreferrer" className="text-xs text-purple-300 hover:text-purple-200 underline">Aptos docs →</a>
+                  <a href="https://docs.sui.io/" target="_blank" rel="noopener noreferrer" className="text-xs text-purple-300 hover:text-purple-200 underline">Sui docs →</a>
+                </div>
+              </div>
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-bold text-pink-300">Execution clients in general</div>
+                <p className="text-xs text-slate-300">Many runtimes explore parallelism to scale smart contract execution beyond single-threaded EVM execution.</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
+            <h3 className="font-semibold text-lg mb-3 text-yellow-400">Production Use Cases</h3>
+            <div className="space-y-3 text-sm">
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-semibold text-blue-300 mb-1">🧾 High-Volume Token Transfers</div>
+                <p className="text-xs text-slate-300">Payments, airdrops, and market making can process many independent transfers in parallel.</p>
+              </div>
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-semibold text-purple-300 mb-1">🧠 On-Chain Orderbooks / Games</div>
+                <p className="text-xs text-slate-300">Parallelism helps when state can be sharded across accounts/objects so many actions don’t conflict.</p>
+              </div>
+              <div className="bg-slate-700 rounded p-3">
+                <div className="font-semibold text-emerald-300 mb-1">📈 Better Block Utilization</div>
+                <p className="text-xs text-slate-300">Block producers can pack more transactions per block when the runtime can safely execute non-overlapping state changes concurrently.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Further Reading */}
+      <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
+        <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+        <ul className="space-y-2 text-sm">
+          <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://solana.com/docs" target="_blank" rel="noopener noreferrer">Solana runtime & accounts docs →</a></li>
+          <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://aptos.dev/" target="_blank" rel="noopener noreferrer">Aptos documentation (Block-STM lineage) →</a></li>
+          <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://docs.sui.io/" target="_blank" rel="noopener noreferrer">Sui documentation →</a></li>
+        </ul>
       </div>
 
       {/* Explanation */}

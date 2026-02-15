@@ -1,6 +1,9 @@
 import React from 'react';
 import { X } from 'lucide-react';
 import type { DemoMeta } from './Hub';
+import EduTooltip from './EduTooltip';
+import { getConceptChip } from './concepts';
+
 
 export default function DemoDetailsModal({
   demo,
@@ -45,9 +48,22 @@ export default function DemoDetailsModal({
           <div>
             <div className="text-xs font-semibold text-slate-400 mb-2">Key concepts</div>
             <ul className="space-y-2">
-              {demo.concepts.map((c) => (
-                <li key={c} className="text-sm text-slate-200">• {c}</li>
-              ))}
+              {demo.concepts.map((concept) => {
+                const chip = getConceptChip(concept, demo.category);
+                const def = chip.definition ?? 'Definition coming soon.';
+                const Icon = chip.Icon;
+
+                return (
+                  <li key={concept} className="text-sm text-slate-200 flex items-start gap-2">
+                    <span className="mt-0.5 text-slate-300">
+                      <Icon size={16} />
+                    </span>
+                    <span className="min-w-0">
+                      {concept} <EduTooltip text={def} />
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
