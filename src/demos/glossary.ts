@@ -32,6 +32,50 @@ export type GlossaryKey =
   | 'Oracle Networks'
   | 'Cross-Chain Messaging'
   | 'Trust Models'
+  // ERC standards
+  | 'ERC Standards'
+  | 'ERC-20'
+  | 'ERC-721'
+  | 'ERC-1155'
+  | 'Approval'
+  | 'Allowance'
+  | 'Fungible Token'
+  | 'Non-Fungible Token'
+  | 'Multi-Token'
+  | 'Token ID'
+  | 'transfer'
+  | 'approve'
+  | 'transferFrom'
+  | 'ownerOf'
+  | 'mint'
+  | 'burn'
+  | 'safeTransferFrom'
+  | 'Total Supply'
+  | 'Partition'
+  | 'transferByPartition'
+  | 'Operator'
+  | 'authorizeOperator'
+  | 'send'
+  | 'operatorSend'
+  | 'Composable NFT'
+  | 'ERC1820Registry'
+  | 'IERC1155Receiver'
+  | 'onERC721Received'
+  | 'TransferSingle'
+  | 'TransferBatch'
+  | 'ApprovalForAll'
+  | 'URI'
+  | 'ERC-4626'
+  | 'deposit'
+  | 'withdraw'
+  | 'redeem'
+  | 'shares'
+  | 'assets'
+  | 'ERC-223'
+  | 'tokenFallback'
+  | 'ERC-827'
+  | 'transferAndCall'
+  | 'approveAndCall'
 
   // Other glossary terms used throughout demos
   | 'Layer 2 Rollup'
@@ -73,7 +117,8 @@ export type GlossaryKey =
   | 'Columns/Node'
   | 'Samples/Node'
   | 'Coverage'
-  | 'Availability';
+  | 'Availability'
+  ;
 
 export const GLOSSARY: Record<GlossaryKey, string> = {
   // Hub/demo details concepts
@@ -141,6 +186,97 @@ export const GLOSSARY: Record<GlossaryKey, string> = {
     'Sending authenticated messages between blockchains (not necessarily tokens). The core question is how the destination chain verifies the source event.',
   'Trust Models':
     'The assumptions required for security (e.g., light-client verification vs multisig vs oracle/relayer). Different interoperability protocols trade off trust, cost, and complexity.',
+
+  // ERC standards
+  'ERC Standards':
+    'Ethereum Request for Comments (ERC) standards define common interfaces (function signatures + events) so wallets, dApps, and tooling can integrate assets consistently.',
+  'ERC-20':
+    'The standard interface for fungible tokens. Defines functions like balanceOf, transfer, approve, allowance, and transferFrom.',
+  'ERC-721':
+    'The standard interface for NFTs (non-fungible tokens). Each tokenId is unique and has a single owner, with per-token approvals.',
+  'ERC-1155':
+    'A multi-token standard supporting many token IDs (fungible and NFT-like) within a single contract, with batch operations and safe transfers.',
+  Approval:
+    'A permission granted to another address/contract to move your tokens (ERC-20 allowance, or ERC-721 operator/token approval). This is powerful and should be used carefully.',
+  Allowance:
+    'In ERC-20, allowance(owner, spender) is the remaining amount the spender is permitted to transfer from the owner using transferFrom.',
+  'Fungible Token':
+    'A token where each unit is interchangeable with any other unit (like dollars). Balances are numbers, not unique IDs.',
+  'Non-Fungible Token':
+    'A token where each unit is unique (identified by a tokenId). Ownership is tracked per tokenId rather than as a single balance.',
+  'Multi-Token':
+    'A token standard that can represent multiple assets (token IDs) within one contract, where each ID can have its own supply and fungibility.',
+  'Token ID':
+    'An identifier for a specific NFT (ERC-721) or a specific asset class (ERC-1155).',
+  transfer:
+    'ERC-20: move tokens from msg.sender to a recipient. Fails if balance is insufficient.',
+  approve:
+    'Set an allowance or approval so another address can move tokens on your behalf. In ERC-20 this sets allowance; in ERC-721 it can approve a tokenId or an operator.',
+  transferFrom:
+    'ERC-20: move tokens from an owner to a recipient using an allowance previously set via approve.',
+  ownerOf:
+    'ERC-721: returns the current owner address of a given tokenId.',
+  mint:
+    'Create new tokens (increasing supply) and assign them to an address. Minting rules depend on the contract.',
+  burn:
+    'Destroy tokens (reducing supply) from an address. Burning rules depend on the contract.',
+  safeTransferFrom:
+    'ERC-721/ERC-1155: transfer with an additional safety check when the recipient is a contract (it must implement the receiver interface).',
+  'Total Supply':
+    'The number of tokens that exist. In ERC-20 it is typically the sum of all balances.',
+  Partition:
+    'In security-token standards (e.g., ERC-1400), a partition is a labeled bucket of balances that can have distinct rules (lockups, KYC requirements, transfer restrictions).',
+  transferByPartition:
+    'An ERC-1400-style transfer method that moves tokens within a specific partition. Including the partition in the call lets the contract apply partition-specific compliance rules.',
+  Operator:
+    'In ERC-777, an operator is an address authorized to send tokens on behalf of a token holder (a different permission model than ERC-20 allowances).',
+  authorizeOperator:
+    'ERC-777 method to authorize an operator to act on behalf of the token holder. Operators can then call operatorSend/operatorBurn.',
+  send:
+    'ERC-777 method that transfers tokens and triggers hooks (tokensToSend/tokensReceived) when applicable.',
+  operatorSend:
+    'ERC-777 method allowing an authorized operator to send tokens from a holder to a recipient, with hooks triggered when registered.',
+  'Composable NFT':
+    'An NFT that can own other assets (child NFTs or fungible tokens), enabling nested ownership and bundled transfers. ERC-998 explores patterns for this.',
+  ERC1820Registry:
+    'A registry contract (ERC-1820) that maps addresses to interface implementers. ERC-777 uses it to discover hook implementers for tokensToSend/tokensReceived.',
+  IERC1155Receiver:
+    'The interface a contract must implement to safely receive ERC-1155 tokens. It defines onERC1155Received and onERC1155BatchReceived.',
+  onERC721Received:
+    'The ERC-721 receiver callback. safeTransferFrom calls this on contract recipients; if not implemented (or returns the wrong value) the transfer reverts to avoid locking NFTs.',
+  TransferSingle:
+    'ERC-1155 event emitted for a single-token-id transfer: operator, from, to, id, value.',
+  TransferBatch:
+    'ERC-1155 event emitted for a batch transfer over multiple token IDs and amounts.',
+  ApprovalForAll:
+    'Event used by ERC-721 and ERC-1155 to signal an operator approval toggle for all assets owned by an address.',
+  URI:
+    'ERC-1155 metadata event indicating the URI template for a token ID (often includes {id} substitution).',
+
+  'ERC-4626':
+    'A standard interface for tokenized vaults. Users deposit an underlying asset and receive vault shares; shares can later be redeemed for assets using standardized conversion functions.',
+  deposit:
+    'An ERC-4626 action where a user provides assets to the vault and receives shares. Implementations typically use convertToShares/previewDeposit to quote amounts.',
+  withdraw:
+    'An ERC-4626 action where a user receives a target amount of assets and the vault burns the required shares. previewWithdraw can be used to quote required shares.',
+  redeem:
+    'An ERC-4626 action where a user burns a specified number of shares and receives assets. previewRedeem can be used to quote assets out.',
+  shares:
+    'In ERC-4626, shares represent proportional ownership of the vault. Their value changes as the vault earns yield or incurs losses.',
+  assets:
+    'In ERC-4626, assets are the underlying tokens held by the vault (e.g., USDC, DAI). Users deposit assets and receive shares.',
+
+  'ERC-223':
+    'A token transfer standard intended to prevent tokens being accidentally sent to contracts that cannot handle them, by requiring a receiver callback when transferring to contracts.',
+  tokenFallback:
+    'The ERC-223 receiver callback concept: when transferring tokens to a contract, the token contract calls tokenFallback on the recipient so it can accept/reject and handle incoming tokens.',
+
+  'ERC-827':
+    'An ERC-20 extension that allows transfers/approvals to include extra call data, enabling a token transfer to trigger a function call in the same transaction. Powerful but higher risk.',
+  transferAndCall:
+    'An ERC-827-style pattern where a transfer also performs a call on a target contract (using provided data). This couples token movement with arbitrary execution.',
+  approveAndCall:
+    'An ERC-827-style pattern where an approval is granted and then a call is executed, often used to reduce multi-transaction UX for DeFi interactions.',
 
   'Layer 2 Rollup':
     'A Layer 2 rollup executes transactions on an L2 and posts compressed data plus a state commitment to L1. Users inherit L1 security while reducing fees.',

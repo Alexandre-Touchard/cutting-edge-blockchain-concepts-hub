@@ -7,6 +7,7 @@ import {
   Database,
   GitBranch,
   Hash,
+  Images,
   Layers,
   Network,
   Scale,
@@ -62,6 +63,13 @@ const conceptIconMap: Record<string, ConceptChip['Icon']> = {
   // Interop
   'Light Clients': Shield,
   'Cross-Chain Messaging': ArrowLeftRight,
+
+  // ERC standards
+  'ERC Standards': Layers,
+  'ERC-20': Coins,
+  'ERC-721': Images,
+  'ERC-1155': Layers,
+  Approval: Shield,
   Bridges: ArrowLeftRight,
   'Trust Models': Shield,
 

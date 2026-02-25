@@ -114,6 +114,23 @@ export const demoMetaRegistry: Record<string, Partial<DemoMeta>> = {
     ],
     tags: ['Blockchain Basics', 'PoW', 'Mining', 'Fundamentals']
   },
+  'erc-standards-showcase': {
+    id: 'erc-standards',
+    title: 'ERC Standards Playground',
+    category: 'defi',
+    difficulty: 'Beginner',
+    thumbnail: '🧾',
+    description:
+      'Explore multiple ERC standards on one page. Start with ERC-20, ERC-721, and ERC-1155 with interactive actions, tooltips, and real-world context.',
+    concepts: ['ERC Standards', 'ERC-20', 'ERC-721', 'ERC-1155', 'Approval'],
+    keyTakeaways: [
+      'ERC standards define interoperable interfaces so wallets, dApps, and exchanges can support assets consistently',
+      'ERC-20 is fungible, ERC-721 is non-fungible, and ERC-1155 is multi-token (fungible + NFTs) in one contract',
+      'Approvals/allowances are a core UX + security surface across standards'
+    ],
+    tags: ['Tokens', 'NFTs', 'Standards', 'EVM']
+  },
+
   'blockchain-interoperability': {
     id: 'blockchain-interop',
     title: 'Cross-Chain Protocols',
