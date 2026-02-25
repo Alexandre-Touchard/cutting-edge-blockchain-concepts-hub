@@ -3,7 +3,10 @@ import { ArrowRightLeft, Coins, Flame, Images, Layers, Plus, ShieldCheck } from 
 import EduTooltip from '../../ui/EduTooltip';
 import LinkWithCopy from '../../ui/LinkWithCopy';
 import { defineMaybe } from '../glossary';
+import { useDemoI18n } from '../useDemoI18n';
 import { ERC_STANDARDS, type StandardId, type Standard } from '../ercStandardsConfig';
+
+type TrFn = (english: string, opts?: Record<string, unknown>) => string;
 
 export const demoMeta = {
   id: 'erc-standards',
@@ -62,16 +65,22 @@ function AmountInput({ value, onChange, label }: { value: number; onChange: (v: 
   );
 }
 
-function RealWorldApplications({ items }: { items: Array<{ title: string; href: string; color: string; body: string }> }) {
+function RealWorldApplications({
+  items,
+  tr
+}: {
+  items: Array<{ title: string; href: string; color: string; body: string }>;
+  tr: TrFn;
+}) {
   return (
     <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
-      <h2 className="text-2xl font-bold mb-4 text-blue-300">Real-World Applications</h2>
+      <h2 className="text-2xl font-bold mb-4 text-blue-300">{tr('Real-World Applications')}</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {items.map((it) => (
           <div key={it.title} className="bg-slate-700 rounded p-3">
             <div className={`font-bold ${it.color} flex items-center justify-between gap-3`}>
               <span>{it.title}</span>
-              <LinkWithCopy href={it.href} label={<>Docs</>} className={`text-xs ${it.color} hover:opacity-90 underline`} />
+              <LinkWithCopy href={it.href} label={<>{tr('Docs')}</>} className={`text-xs ${it.color} hover:opacity-90 underline`} />
             </div>
             <p className="text-xs text-slate-300 mt-1">{it.body}</p>
           </div>
@@ -81,10 +90,16 @@ function RealWorldApplications({ items }: { items: Array<{ title: string; href: 
   );
 }
 
-function FurtherReading({ links }: { links: Array<{ label: string; href: string; summary: string }> }) {
+function FurtherReading({
+  links,
+  tr
+}: {
+  links: Array<{ label: string; href: string; summary: string }>;
+  tr: TrFn;
+}) {
   return (
     <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
-      <h2 className="text-2xl font-bold mb-4 text-blue-300">Further Reading</h2>
+      <h2 className="text-2xl font-bold mb-4 text-blue-300">{tr('Further Reading')}</h2>
       <ul className="space-y-3 text-sm">
         {links.map((l) => (
           <li key={l.href} className="bg-slate-900 rounded-lg p-4 border border-slate-700">
@@ -103,10 +118,16 @@ function FurtherReading({ links }: { links: Array<{ label: string; href: string;
   );
 }
 
-function ImplementationSection({ items }: { items: Array<{ title: string; body: React.ReactNode }> }) {
+function ImplementationSection({
+  items,
+  tr
+}: {
+  items: Array<{ title: string; body: React.ReactNode }>;
+  tr: TrFn;
+}) {
   return (
     <div className="mt-6 bg-slate-900 rounded-lg p-6 border border-slate-700">
-      <h3 className="text-lg font-bold mb-3 text-blue-200">How the Standard Works (Implementation)</h3>
+      <h3 className="text-lg font-bold mb-3 text-blue-200">{tr('How the Standard Works (Implementation)')}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {items.map((it) => (
           <div key={it.title} className="bg-slate-800 rounded p-4 border border-slate-700">
@@ -120,6 +141,7 @@ function ImplementationSection({ items }: { items: Array<{ title: string; body: 
 }
 
 function ERC20Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   const [balances, setBalances] = useState<Record<Address, number>>({ Alice: 1000, Bob: 250, Carol: 0, Dex: 0 });
   const [allowances, setAllowances] = useState<Record<Address, Record<Address, number>>>(() => ({
     Alice: { Alice: 0, Bob: 0, Carol: 0, Dex: 0 },
@@ -158,11 +180,12 @@ function ERC20Demo() {
     <div className="space-y-6">
       <Card>
         <SectionTitle>
-          ERC-20: Fungible tokens <T text={def('ERC-20')} />
+          {tr('ERC-20')}: {tr('Fungible tokens')} <T text={def('ERC-20')} />
         </SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          ERC-20 defines a standard interface for <strong>fungible</strong> assets. Itâ  s the backbone of stablecoins and most DeFi tokens.
-          The critical security surface is <strong>approve/allowance</strong>.
+          {tr('ERC-20 defines a standard interface for')} <strong>{tr('fungible')}</strong> {tr('assets.')}
+          {tr("It's the backbone of stablecoins and most DeFi tokens.")}
+          {tr('The critical security surface is')} <strong>{tr('approve/allowance')}</strong>. 
         </p>
 
         <ImplementationSection
@@ -173,16 +196,16 @@ function ERC20Demo() {
                 <>
                   <div><code>balanceOf(address)</code>, <code>totalSupply()</code>, <code>transfer(to, value)</code></div>
                   <div><code>approve(spender, value)</code>, <code>allowance(owner, spender)</code>, <code>transferFrom(from, to, value)</code></div>
-                  <div className="mt-2">Events: <code>Transfer(from, to, value)</code>, <code>Approval(owner, spender, value)</code></div>
+                  <div className="mt-2">{tr('Events')}: <code>Transfer(from, to, value)</code>, <code>Approval(owner, spender, value)</code></div>
                 </>
               )
             },
             {
-              title: 'State + common patterns',
+              title: tr('State + common patterns'),
               body: (
                 <>
-                  <div>State is typically <code>mapping(address =&gt; uint256) balances</code> and <code>mapping(address =&gt; mapping(address =&gt; uint256)) allowances</code>.</div>
-                  <div className="mt-2">Many tokens also implement <em>mint/burn</em> and <em>EIP-2612 permit</em> to reduce approval friction.</div>
+                  <div>{tr('State is typically')} <code>mapping(address =&gt; uint256) balances</code> {tr('and')} <code>mapping(address =&gt; mapping(address =&gt; uint256)) allowances</code>.</div>
+                  <div className="mt-2">{tr('Many tokens also implement')} <em>{tr('mint/burn')}</em> {tr('and')} <em>{tr('EIP-2612 permit')}</em> {tr('to reduce approval friction.')}</div>
                 </>
               )
             }
@@ -192,13 +215,13 @@ function ERC20Demo() {
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
             <div className="text-xs text-slate-400 mb-1">
-              Total supply <T text={def('Total Supply')} />
+              {tr('Total supply')} <T text={def('Total Supply')} />
             </div>
             <div className="text-2xl font-bold">{totalSupply}</div>
           </div>
 
           <div className="bg-slate-900 rounded p-4 border border-slate-700 md:col-span-2">
-            <div className="text-xs text-slate-400 mb-2">Balances</div>
+            <div className="text-xs text-slate-400 mb-2">{tr('Balances')}</div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {ADDRESSES.map((a) => (
                 <div key={a} className="bg-slate-800 rounded p-2 border border-slate-700">
@@ -211,29 +234,29 @@ function ERC20Demo() {
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-          <AddressSelect value={owner} onChange={setOwner} label="Owner (from)" />
-          <AddressSelect value={to} onChange={setTo} label="Recipient (to)" />
-          <AddressSelect value={spender} onChange={setSpender} label="Spender" />
-          <AmountInput value={amount} onChange={setAmount} label="Amount" />
+          <AddressSelect value={owner} onChange={setOwner} label={tr('Owner (from)')} />
+          <AddressSelect value={to} onChange={setTo} label={tr('Recipient (to)')} />
+          <AddressSelect value={spender} onChange={setSpender} label={tr('Spender')} />
+          <AmountInput value={amount} onChange={setAmount} label={tr('Amount')} />
 
           <div className="md:col-span-4 flex flex-wrap gap-3 mt-2">
             <button onClick={transfer} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold">
-              transfer <T text={def('transfer')} />
+              {tr('transfer')} <T text={def('transfer')} />
             </button>
             <button onClick={approve} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded font-semibold">
-              approve <T text={def('approve')} />
+              {tr('approve')} <T text={def('approve')} />
             </button>
             <button onClick={transferFrom} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded font-semibold">
-              transferFrom <T text={def('transferFrom')} />
+              {tr('transferFrom')} <T text={def('transferFrom')} />
             </button>
           </div>
 
           <div className="md:col-span-4 mt-4 bg-slate-900 rounded p-4 border border-slate-700">
             <div className="text-xs text-slate-400 mb-2">
-              allowance <T text={def('Allowance')} /> (owner to spender)
+              {tr('allowance')} <T text={def('Allowance')} /> ({tr('owner to spender')})
             </div>
             <div className="text-sm text-slate-200">
-              {owner} allows {spender}: <span className="font-bold">{allowances[owner]?.[spender] ?? 0}</span>
+              {owner} {tr('allows')} {spender}: <span className="font-bold">{allowances[owner]?.[spender] ?? 0}</span>
             </div>
           </div>
         </div>
@@ -242,22 +265,22 @@ function ERC20Demo() {
       <RealWorldApplications
         items={[
           {
-            title: 'Stablecoins (USDC/DAI)',
+            title: tr('Stablecoins (USDC/DAI)'),
             href: 'https://ethereum.org/en/stablecoins/',
             color: 'text-blue-300',
-            body: 'Fungible balances with transfer/approve flow; integrated across exchanges and wallets.'
+            body: tr('Fungible balances with transfer/approve flow; integrated across exchanges and wallets.')
           },
           {
-            title: 'DEX trading (Uniswap)',
+            title: tr('DEX trading (Uniswap)'),
             href: 'https://docs.uniswap.org/',
             color: 'text-purple-300',
-            body: 'Users approve a router to spend tokens; swaps call transferFrom under the hood.'
+            body: tr('Users approve a router to spend tokens; swaps call transferFrom under the hood.')
           },
           {
-            title: 'Governance tokens',
+            title: tr('Governance tokens'),
             href: 'https://ethereum.org/en/dao/',
             color: 'text-pink-300',
-            body: 'Voting power is often represented as ERC-20 balances (or snapshot-compatible variants).'
+            body: tr('Voting power is often represented as ERC-20 balances (or snapshot-compatible variants).')
           }
         ]}
       />
@@ -265,22 +288,22 @@ function ERC20Demo() {
       <FurtherReading
         links={[
           {
-            label: 'EIP-20: Token Standard',
+            label: tr('EIP-20: Token Standard'),
             href: 'https://eips.ethereum.org/EIPS/eip-20',
             summary:
-              'The canonical specification for ERC-20: required functions/events, optional metadata, and the allowance-based spending model used by most DeFi protocols.'
+              tr('The canonical specification for ERC-20: required functions/events, optional metadata, and the allowance-based spending model used by most DeFi protocols.')
           },
           {
-            label: 'OpenZeppelin ERC-20 guide',
+            label: tr('OpenZeppelin ERC-20 guide'),
             href: 'https://docs.openzeppelin.com/contracts/5.x/erc20',
             summary:
-              'Practical implementation guidance and common extensions (minting, pausing, permit). Helpful for understanding how production ERC-20s are typically built.'
+              tr('Practical implementation guidance and common extensions (minting, pausing, permit). Helpful for understanding how production ERC-20s are typically built.')
           },
           {
-            label: 'Ethereum.org ERC-20 overview',
+            label: tr('Ethereum.org ERC-20 overview'),
             href: 'https://ethereum.org/en/developers/docs/standards/tokens/erc-20/',
             summary:
-              'High-level explanation of ERC-20 and how transfers/approvals work from a developer and user perspective.'
+              tr('High-level explanation of ERC-20 and how transfers/approvals work from a developer and user perspective.')
           }
         ]}
       />
@@ -289,6 +312,7 @@ function ERC20Demo() {
 }
 
 function ERC721Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   const [owners, setOwners] = useState<Record<number, Address>>({ 1: 'Alice', 2: 'Bob' });
   const [approved, setApproved] = useState<Record<number, Address | null>>({ 1: null, 2: null });
   const [nextId, setNextId] = useState(3);
@@ -405,7 +429,7 @@ function ERC721Demo() {
               <Plus size={16} /> mint <T text={def('mint')} />
             </button>
             <button onClick={approve} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded font-semibold">
-              approve <T text={def('approve')} />
+              {tr('approve')} <T text={def('approve')} />
             </button>
             <button onClick={transfer} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold">
               safeTransferFrom <T text={def('safeTransferFrom')} />
@@ -453,6 +477,7 @@ function ERC721Demo() {
 }
 
 function ERC1155Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   const [balances, setBalances] = useState<Record<Address, Record<number, number>>>(() => ({
     Alice: { 1: 100, 2: 1 },
     Bob: { 1: 30, 2: 0 },
@@ -2026,7 +2051,7 @@ function ERC865Demo() {
 
 // INSERT_4337_864_865_END
 
-function ComingSoon({ standard }: { standard: Standard }) {
+function ComingSoon({ standard, tr }: { standard: Standard; tr: TrFn }) {
   const Icon = standard.icon;
   return (
     <Card>
@@ -2037,11 +2062,11 @@ function ComingSoon({ standard }: { standard: Standard }) {
       </SectionTitle>
       <p className="text-sm text-slate-300">{standard.summary}</p>
       <div className="mt-4 bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4">
-        <div className="text-sm font-semibold text-blue-300 mb-1">Coming soon</div>
-        <p className="text-sm text-slate-300">This interactive demo will be added next. For now, you can still explore the EIP/spec.</p>
+        <div className="text-sm font-semibold text-blue-300 mb-1">{tr('Coming soon')}</div>
+        <p className="text-sm text-slate-300">{tr('This interactive demo will be added next. For now, you can still explore the EIP/spec.')}</p>
         {standard.eipUrl ? (
           <div className="mt-3">
-            <LinkWithCopy href={standard.eipUrl} label={<>Read the spec ?</>} className="text-blue-300 hover:text-blue-200 underline" />
+            <LinkWithCopy href={standard.eipUrl} label={<>{tr('Read the spec')}</>} className="text-blue-300 hover:text-blue-200 underline" />
           </div>
         ) : null}
       </div>
@@ -2050,6 +2075,7 @@ function ComingSoon({ standard }: { standard: Standard }) {
 }
 
 export default function ERCStandardsShowcase() {
+  const { tr } = useDemoI18n('erc-standards');
   const [selected, setSelected] = useState<StandardId>('erc20');
 
   const selectedStandard = STANDARDS.find((s) => s.id === selected) ?? STANDARDS[0];
@@ -2058,21 +2084,23 @@ export default function ERCStandardsShowcase() {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-4xl font-bold mb-2">ERC Standards Playground</h1>
+          <h1 className="text-4xl font-bold mb-2">{tr('ERC Standards Playground')}</h1>
           <p className="text-slate-300 max-w-3xl">
-            Pick a standard and interact with its core mechanics. This is a conceptual simulation (not on-chain), focused on understanding interfaces, approvals, and common UX/security pitfalls.
+            {tr(
+              'Pick a standard and interact with its core mechanics. This is a conceptual simulation (not on-chain), focused on understanding interfaces, approvals, and common UX/security pitfalls.'
+            )}
           </p>
 
           <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-slate-300">
             <span>
-              Key idea: <strong>interfaces enable interoperability</strong> â   the same wallet UI can work with many tokens.
+              {tr('Key idea')}: <strong>{tr('interfaces enable interoperability')}</strong> - {tr('the same wallet UI can work with many tokens.')}
             </span>
             <T text={def('ERC Standards')} />
           </div>
         </div>
 
         <div className="bg-slate-800 rounded-xl border border-slate-700 p-4 mb-6">
-          <div className="text-sm text-slate-300 mb-3">Choose a standard</div>
+          <div className="text-sm text-slate-300 mb-3">{tr('Choose a standard')}</div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {STANDARDS.map((s) => {
               const Icon = s.icon;
@@ -2090,9 +2118,9 @@ export default function ERCStandardsShowcase() {
                       <Icon size={18} /> {s.name}
                     </div>
                     {s.status === 'coming_soon' ? (
-                      <span className="text-xs px-2 py-1 rounded bg-slate-700 text-slate-200">Coming soon</span>
+                      <span className="text-xs px-2 py-1 rounded bg-slate-700 text-slate-200">{tr('Coming soon')}</span>
                     ) : (
-                      <span className="text-xs px-2 py-1 rounded bg-emerald-700/40 text-emerald-200">Ready</span>
+                      <span className="text-xs px-2 py-1 rounded bg-emerald-700/40 text-emerald-200">{tr('Ready')}</span>
                     )}
                   </div>
                   <div className="text-xs text-slate-400 mt-1">{s.summary}</div>
@@ -2127,7 +2155,7 @@ export default function ERCStandardsShowcase() {
         ) : selectedStandard.id === 'erc865' ? (
           <ERC865Demo />
         ) : (
-          <ComingSoon standard={selectedStandard} />
+          <ComingSoon standard={selectedStandard} tr={tr} />
         )}
       </div>
     </div>

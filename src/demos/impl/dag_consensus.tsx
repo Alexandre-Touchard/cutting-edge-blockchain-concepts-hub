@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import LinkWithCopy from '../../ui/LinkWithCopy';
 import EduTooltip from '../../ui/EduTooltip';
 import { define } from '../glossary';
+import { useDemoI18n } from '../useDemoI18n';
 const T = EduTooltip;
 import { Plus, Play, RefreshCw, Zap, GitBranch, CheckCircle } from 'lucide-react';
 
 const DAGConsensus = () => {
+  const { tr } = useDemoI18n('dag-consensus');
   const [nodes, setNodes] = useState([
     { id: 'A', x: 400, y: 100, parents: [], validator: 'Alice', weight: 1, confirmed: true, timestamp: Date.now() - 5000 },
     { id: 'B', x: 250, y: 200, parents: ['A'], validator: 'Bob', weight: 1, confirmed: true, timestamp: Date.now() - 4500 },
@@ -273,10 +275,10 @@ const DAGConsensus = () => {
 
           {/* Add Transaction */}
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-            <h2 className="text-lg font-semibold mb-3">Add Transaction</h2>
+            <h2 className="text-lg font-semibold mb-3">{tr('Add Transaction')}</h2>
             
             <div className="mb-3">
-              <label className="text-sm text-slate-400 mb-2 block">Validator</label>
+              <label className="text-sm text-slate-400 mb-2 block">{tr('Validator')}</label>
               <select
                 value={selectedValidator}
                 onChange={(e) => setSelectedValidator(e.target.value)}
@@ -308,7 +310,7 @@ const DAGConsensus = () => {
                     );
                   })
                 ) : (
-                  <div className="text-slate-500 text-xs py-2">Shift+Click nodes in DAG to select</div>
+                  <div className="text-slate-500 text-xs py-2">{tr('Shift+Click nodes in DAG to select')}</div>
                 )}
               </div>
             </div>
@@ -370,26 +372,26 @@ const DAGConsensus = () => {
 
           {/* Stats */}
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-            <h2 className="text-lg font-semibold mb-3">Statistics</h2>
+            <h2 className="text-lg font-semibold mb-3">{tr('Statistics')}</h2>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-slate-400">Total Transactions:</span>
+                <span className="text-slate-400">{tr('Total Transactions')}:</span>
                 <span className="font-semibold">{nodes.length}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Confirmed:</span>
+                <span className="text-slate-400">{tr('Confirmed')}:</span>
                 <span className="font-semibold text-emerald-400">
                   {nodes.filter(n => n.confirmed).length}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Pending:</span>
+                <span className="text-slate-400">{tr('Pending')}:</span>
                 <span className="font-semibold text-yellow-400">
                   {nodes.filter(n => !n.confirmed).length}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Current Tips:</span>
+                <span className="text-slate-400">{tr('Current Tips')}:</span>
                 <span className="font-semibold text-blue-400">{tips.length}</span>
               </div>
             </div>

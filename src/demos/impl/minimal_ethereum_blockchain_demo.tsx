@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import EduTooltip from '../../ui/EduTooltip';
 import { define } from '../glossary';
+import { useDemoI18n } from '../useDemoI18n';
 const T = EduTooltip;
 import { Plus, Pickaxe, Link, CheckCircle, AlertCircle, Wallet, ArrowRight, Zap } from 'lucide-react';
 
@@ -63,6 +64,7 @@ class Block {
 }
 
 const EthereumBlockchainDemo = () => {
+  const { tr } = useDemoI18n('ethereum-blockchain');
   const [accounts, setAccounts] = useState({
     'Alice': { balance: 1000, nonce: 0 },
     'Bob': { balance: 1000, nonce: 0 },
@@ -104,7 +106,7 @@ const EthereumBlockchainDemo = () => {
 
   const addTransaction = () => {
     if (txFrom === txTo) {
-      addEvent('Cannot send to yourself', 'error');
+      addEvent(tr('Cannot send to yourself'), 'error');
       return;
     }
 
@@ -120,12 +122,12 @@ const EthereumBlockchainDemo = () => {
 
   const mineBlock = async () => {
     if (pendingTxs.length === 0) {
-      addEvent('No transactions to mine', 'error');
+      addEvent(tr('No transactions to mine'), 'error');
       return;
     }
 
     setMining(true);
-    addEvent('Mining started...', 'info');
+    addEvent(tr('Mining started...'), 'info');
 
     // Simulate mining delay
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -166,11 +168,11 @@ const EthereumBlockchainDemo = () => {
       const previous = chain[i - 1];
       
       if (current.previousHash !== previous.hash) {
-        addEvent('Chain validation failed: broken link', 'error');
+        addEvent(tr('Chain validation failed: broken link'), 'error');
         return false;
       }
     }
-    addEvent('Chain is valid!', 'success');
+    addEvent(tr('Chain is valid!'), 'success');
     return true;
   };
 
@@ -186,7 +188,7 @@ const EthereumBlockchainDemo = () => {
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold mb-2">⛓️ Minimal Ethereum Blockchain</h1>
+          <h1 className="text-3xl font-bold mb-2">⛓️ {tr('Minimal Ethereum Blockchain')}</h1>
           <p className="text-slate-300">
             Built with Rust concepts - Proof of Work, Account Model, Transaction Pool
           </p>
@@ -197,7 +199,7 @@ const EthereumBlockchainDemo = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <Link size={20} className="text-blue-400" />
-              <span className="text-sm text-slate-400">Chain Length</span>
+              <span className="text-sm text-slate-400">{tr('Chain Length')}</span>
             </div>
             <div className="text-2xl font-bold">{chain.length}</div>
           </div>

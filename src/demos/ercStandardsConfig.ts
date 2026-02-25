@@ -21,7 +21,7 @@ export type StandardId =
 export type Standard = {
   id: StandardId;
   name: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
   status: 'ready' | 'coming_soon';
   summary: string;
   eipUrl?: string;

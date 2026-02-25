@@ -1,3 +1,10 @@
+import i18n from '../i18n';
+import { glossaryKey } from './i18nKeys';
+
+// NOTE: This file provides the glossary in a language-aware way.
+// English strings live here as a fallback, while French/Spanish can be provided
+// via i18n resources under `glossary.<term>`.
+
 export type GlossaryKey =
   // Hub/demo details concepts (from demoRegistry)
   | 'Constant Product'
@@ -120,7 +127,7 @@ export type GlossaryKey =
   | 'Availability'
   ;
 
-export const GLOSSARY: Record<GlossaryKey, string> = {
+export const EN_GLOSSARY: Record<GlossaryKey, string> = {
   // Hub/demo details concepts
   'Constant Product':
     'A pricing rule used by many AMMs: keep the product of reserves constant (x × y = k), which implies a curve where price changes as reserves change.',
@@ -361,10 +368,14 @@ export const GLOSSARY: Record<GlossaryKey, string> = {
 };
 
 export function define(term: GlossaryKey): string {
-  return GLOSSARY[term];
+  const fallback = EN_GLOSSARY[term];
+  return i18n.t(glossaryKey(term), { defaultValue: fallback });
 }
 
 /** Non-throwing lookup for UI surfaces that may contain concepts not yet in the glossary. */
 export function defineMaybe(term: string): string | undefined {
-  return (GLOSSARY as Record<string, string>)[term];
+  // Best-effort lookup: if term is in the English glossary, allow i18n override.
+  const fallback = (EN_GLOSSARY as Record<string, string>)[term];
+  if (fallback) return i18n.t(glossaryKey(term), { defaultValue: fallback });
+  return undefined;
 }

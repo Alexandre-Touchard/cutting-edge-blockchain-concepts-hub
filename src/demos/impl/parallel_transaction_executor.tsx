@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import EduTooltip from '../../ui/EduTooltip';
 import { define } from '../glossary';
+import { useDemoI18n } from '../useDemoI18n';
 const T = EduTooltip;
 import { Play, Plus, Trash2, RefreshCw, Zap, AlertTriangle } from 'lucide-react';
 
 const ParallelExecutor = () => {
+  const { tr } = useDemoI18n('parallel-executor');
   const [accounts, setAccounts] = useState({
     'Alice': 100,
     'Bob': 100,
@@ -523,22 +525,22 @@ const ParallelExecutor = () => {
 
       {/* Execution Mode Selector */}
       <div className="mb-6 bg-slate-800 rounded-lg p-4 border border-slate-700">
-        <h2 className="text-lg font-semibold mb-3">Execution Strategy</h2>
+        <h2 className="text-lg font-semibold mb-3">{tr('Execution Strategy')}</h2>
         
         {/* Conflict Rate Analyzer */}
         {analysis && transactions.length > 0 && (
           <div className="mb-4 p-4 bg-slate-900 rounded-lg border-2 border-blue-600">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h3 className="font-semibold text-blue-300 mb-1">Conflict Rate Analysis</h3>
-                <p className="text-sm text-slate-400">Based on current transaction queue</p>
+                <h3 className="font-semibold text-blue-300 mb-1">{tr('Conflict Rate Analysis')}</h3>
+                <p className="text-sm text-slate-400">{tr('Based on current transaction queue')}</p>
               </div>
               <div className={`px-3 py-1 rounded text-sm font-semibold ${
                 analysis.recommendation === 'optimistic' 
                   ? 'bg-purple-600 text-white' 
                   : 'bg-emerald-600 text-white'
               }`}>
-                Recommended: {analysis.recommendation === 'optimistic' ? 'Optimistic' : 'Conservative'}
+                {tr('Recommended')}: {analysis.recommendation === 'optimistic' ? tr('Optimistic') : tr('Conservative')}
               </div>
             </div>
             
@@ -559,7 +561,7 @@ const ParallelExecutor = () => {
               </div>
               
               <div className="bg-slate-800 rounded p-3">
-                <div className="text-xs text-slate-400 mb-1">Parallel Groups</div>
+                <div className="text-xs text-slate-400 mb-1">{tr('Parallel Groups')}</div>
                 <div className="text-2xl font-bold text-blue-400">
                   {conflictGroups.length}
                 </div>
@@ -569,7 +571,7 @@ const ParallelExecutor = () => {
               </div>
               
               <div className="bg-slate-800 rounded p-3">
-                <div className="text-xs text-slate-400 mb-1">Parallel Efficiency</div>
+                <div className="text-xs text-slate-400 mb-1">{tr('Parallel Efficiency')}</div>
                 <div className={`text-2xl font-bold ${
                   parseFloat(analysis.parallelEfficiency) > 2 ? 'text-emerald-400' : 'text-yellow-400'
                 }`}>
@@ -583,7 +585,7 @@ const ParallelExecutor = () => {
             
             <div className="bg-blue-900 bg-opacity-20 rounded p-3 border border-blue-700">
               <div className="text-sm text-blue-200">
-                <span className="font-semibold">Why {analysis.recommendation}?</span> {analysis.reasoning}
+                <span className="font-semibold">{tr('Why')} {analysis.recommendation}?</span> {analysis.reasoning}
               </div>
             </div>
           </div>
@@ -601,7 +603,7 @@ const ParallelExecutor = () => {
           >
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle size={20} className="text-emerald-400" />
-              <span className="font-semibold">Conservative (Solana-style)</span>
+              <span className="font-semibold">{tr('Conservative (Solana-style)')}</span>
             </div>
             <p className="text-sm text-slate-300">
               Pre-analyze dependencies, schedule non-conflicting transactions in parallel groups. 
@@ -620,7 +622,7 @@ const ParallelExecutor = () => {
           >
             <div className="flex items-center gap-2 mb-2">
               <Zap size={20} className="text-purple-400" />
-              <span className="font-semibold">Optimistic (Aptos Block-STM)</span>
+              <span className="font-semibold">{tr('Optimistic (Aptos Block-STM)')}</span>
             </div>
             <p className="text-sm text-slate-300">
               Execute everything in parallel speculatively, detect conflicts, re-execute only what's needed.

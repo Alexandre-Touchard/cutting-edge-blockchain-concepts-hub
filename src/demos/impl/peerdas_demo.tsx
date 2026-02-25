@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Download, Upload, CheckCircle, XCircle, AlertCircle, Users, Database, Zap, Shield } from 'lucide-react';
 import EduTooltip from '../../ui/EduTooltip';
 import { define } from '../glossary';
+import { useDemoI18n } from '../useDemoI18n';
 
 // Backwards-compatible alias so we don't have to rewrite all usages.
 const Tooltip = EduTooltip;
 
 const PeerDASDemo = () => {
+  const { tr } = useDemoI18n('peerdas-demo');
   // Network configuration
   const [nodes, setNodes] = useState([]);
   const [numNodes, setNumNodes] = useState(20);
@@ -225,7 +227,7 @@ const PeerDASDemo = () => {
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold mb-2">PeerDAS: Peer Data Availability Sampling</h1>
+          <h1 className="text-3xl font-bold mb-2">{tr('PeerDAS: Peer Data Availability Sampling')}</h1>
           <p className="text-slate-300">
             Ethereum's scalable data availability layer - nodes sample random columns instead of downloading everything
           </p>
@@ -370,7 +372,7 @@ const PeerDASDemo = () => {
                   className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-600 disabled:cursor-not-allowed rounded font-semibold flex items-center justify-center gap-2"
                 >
                   <Upload size={18} />
-                  {isPublishing ? 'Publishing...' : 'Publish to Network'}
+                  {isPublishing ? tr('Publishing...') : tr('Publish to Network')}
                 </button>
 
                 <button
@@ -379,7 +381,7 @@ const PeerDASDemo = () => {
                   className="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 disabled:cursor-not-allowed rounded font-semibold flex items-center justify-center gap-2"
                 >
                   <Zap size={18} />
-                  {isSampling ? 'Sampling...' : 'Start Sampling'}
+                  {isSampling ? tr('Sampling...') : tr('Start Sampling')}
                 </button>
 
                 <button

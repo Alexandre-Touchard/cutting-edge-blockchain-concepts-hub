@@ -3,11 +3,13 @@ import { TrendingDown, DollarSign, Droplet, ArrowRight, AlertCircle, Info } from
 import EduTooltip from '../../ui/EduTooltip';
 import LinkWithCopy from '../../ui/LinkWithCopy';
 import { define } from '../glossary';
+import { useDemoI18n } from '../useDemoI18n';
 
 // Backwards-compatible alias so we don't have to rewrite all usages.
 const Tooltip = EduTooltip;
 
 const AMMDemo = () => {
+  const { tr } = useDemoI18n('amm-demo');
   const [reserveA, setReserveA] = useState(1000);
   const [reserveB, setReserveB] = useState(2000);
   const [inputAmount, setInputAmount] = useState(100);
@@ -79,8 +81,8 @@ const AMMDemo = () => {
   return (
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2">💱 Automated Market Maker (AMM) Math</h1>
-        <p className="text-slate-300 mb-6">Constant Product Formula (x × y = k)</p>
+        <h1 className="text-3xl font-bold mb-2">💱 {tr('Automated Market Maker (AMM) Math')}</h1>
+        <p className="text-slate-300 mb-6">{tr('Constant Product Formula (x × y = k)')}</p>
 
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4 mb-6">
@@ -88,7 +90,7 @@ const AMMDemo = () => {
             <div className="flex items-center gap-2 mb-2">
               <Droplet size={16} className="text-blue-400" />
               <span className="text-xs text-slate-400">
-                Pool TVL
+                {tr('Pool TVL')}
                 <Tooltip text={define('Pool TVL')} />
               </span>
             </div>
@@ -98,7 +100,7 @@ const AMMDemo = () => {
             <div className="flex items-center gap-2 mb-2">
               <DollarSign size={16} className="text-emerald-400" />
               <span className="text-xs text-slate-400">
-                Price
+                {tr('Price')}
                 <Tooltip text={define('Price')} />
               </span>
             </div>
@@ -108,7 +110,7 @@ const AMMDemo = () => {
             <div className="flex items-center gap-2 mb-2">
               <TrendingDown size={16} className="text-red-400" />
               <span className="text-xs text-slate-400">
-                Impermanent Loss
+                {tr('Impermanent Loss')}
                 <Tooltip text={define('Impermanent Loss')} />
               </span>
             </div>
@@ -118,7 +120,7 @@ const AMMDemo = () => {
           </div>
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="text-xs text-slate-400 mb-2">
-              Your LP Tokens
+              {tr('Your LP Tokens')}
               <Tooltip text={define('LP Tokens')} />
             </div>
             <div className="text-xl font-bold">{lpTokens.toFixed(2)}</div>
@@ -130,13 +132,13 @@ const AMMDemo = () => {
           {/* Pool Reserves */}
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <h2 className="text-lg font-semibold mb-4">
-              Pool Reserves
+              {tr('Pool Reserves')}
               <Tooltip text={define('Pool Reserves')} />
             </h2>
             
             <div className="space-y-4">
               <div className="bg-slate-700 rounded p-3">
-                <div className="text-sm text-slate-400 mb-2">Token A</div>
+                <div className="text-sm text-slate-400 mb-2">{tr('Token A')}</div>
                 <div className="text-2xl font-bold text-blue-400 mb-2">{reserveA.toFixed(2)}</div>
                 <input
                   type="range"
@@ -149,7 +151,7 @@ const AMMDemo = () => {
               </div>
 
               <div className="bg-slate-700 rounded p-3">
-                <div className="text-sm text-slate-400 mb-2">Token B</div>
+                <div className="text-sm text-slate-400 mb-2">{tr('Token B')}</div>
                 <div className="text-2xl font-bold text-purple-400 mb-2">{reserveB.toFixed(2)}</div>
                 <input
                   type="range"
@@ -176,7 +178,7 @@ const AMMDemo = () => {
 
               <div className="space-y-2">
                 <div className="text-sm text-slate-400">
-                  Trading Fee: {feePercent}%
+                  {tr('Trading Fee')}: {feePercent}%
                   <Tooltip text={define('Trading Fee')} />
                 </div>
                 <input
@@ -194,11 +196,11 @@ const AMMDemo = () => {
 
           {/* Swap */}
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-            <h2 className="text-lg font-semibold mb-4">Swap Tokens</h2>
+            <h2 className="text-lg font-semibold mb-4">{tr('Swap Tokens')}</h2>
 
             <div className="space-y-4">
               <div className="bg-slate-700 rounded-lg p-3">
-                <div className="text-sm text-slate-400 mb-2">You pay</div>
+                <div className="text-sm text-slate-400 mb-2">{tr('You pay')}</div>
                 <div className="flex gap-2">
                   <input
                     type="number"
@@ -224,7 +226,7 @@ const AMMDemo = () => {
               </div>
 
               <div className="bg-slate-700 rounded-lg p-3">
-                <div className="text-sm text-slate-400 mb-2">You receive</div>
+                <div className="text-sm text-slate-400 mb-2">{tr('You receive')}</div>
                 <div className="text-xl font-bold text-emerald-400">
                   {outputAmount.toFixed(4)} {inputToken === 'A' ? 'B' : 'A'}
                 </div>
@@ -234,7 +236,7 @@ const AMMDemo = () => {
                 <div className="bg-slate-900 rounded p-3 space-y-1 text-xs">
                   <div className="flex justify-between">
                     <span className="text-slate-400">
-                      Price Impact
+                      {tr('Price Impact')}
                       <Tooltip text={define('Price Impact')} />
                     </span>
                     <span className={`font-semibold ${priceImpact > 5 ? 'text-red-400' : 'text-emerald-400'}`}>
@@ -243,14 +245,14 @@ const AMMDemo = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">
-                      Fee
+                      {tr('Fee')}
                       <Tooltip text={define('Fee')} />
                     </span>
                     <span>{(inputAmount * feePercent / 100).toFixed(4)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">
-                      Rate
+                      {tr('Rate')}
                       <Tooltip text={define('Rate')} />
                     </span>
                     <span>1 = {(outputAmount / inputAmount).toFixed(4)}</span>
@@ -261,7 +263,7 @@ const AMMDemo = () => {
               {priceImpact > 5 && (
                 <div className="bg-red-900 bg-opacity-20 border border-red-700 rounded p-2 flex gap-2 text-xs">
                   <AlertCircle size={14} className="text-red-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-red-300">High price impact!</span>
+                  <span className="text-red-300">{tr('High price impact!')}</span>
                 </div>
               )}
 

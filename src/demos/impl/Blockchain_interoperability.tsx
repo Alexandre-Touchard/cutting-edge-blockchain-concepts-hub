@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import EduTooltip from '../../ui/EduTooltip';
 import { define } from '../glossary';
+import { useDemoI18n } from '../useDemoI18n';
 const T = EduTooltip;
 import { Send, CheckCircle, Clock, AlertTriangle, Shield, Zap, Lock, Eye } from 'lucide-react';
 
 const BlockchainInteropDemo = () => {
+  const { tr } = useDemoI18n('blockchain-interop');
   const [selectedProtocol, setSelectedProtocol] = useState('ibc');
   const [sourceChain, setSourceChain] = useState('cosmos');
   const [destChain, setDestChain] = useState('osmosis');
@@ -244,7 +246,7 @@ const BlockchainInteropDemo = () => {
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold mb-2">🌉 Blockchain Interoperability Protocols</h1>
+          <h1 className="text-3xl font-bold mb-2">🌉 {tr('Blockchain Interoperability Protocols')}</h1>
 <p className="text-slate-300 text-sm">
   <T term="Interoperability" text={define('Interoperability')} />
 </p>

@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import EduTooltip from './EduTooltip';
 import { getConceptChip } from './concepts';
+import LanguageSwitcher from './LanguageSwitcher';
 import {
   ChevronRight,
   Database,
@@ -35,6 +37,7 @@ export default function Hub({
   demos: DemoMeta[];
   onOpenDemo: (demo: DemoMeta) => void;
 }) {
+  const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [hoveredThumbnailDemoId, setHoveredThumbnailDemoId] = useState<string | null>(null);
@@ -200,20 +203,23 @@ export default function Hub({
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="relative text-center mb-12">
+          <div className="absolute right-0 top-0">
+            <LanguageSwitcher />
+          </div>
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Blockchain Learning Hub
+            {t('app.title')}
           </h1>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            Interactive demonstrations of cutting-edge blockchain concepts, protocols, and mechanisms
+            {t('app.subtitle')}
           </p>
           <div className="flex items-center justify-center gap-4 mt-6">
             <div className="px-4 py-2 bg-slate-800 rounded-full text-sm">
-              <span className="text-slate-400">Total Demos:</span>{' '}
+              <span className="text-slate-400">{t('app.totalDemos')}</span>{' '}
               <span className="font-bold text-blue-400">{demos.length}</span>
             </div>
             <div className="px-4 py-2 bg-slate-800 rounded-full text-sm">
-              <span className="text-slate-400">Categories:</span>{' '}
+              <span className="text-slate-400">{t('app.categories')}</span>{' '}
               <span className="font-bold text-purple-400">{Object.keys(categories).length - 1}</span>
             </div>
           </div>
@@ -229,7 +235,7 @@ export default function Hub({
               />
               <input
                 type="text"
-                placeholder="Search demos, concepts, or tags..."
+                placeholder={t('app.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);

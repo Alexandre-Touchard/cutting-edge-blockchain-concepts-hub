@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import EduTooltip from '../../ui/EduTooltip';
 import LinkWithCopy from '../../ui/LinkWithCopy';
 import { define } from '../glossary';
+import { useDemoI18n } from '../useDemoI18n';
 const T = EduTooltip;
 import { Plus, Upload, CheckCircle, Clock, Layers, ArrowUp, Shield, Zap } from 'lucide-react';
 
 const RollupSimulation = () => {
+  const { tr } = useDemoI18n('rollup-simulation');
   const [l2Transactions, setL2Transactions] = useState([]);
   const [l1Batches, setL1Batches] = useState([]);
   const [nextTxId, setNextTxId] = useState(1);
@@ -175,7 +177,7 @@ const RollupSimulation = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <Layers size={20} className="text-blue-400" />
-              <span className="text-sm text-slate-400">L2 Transactions</span>
+              <span className="text-sm text-slate-400">{tr('L2 Transactions')}</span>
             </div>
             <div className="text-2xl font-bold">{stats.totalL2Txs}</div>
           </div>
@@ -183,7 +185,7 @@ const RollupSimulation = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <Upload size={20} className="text-emerald-400" />
-              <span className="text-sm text-slate-400">Batches Posted</span>
+              <span className="text-sm text-slate-400">{tr('Batches Posted')}</span>
             </div>
             <div className="text-2xl font-bold">{stats.totalBatches}</div>
           </div>
@@ -191,7 +193,7 @@ const RollupSimulation = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <Zap size={20} className="text-yellow-400" />
-              <span className="text-sm text-slate-400">Avg TXs/Batch</span>
+              <span className="text-sm text-slate-400">{tr('Avg TXs/Batch')}</span>
             </div>
             <div className="text-2xl font-bold">{stats.avgTxsPerBatch.toFixed(1)}</div>
           </div>
@@ -209,7 +211,7 @@ const RollupSimulation = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <Shield size={20} className="text-red-400" />
-              <span className="text-sm text-slate-400">Pending TXs</span>
+              <span className="text-sm text-slate-400">{tr('Pending TXs')}</span>
             </div>
             <div className="text-2xl font-bold text-yellow-400">{pendingTxs.length}</div>
           </div>
@@ -271,7 +273,7 @@ const RollupSimulation = () => {
                   className="flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 disabled:cursor-not-allowed rounded font-semibold"
                 >
                   <Upload size={18} />
-                  {isProcessing ? 'Processing...' : 'Submit Batch to L1'}
+                  {isProcessing ? tr('Processing...') : tr('Submit Batch to L1')}
                 </button>
                 
                 <button
@@ -287,7 +289,7 @@ const RollupSimulation = () => {
 
             {/* L2 Transaction Pool */}
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-              <h3 className="text-lg font-semibold mb-3">L2 Transaction Pool</h3>
+              <h3 className="text-lg font-semibold mb-3">{tr('L2 Transaction Pool')}</h3>
               
               <div className="flex gap-2 mb-3 text-sm">
                 <div className="flex items-center gap-1">

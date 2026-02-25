@@ -1,0 +1,78 @@
+{
+  "demos": {
+    "amm-demo": {
+      "title": "Matemáticas AMM y pérdida impermanente",
+      "description": "AMM interactivo de producto constante (x × y = k) con impacto en el precio, slippage y cálculos de pérdida impermanente."
+    },
+    "parallel-executor": {
+      "title": "Ejecutor de transacciones en paralelo",
+      "description": "Compara estrategias de ejecución paralela conservadoras (Solana) vs optimistas (Aptos Block-STM)."
+    },
+    "dag-consensus": {
+      "title": "Consenso DAG (Tangle)",
+      "description": "Visualización interactiva de DAG que muestra cómo las transacciones referencian tips y logran consenso sin bloques tradicionales."
+    },
+    "rollup-simulation": {
+      "title": "Rollup de capa 2",
+      "description": "Mira cómo las transacciones L2 se agrupan y se publican en L1 para grandes ahorros de gas."
+    },
+    "eigenlayer-demo": {
+      "title": "Restaking de EigenLayer",
+      "description": "Reutiliza el stake de ETH para asegurar múltiples protocolos (AVS) y obtener recompensas adicionales."
+    },
+    "peerdas-demo": {
+      "title": "Muestreo PeerDAS",
+      "description": "Peer Data Availability Sampling: los nodos muestrean columnas aleatorias en lugar de descargarlo todo."
+    },
+    "ethereum-blockchain": {
+      "title": "Blockchain mínima de Ethereum",
+      "description": "Construye una blockchain funcional desde cero con Proof of Work, cuentas y transiciones de estado."
+    },
+    "erc-standards": {
+      "title": "Playground de estándares ERC",
+      "description": "Explora varios estándares ERC en una sola página con acciones interactivas, tooltips y contexto del mundo real."
+    },
+    "blockchain-interop": {
+      "title": "Protocolos cross-chain",
+      "description": "Compara IBC, CCIP y LayerZero: distintos modelos de confianza para mensajería entre cadenas."
+    }
+  },
+  "glossary": {
+    "Slippage": "Diferencia entre el precio esperado y el precio ejecutado (a menudo por liquidez y volatilidad).",
+    "Price Impact": "Cambio de precio causado por tu operación (mayor cuando el trade es grande respecto a las reservas).",
+    "Impermanent Loss": "Pérdida relativa para un proveedor de liquidez cuando cambia el precio, comparado con holdear los activos."
+  },
+  "app": {
+    "title": "Centro de aprendizaje de Blockchain",
+    "subtitle": "Demostraciones interactivas de conceptos, protocolos y mecanismos de blockchain de vanguardia",
+    "totalDemos": "Demos totales:",
+    "categories": "Categorías:",
+    "searchPlaceholder": "Buscar demos, conceptos o etiquetas..."
+  },
+  "nav": {
+    "backToHub": "Volver al hub",
+    "demoNotFound": "Demo no encontrada",
+    "unknownDemoId": "ID de demo desconocido: {{id}}",
+    "nowViewing": "Viendo"
+  },
+  "modal": {
+    "demoDetails": "Detalles de la demo",
+    "keyConcepts": "Conceptos clave",
+    "keyTakeaways": "Conclusiones clave",
+    "cancel": "Cancelar",
+    "startDemo": "Iniciar demo",
+    "close": "Cerrar"
+  },
+  "common": {
+    "definitionComingSoon": "Definición próximamente.",
+    "copiedLink": "Enlace copiado",
+    "copyLink": "Copiar enlace",
+    "copied": "¡Copiado!"
+  },
+  "lang": {
+    "label": "Idioma",
+    "en": "Inglés",
+    "fr": "Francés",
+    "es": "Español"
+  }
+}

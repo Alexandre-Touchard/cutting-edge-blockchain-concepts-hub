@@ -1,5 +1,7 @@
 import type React from 'react';
+import i18n from '../i18n';
 import type { DemoMeta } from '../ui/Hub';
+import { demoKey } from './i18nKeys';
 import { demoMetaRegistry } from './demoRegistry';
 
 export type ImplDemoModule = {
@@ -62,15 +64,26 @@ export function loadDemos(): LoadedDemo[] {
   // Files must default-export a React component.
   const modules = import.meta.glob<ImplDemoModule>('./impl/*.tsx', { eager: true });
 
-  const demos = Object.entries(modules).map(([sourcePath, mod]) => {
+  const demos = (Object.entries(modules) as Array<[string, ImplDemoModule]>).map(([sourcePath, mod]) => {
     const defaults = inferDefaultsFromPath(sourcePath);
-    const metaOverride = mod.demoMeta ?? {};
+    const metaOverride = (mod.demoMeta ?? {}) as NonNullable<ImplDemoModule['demoMeta']>;
 
-    const meta: DemoMeta = {
+    const metaBase: DemoMeta = {
       ...defaults,
       ...metaOverride,
       id: metaOverride.id ?? defaults.id,
       title: metaOverride.title ?? defaults.title
+    };
+
+    const meta: DemoMeta = {
+      ...metaBase,
+      // i18n overlays with English fallbacks
+      title: i18n.t(demoKey(metaBase.id, 'title'), { defaultValue: metaBase.title }),
+      description: i18n.t(demoKey(metaBase.id, 'description'), { defaultValue: metaBase.description }),
+      keyTakeaways: metaBase.keyTakeaways.map((v, idx) =>
+        i18n.t(demoKey(metaBase.id, `keyTakeaways.${idx}`), { defaultValue: v })
+      ),
+      tags: metaBase.tags.map((v, idx) => i18n.t(demoKey(metaBase.id, `tags.${idx}`), { defaultValue: v }))
     };
 
     return {

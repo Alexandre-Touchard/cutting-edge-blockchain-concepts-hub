@@ -1,0 +1,141 @@
+{
+  "demos": {
+    "amm-demo": {
+      "title": "Mathématiques AMM et perte impermanente",
+      "description": "AMM à produit constant interactif (x × y = k) avec impact sur le prix, slippage et calculs de perte impermanente."
+    },
+    "parallel-executor": {
+      "title": "Exécuteur de transactions en parallèle",
+      "description": "Comparez des stratégies d’exécution parallèle conservatrices (Solana) et optimistes (Aptos Block-STM)."
+    },
+    "dag-consensus": {
+      "title": "Consensus DAG (Tangle)",
+      "description": "Visualisation DAG interactive montrant comment les transactions référencent des ‘tips’ et atteignent un consensus sans blocs traditionnels."
+    },
+    "rollup-simulation": {
+      "title": "Rollup de couche 2",
+      "description": "Voyez comment les transactions L2 sont regroupées et publiées sur L1 pour de fortes économies de gas."
+    },
+    "eigenlayer-demo": {
+      "title": "Restaking EigenLayer",
+      "description": "Réutilisez une mise ETH pour sécuriser plusieurs protocoles (AVS) et gagner des récompenses supplémentaires."
+    },
+    "peerdas-demo": {
+      "title": "Échantillonnage PeerDAS",
+      "description": "Peer Data Availability Sampling : les nœuds échantillonnent des colonnes aléatoires au lieu de tout télécharger."
+    },
+    "ethereum-blockchain": {
+      "title": "Blockchain Ethereum minimale",
+      "description": "Construisez une blockchain fonctionnelle depuis zéro avec Proof of Work, comptes et transitions d’état."
+    },
+    "erc-standards": {
+      "title": "Terrain de jeu des standards ERC",
+      "description": "Explorez plusieurs standards ERC sur une seule page avec des actions interactives, des info-bulles et du contexte réel.",
+      "auto": {
+        "coming_soon_1o7x1i1": "Bientôt disponible",
+        "docs_yjl5em": "Docs",
+        "further_reading_gv21z1": "Lectures complémentaires",
+        "how_the_standard_works_implementation_2dyaqe": "Comment le standard fonctionne (implémentation)",
+        "owner_from_1fi9alv": "Propriétaire (depuis)",
+        "read_the_spec_1ds34kr": "Lire la spécification",
+        "realworld_applications_14b0veh": "Applications réelles",
+        "recipient_to_j12lok": "Destinataire (vers)",
+        "spender_12i5j6m": "Dépenseur",
+        "this_interactive_demo_will_be_added_next_178csm8": "Cette démo interactive sera ajoutée ensuite. Pour l’instant, vous pouvez consulter l’EIP/la spécification.",
+        "total_supply_orirkk": "Offre totale",
+        "choose_a_standard_1itvmwy": "Choisir un standard",
+        "erc_standards_playground_3utvco": "Terrain de jeu des standards ERC",
+        "pick_a_standard_and_interact_with_its_co_19iugu3": "Choisissez un standard et interagissez avec ses mécanismes de base. Il s’agit d’une simulation conceptuelle (hors chaîne), axée sur la compréhension des interfaces, des approvals et des pièges UX/sécurité courants.",
+        "ready_3swvf2": "Prêt",
+        "key_idea_1ujx5x7": "Idée clé",
+        "interfaces_enable_interoperability_1xai16k": "les interfaces permettent l’interopérabilité",
+        "the_same_wallet_ui_can_work_with_many_to_pp4tsf": "la même interface de portefeuille peut fonctionner avec de nombreux tokens.",
+        "amount_1pek0uw": "Montant",
+        "approve_1lra6k5": "approve",
+        "transfer_1chewyo": "transfer",
+        "transferfrom_2rvzkd": "transferFrom",
+        "allowance_1fo33tl": "allowance",
+        "owner_to_spender_1gx32b2": "du propriétaire vers le dépenseur",
+        "allows_1con4lv": "autorise",
+        "erc20_13fhpoe": "ERC-20",
+        "fungible_tokens_1hvkx6d": "Tokens fongibles",
+        "erc20_defines_a_standard_interface_for_16j5kh8": "ERC-20 définit une interface standard pour",
+        "assets_gwwwko": "des actifs.",
+        "fungible_qgeshp": "fongibles",
+        "its_the_backbone_of_stablecoins_and_mos_11fl1du": "C’est la base des stablecoins et de la plupart des tokens DeFi.",
+        "the_critical_security_surface_is_x51ery": "La surface critique de sécurité concerne",
+        "approveallowance_4p16s5": "approve/allowance",
+        "owner_to_spender_15aaog4": "du propriétaire vers le dépenseur",
+        "allowance_uqxx9x": "allowance",
+        "allows_lpqsnj": "autorise",
+        "transfer_8tftgu": "transfer",
+        "transferfrom_1x7krp4": "transferFrom",
+        "amount_156z2nd": "Montant",
+        "balances_18ce2j4": "Soldes",
+        "approve_dto53e": "approve",
+        "core_interface_events_1uanhx2": "Interface principale + événements",
+        "state_common_patterns_1xb5eag": "État + patterns courants",
+        "events_3h5f2e": "Événements",
+        "state_is_typically_1xjtw1i": "L’état est généralement",
+        "and_1byxy3": "et",
+        "many_tokens_also_implement_1u9x4si": "De nombreux tokens implémentent aussi",
+        "mintburn_26aw55": "mint/burn",
+        "eip2612_permit_1f1m5vv": "le permit EIP-2612",
+        "to_reduce_approval_friction_1q5h8ld": "pour réduire la friction des approvals.",
+
+        "events_12wenwa": "Événements",
+        "state_is_typically_392fd3": "L’état est généralement",
+        "and_375fym": "et",
+        "many_tokens_also_implement_1v2acvc": "De nombreux tokens implémentent aussi",
+        "mintburn_wgkynz": "mint/burn",
+        "eip2612_permit_1kdwvlw": "le permit EIP-2612",
+        "to_reduce_approval_friction_77jjit": "pour réduire la friction des approvals.",
+        "state_common_patterns_ejiuxb": "État + patterns courants"
+
+
+      }
+    },
+    "blockchain-interop": {
+      "title": "Protocoles cross-chain",
+      "description": "Comparez IBC, CCIP et LayerZero : différents modèles de confiance pour la messagerie inter-chaînes."
+    }
+  },
+  "glossary": {
+    "Slippage": "Écart entre le prix attendu et le prix exécuté (souvent dû à la liquidité et à la volatilité).",
+    "Price Impact": "Variation du prix causée par votre trade lui-même (plus forte quand le trade est grand par rapport aux réserves).",
+    "Impermanent Loss": "Perte relative pour un fournisseur de liquidité quand le prix évolue, comparé à la détention des actifs."
+  },
+  "app": {
+    "title": "Centre d’apprentissage Blockchain",
+    "subtitle": "Démonstrations interactives de concepts, protocoles et mécanismes blockchain de pointe",
+    "totalDemos": "Démos au total :",
+    "categories": "Catégories :",
+    "searchPlaceholder": "Rechercher des démos, concepts ou tags..."
+  },
+  "nav": {
+    "backToHub": "Retour au hub",
+    "demoNotFound": "Démo introuvable",
+    "unknownDemoId": "Identifiant de démo inconnu : {{id}}",
+    "nowViewing": "Vous consultez"
+  },
+  "modal": {
+    "demoDetails": "Détails de la démo",
+    "keyConcepts": "Concepts clés",
+    "keyTakeaways": "Points clés",
+    "cancel": "Annuler",
+    "startDemo": "Démarrer la démo",
+    "close": "Fermer"
+  },
+  "common": {
+    "definitionComingSoon": "Définition bientôt disponible.",
+    "copiedLink": "Lien copié",
+    "copyLink": "Copier le lien",
+    "copied": "Copié !"
+  },
+  "lang": {
+    "label": "Langue",
+    "en": "Anglais",
+    "fr": "Français",
+    "es": "Espagnol"
+  }
+}

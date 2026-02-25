@@ -3,9 +3,11 @@ import { Lock, Unlock, Shield, Layers, TrendingUp, AlertCircle, CheckCircle, Zap
 import EduTooltip from '../../ui/EduTooltip';
 import LinkWithCopy from '../../ui/LinkWithCopy';
 import { define } from '../glossary';
+import { useDemoI18n } from '../useDemoI18n';
 const T = EduTooltip;
 
 const EigenLayerDemo = () => {
+  const { tr } = useDemoI18n('eigenlayer-demo');
   const [validators, setValidators] = useState([
     { id: 1, name: 'Alice', ethStaked: 32, isRestaking: false, restakeAmount: 0, services: [], rewards: 0, slashRisk: 0 },
     { id: 2, name: 'Bob', ethStaked: 64, isRestaking: false, restakeAmount: 0, services: [], rewards: 0, slashRisk: 0 },
@@ -275,7 +277,7 @@ const EigenLayerDemo = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <Shield size={20} className="text-emerald-400" />
-              <span className="text-sm text-slate-400">Total ETH Staked</span>
+              <span className="text-sm text-slate-400">{tr('Total ETH Staked')}</span>
             </div>
             <div className="text-2xl font-bold">{getTotalEthSecured()} ETH</div>
           </div>
@@ -283,7 +285,7 @@ const EigenLayerDemo = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <Layers size={20} className="text-blue-400" />
-              <span className="text-sm text-slate-400">ETH Restaked</span>
+              <span className="text-sm text-slate-400">{tr('ETH Restaked')}</span>
             </div>
             <div className="text-2xl font-bold text-blue-400">{totalRestaked} ETH</div>
           </div>
@@ -333,7 +335,7 @@ const EigenLayerDemo = () => {
                       <div className={`px-2 py-1 rounded text-xs font-semibold ${
                         validator.isRestaking ? 'bg-blue-600' : 'bg-slate-600'
                       }`}>
-                        {validator.isRestaking ? 'RESTAKING' : 'STAKING'}
+                        {validator.isRestaking ? tr('RESTAKING') : tr('STAKING')}
                       </div>
                     </div>
 

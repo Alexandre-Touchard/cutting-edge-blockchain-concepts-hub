@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { toast } from './toast';
 
 export default function LinkWithCopy({
   href,
   label,
   className = 'text-xs text-blue-300 hover:text-blue-200 underline',
-  copyAriaLabel = 'Copy link'
+  copyAriaLabel
 }: {
   href: string;
   label: React.ReactNode;
   className?: string;
   copyAriaLabel?: string;
 }) {
+  const { t } = useTranslation();
+  const copyAriaLabelResolved = copyAriaLabel ?? t('common.copyLink');
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(href);
       setCopied(true);
-      toast('Copied link');
+      toast(t('common.copiedLink'));
       window.setTimeout(() => setCopied(false), 1200);
     } catch {
       // Fallback for older browsers / blocked clipboard
@@ -32,7 +35,7 @@ export default function LinkWithCopy({
       document.execCommand('copy');
       document.body.removeChild(ta);
       setCopied(true);
-      toast('Copied link');
+      toast(t('common.copiedLink'));
       window.setTimeout(() => setCopied(false), 1200);
     }
   };
@@ -46,8 +49,8 @@ export default function LinkWithCopy({
         type="button"
         onClick={copy}
         className="inline-flex items-center justify-center rounded border border-slate-600 bg-slate-800 px-2 py-1 text-slate-200 hover:bg-slate-700"
-        aria-label={copyAriaLabel}
-        title={copied ? 'Copied!' : 'Copy link'}
+        aria-label={copyAriaLabelResolved}
+        title={copied ? t('common.copied') : t('common.copyLink')}
       >
         {copied ? <Check size={14} /> : <Copy size={14} />}
       </button>

@@ -20,7 +20,7 @@ import type { DemoMeta } from './Hub';
 
 export type ConceptChip = {
   concept: string;
-  Icon: React.ComponentType<{ size?: number; className?: string }>;
+  Icon: React.ComponentType<{ size?: number | string; className?: string }>;
   definition?: string;
 };
 
