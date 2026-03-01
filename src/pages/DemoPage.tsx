@@ -8,9 +8,10 @@ import { getConceptChip } from '../ui/concepts';
 import LanguageSwitcher from '../ui/LanguageSwitcher';
 
 export default function DemoPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { demoId } = useParams();
-  const demos = useMemo(() => loadDemos(), []);
+  // Recompute translated demo metadata whenever the language changes.
+  const demos = useMemo(() => loadDemos(), [i18n.resolvedLanguage]);
 
   const demo = demos.find((d) => d.meta.id === demoId);
 

@@ -27,33 +27,33 @@ const BlockchainInteropDemo = () => {
 
   const protocols = {
     ibc: {
-      name: 'IBC (Inter-Blockchain Communication)',
+      name: tr('IBC (Inter-Blockchain Communication)'),
       chains: ['cosmos', 'osmosis'],
-      trustModel: 'Light Client Verification',
-      security: 'Very High',
-      speed: 'Fast (6-20s)',
-      cost: 'Low',
-      description: 'Trustless protocol using light clients to verify state proofs',
+      trustModel: tr('Light Client Verification'),
+      security: tr('Very High'),
+      speed: tr('Fast (6-20s)'),
+      cost: tr('Low'),
+      description: tr('Trustless protocol using light clients to verify state proofs'),
       color: 'blue'
     },
     ccip: {
-      name: 'CCIP (Chainlink Cross-Chain)',
+      name: tr('CCIP (Chainlink Cross-Chain)'),
       chains: ['ethereum', 'polygon'],
-      trustModel: 'Decentralized Oracle Network',
-      security: 'High',
-      speed: 'Medium (1-5min)',
-      cost: 'Medium',
-      description: 'Oracle-based messaging with cryptoeconomic security',
+      trustModel: tr('Decentralized Oracle Network'),
+      security: tr('High'),
+      speed: tr('Medium (1-5min)'),
+      cost: tr('Medium'),
+      description: tr('Oracle-based messaging with cryptoeconomic security'),
       color: 'purple'
     },
     layerzero: {
-      name: 'LayerZero',
+      name: tr('LayerZero'),
       chains: ['ethereum', 'polygon'],
-      trustModel: 'Oracle + Relayer',
-      security: 'Medium-High',
-      speed: 'Fast (20-60s)',
-      cost: 'Low-Medium',
-      description: 'Ultra-light nodes with independent oracle and relayer',
+      trustModel: tr('Oracle + Relayer'),
+      security: tr('Medium-High'),
+      speed: tr('Fast (20-60s)'),
+      cost: tr('Low-Medium'),
+      description: tr('Ultra-light nodes with independent oracle and relayer'),
       color: 'green'
     }
   };
@@ -66,10 +66,10 @@ const BlockchainInteropDemo = () => {
   };
 
   const messageTypes = {
-    token_transfer: { name: 'Token Transfer', icon: '💰' },
-    contract_call: { name: 'Contract Call', icon: '📜' },
-    nft_transfer: { name: 'NFT Transfer', icon: '🖼️' },
-    data_message: { name: 'Data Message', icon: '📨' }
+    token_transfer: { name: tr('Token Transfer'), icon: '💰' },
+    contract_call: { name: tr('Contract Call'), icon: '📜' },
+    nft_transfer: { name: tr('NFT Transfer'), icon: '🖼️' },
+    data_message: { name: tr('Data Message'), icon: '📨' }
   };
 
   const addEvent = (message, type = 'info') => {
@@ -83,7 +83,7 @@ const BlockchainInteropDemo = () => {
 
   const sendMessage = async () => {
     if (sourceChain === destChain) {
-      addEvent('Source and destination must be different', 'error');
+      addEvent(tr('Source and destination must be different'), 'error');
       return;
     }
 
@@ -106,7 +106,13 @@ const BlockchainInteropDemo = () => {
     setPackets(prev => [packet, ...prev]);
     setNextPacketId(nextPacketId + 1);
     
-    addEvent(`📤 Packet #${packet.id} created on ${chains[sourceChain].name}`, 'info');
+    addEvent(
+      tr('📤 Packet #{{id}} created on {{chain}}', {
+        id: packet.id,
+        chain: chains[sourceChain].name
+      }),
+      'info'
+    );
     await new Promise(resolve => setTimeout(resolve, 800));
 
     // Step 2: Protocol-specific processing
@@ -123,96 +129,161 @@ const BlockchainInteropDemo = () => {
 
   const processIBC = async (packet) => {
     // Step 1: Commit on source chain
-    updatePacket(packet.id, { status: 'committed', steps: [...packet.steps, 'Source chain commitment'] });
-    addEvent(`✓ Packet committed on ${chains[packet.source].name}`, 'success');
+    updatePacket(packet.id, {
+      status: 'committed',
+      steps: [...packet.steps, tr('Source chain commitment')]
+    });
+    addEvent(tr('✓ Packet committed on {{chain}}', { chain: chains[packet.source].name }), 'success');
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Step 2: Light client verification
-    updatePacket(packet.id, { steps: [...packet.steps, 'Source chain commitment', 'Light client verification'] });
-    addEvent(`🔍 Light client verifying state proof...`, 'info');
+    updatePacket(packet.id, {
+      steps: [...packet.steps, tr('Source chain commitment'), tr('Light client verification')]
+    });
+    addEvent(tr('🔍 Light client verifying state proof...'), 'info');
     await new Promise(resolve => setTimeout(resolve, 1200));
 
     const hasLightClient = lightClients[packet.destination]?.[packet.source]?.verified;
     if (!hasLightClient) {
-      updatePacket(packet.id, { status: 'failed', steps: [...packet.steps, 'Source chain commitment', 'Light client verification', 'Verification failed'] });
-      addEvent(`❌ No verified light client on ${chains[packet.destination].name}`, 'error');
+      updatePacket(packet.id, {
+        status: 'failed',
+        steps: [
+          ...packet.steps,
+          tr('Source chain commitment'),
+          tr('Light client verification'),
+          tr('Verification failed')
+        ]
+      });
+      addEvent(tr('❌ No verified light client on {{chain}}', { chain: chains[packet.destination].name }), 'error');
       return;
     }
 
-    updatePacket(packet.id, { steps: [...packet.steps, 'Source chain commitment', 'Light client verification', 'Proof verified'] });
-    addEvent(`✓ State proof verified by light client`, 'success');
+    updatePacket(packet.id, {
+      steps: [...packet.steps, tr('Source chain commitment'), tr('Light client verification'), tr('Proof verified')]
+    });
+    addEvent(tr('✓ State proof verified by light client'), 'success');
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Step 3: Execute on destination
-    updatePacket(packet.id, { status: 'relaying', steps: [...packet.steps, 'Source chain commitment', 'Light client verification', 'Proof verified', 'Relaying to destination'] });
-    addEvent(`📡 Relayer submitting packet to ${chains[packet.destination].name}`, 'info');
+    updatePacket(packet.id, {
+      status: 'relaying',
+      steps: [
+        ...packet.steps,
+        tr('Source chain commitment'),
+        tr('Light client verification'),
+        tr('Proof verified'),
+        tr('Relaying to destination')
+      ]
+    });
+    addEvent(tr('📡 Relayer submitting packet to {{chain}}', { chain: chains[packet.destination].name }), 'info');
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Step 4: Acknowledgment
-    updatePacket(packet.id, { status: 'completed', steps: [...packet.steps, 'Source chain commitment', 'Light client verification', 'Proof verified', 'Relaying to destination', 'Executed on destination', 'Acknowledgment sent'] });
-    addEvent(`✅ Packet #${packet.id} executed on ${chains[packet.destination].name}`, 'success');
+    updatePacket(packet.id, {
+      status: 'completed',
+      steps: [
+        ...packet.steps,
+        tr('Source chain commitment'),
+        tr('Light client verification'),
+        tr('Proof verified'),
+        tr('Relaying to destination'),
+        tr('Executed on destination'),
+        tr('Acknowledgment sent')
+      ]
+    });
+    addEvent(
+      tr('✅ Packet #{{id}} executed on {{chain}}', {
+        id: packet.id,
+        chain: chains[packet.destination].name
+      }),
+      'success'
+    );
     await new Promise(resolve => setTimeout(resolve, 800));
-    addEvent(`🔙 Acknowledgment received on ${chains[packet.source].name}`, 'success');
+    addEvent(tr('🔙 Acknowledgment received on {{chain}}', { chain: chains[packet.source].name }), 'success');
   };
 
   const processCCIP = async (packet) => {
     // Step 1: Source chain emission
-    updatePacket(packet.id, { status: 'committed', steps: [...packet.steps, 'Message emitted'] });
-    addEvent(`✓ Message emitted on ${chains[packet.source].name}`, 'success');
+    updatePacket(packet.id, { status: 'committed', steps: [...packet.steps, tr('Message emitted')] });
+    addEvent(tr('✓ Message emitted on {{chain}}', { chain: chains[packet.source].name }), 'success');
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Step 2: DON observation
-    updatePacket(packet.id, { status: 'observing', steps: [...packet.steps, 'Message emitted', 'DON observing'] });
-    addEvent(`👁️ Decentralized Oracle Network observing...`, 'info');
+    updatePacket(packet.id, {
+      status: 'observing',
+      steps: [...packet.steps, tr('Message emitted'), tr('DON observing')]
+    });
+    addEvent(tr('👁️ Decentralized Oracle Network observing...'), 'info');
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     // Step 3: Consensus
-    updatePacket(packet.id, { steps: [...packet.steps, 'Message emitted', 'DON observing', 'Oracles reaching consensus'] });
-    addEvent(`🤝 Oracle consensus achieved (12/15 nodes)`, 'success');
+    updatePacket(packet.id, { steps: [...packet.steps, tr('Message emitted'), tr('DON observing'), tr('Oracles reaching consensus')] });
+    addEvent(tr('🤝 Oracle consensus achieved (12/15 nodes)'), 'success');
     await new Promise(resolve => setTimeout(resolve, 1200));
 
     // Step 4: Risk Management
-    updatePacket(packet.id, { steps: [...packet.steps, 'Message emitted', 'DON observing', 'Oracles reaching consensus', 'Risk analysis'] });
-    addEvent(`🛡️ Risk Management Network validating...`, 'info');
+    updatePacket(packet.id, { steps: [...packet.steps, tr('Message emitted'), tr('DON observing'), tr('Oracles reaching consensus'), tr('Risk analysis')] });
+    addEvent(tr('🛡️ Risk Management Network validating...'), 'info');
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Step 5: Execution
-    updatePacket(packet.id, { status: 'relaying', steps: [...packet.steps, 'Message emitted', 'DON observing', 'Oracles reaching consensus', 'Risk analysis', 'Approved for execution'] });
-    addEvent(`✓ Risk checks passed`, 'success');
+    updatePacket(packet.id, {
+      status: 'relaying',
+      steps: [
+        ...packet.steps,
+        tr('Message emitted'),
+        tr('DON observing'),
+        tr('Oracles reaching consensus'),
+        tr('Risk analysis'),
+        tr('Approved for execution')
+      ]
+    });
+    addEvent(tr('✓ Risk checks passed'), 'success');
     await new Promise(resolve => setTimeout(resolve, 800));
 
-    updatePacket(packet.id, { status: 'completed', steps: [...packet.steps, 'Message emitted', 'DON observing', 'Oracles reaching consensus', 'Risk analysis', 'Approved for execution', 'Executed on destination'] });
-    addEvent(`✅ Message executed on ${chains[packet.destination].name}`, 'success');
+    updatePacket(packet.id, {
+      status: 'completed',
+      steps: [
+        ...packet.steps,
+        tr('Message emitted'),
+        tr('DON observing'),
+        tr('Oracles reaching consensus'),
+        tr('Risk analysis'),
+        tr('Approved for execution'),
+        tr('Executed on destination')
+      ]
+    });
+    addEvent(tr('✅ Message executed on {{chain}}', { chain: chains[packet.destination].name }), 'success');
   };
 
   const processLayerZero = async (packet) => {
     // Step 1: User application calls
-    updatePacket(packet.id, { status: 'committed', steps: [...packet.steps, 'User app initiated'] });
-    addEvent(`✓ Application initiated on ${chains[packet.source].name}`, 'success');
+    updatePacket(packet.id, { status: 'committed', steps: [...packet.steps, tr('User app initiated')] });
+    addEvent(tr('✓ Application initiated on {{chain}}', { chain: chains[packet.source].name }), 'success');
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Step 2: Oracle observation
-    updatePacket(packet.id, { steps: [...packet.steps, 'User app initiated', 'Oracle observing'] });
-    addEvent(`👁️ Oracle monitoring block headers...`, 'info');
+    updatePacket(packet.id, { steps: [...packet.steps, tr('User app initiated'), tr('Oracle observing')] });
+    addEvent(tr('👁️ Oracle monitoring block headers...'), 'info');
     await new Promise(resolve => setTimeout(resolve, 1200));
 
     // Step 3: Relayer fetches proof
-    updatePacket(packet.id, { steps: [...packet.steps, 'User app initiated', 'Oracle observing', 'Relayer fetching proof'] });
-    addEvent(`📡 Relayer fetching transaction proof`, 'info');
+    updatePacket(packet.id, { steps: [...packet.steps, tr('User app initiated'), tr('Oracle observing'), tr('Relayer fetching proof')] });
+    addEvent(tr('📡 Relayer fetching transaction proof'), 'info');
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Step 4: Submit to destination
-    updatePacket(packet.id, { status: 'relaying', steps: [...packet.steps, 'User app initiated', 'Oracle observing', 'Relayer fetching proof', 'Submitting to destination'] });
-    addEvent(`📤 Oracle and Relayer submitting independently`, 'info');
+    updatePacket(packet.id, { status: 'relaying', steps: [...packet.steps, tr('User app initiated'), tr('Oracle observing'), tr('Relayer fetching proof'), tr('Submitting to destination')] });
+    addEvent(tr('📤 Oracle and Relayer submitting independently'), 'info');
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     // Step 5: Verification and execution
-    updatePacket(packet.id, { steps: [...packet.steps, 'User app initiated', 'Oracle observing', 'Relayer fetching proof', 'Submitting to destination', 'Validating on destination'] });
-    addEvent(`🔍 Destination chain validating Oracle vs Relayer data`, 'info');
+    updatePacket(packet.id, { steps: [...packet.steps, tr('User app initiated'), tr('Oracle observing'), tr('Relayer fetching proof'), tr('Submitting to destination'), tr('Validating on destination')] });
+    addEvent(tr('🔍 Destination chain validating Oracle vs Relayer data'), 'info');
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    updatePacket(packet.id, { status: 'completed', steps: [...packet.steps, 'User app initiated', 'Oracle observing', 'Relayer fetching proof', 'Submitting to destination', 'Validating on destination', 'Executed'] });
-    addEvent(`✅ Message executed on ${chains[packet.destination].name}`, 'success');
+    updatePacket(packet.id, { status: 'completed', steps: [...packet.steps, tr('User app initiated'), tr('Oracle observing'), tr('Relayer fetching proof'), tr('Submitting to destination'), tr('Validating on destination'), tr('Executed')] });
+    addEvent(tr('✅ Message executed on {{chain}}', { chain: chains[packet.destination].name }), 'success');
   };
 
   const updatePacket = (id, updates) => {
@@ -251,7 +322,7 @@ const BlockchainInteropDemo = () => {
   <T term="Interoperability" text={define('Interoperability')} />
 </p>
           <p className="text-slate-300">
-            Compare IBC, CCIP, and LayerZero - different approaches to cross-chain messaging
+            {tr('Compare IBC, CCIP, and LayerZero - different approaches to cross-chain messaging')}
           </p>
         </div>
 
@@ -275,19 +346,19 @@ const BlockchainInteropDemo = () => {
               <div className="text-sm text-slate-300 mb-3">{protocol.description}</div>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="bg-slate-700 rounded p-2">
-                  <div className="text-slate-400">Trust Model</div>
+                  <div className="text-slate-400">{tr('Trust Model')}</div>
                   <div className="font-semibold">{protocol.trustModel}</div>
                 </div>
                 <div className="bg-slate-700 rounded p-2">
-                  <div className="text-slate-400">Security</div>
+                  <div className="text-slate-400">{tr('Security')}</div>
                   <div className="font-semibold">{protocol.security}</div>
                 </div>
                 <div className="bg-slate-700 rounded p-2">
-                  <div className="text-slate-400">Speed</div>
+                  <div className="text-slate-400">{tr('Speed')}</div>
                   <div className="font-semibold">{protocol.speed}</div>
                 </div>
                 <div className="bg-slate-700 rounded p-2">
-                  <div className="text-slate-400">Cost</div>
+                  <div className="text-slate-400">{tr('Cost')}</div>
                   <div className="font-semibold">{protocol.cost}</div>
                 </div>
               </div>
@@ -301,12 +372,12 @@ const BlockchainInteropDemo = () => {
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Send className="text-blue-400" />
-                Create Message
+                {tr('Create Message')}
               </h2>
 
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">Source Chain</label>
+                  <label className="text-sm text-slate-400 mb-2 block">{tr('Source Chain')}</label>
                   <select
                     value={sourceChain}
                     onChange={(e) => setSourceChain(e.target.value)}
@@ -320,7 +391,7 @@ const BlockchainInteropDemo = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">Destination Chain</label>
+                  <label className="text-sm text-slate-400 mb-2 block">{tr('Destination Chain')}</label>
                   <select
                     value={destChain}
                     onChange={(e) => setDestChain(e.target.value)}
@@ -334,7 +405,7 @@ const BlockchainInteropDemo = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">Message Type</label>
+                  <label className="text-sm text-slate-400 mb-2 block">{tr('Message Type')}</label>
                   <select
                     value={messageType}
                     onChange={(e) => setMessageType(e.target.value)}
@@ -350,7 +421,7 @@ const BlockchainInteropDemo = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm text-slate-400 mb-2 block">Amount / Value</label>
+                  <label className="text-sm text-slate-400 mb-2 block">{tr('Amount / Value')}</label>
                   <input
                     type="number"
                     value={amount}
@@ -367,7 +438,7 @@ const BlockchainInteropDemo = () => {
                   className="w-full px-4 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 disabled:cursor-not-allowed rounded font-semibold flex items-center justify-center gap-2"
                 >
                   <Send size={18} />
-                  {isProcessing ? 'Processing...' : 'Send Cross-Chain Message'}
+                  {isProcessing ? tr('Processing...') : tr('Send Cross-Chain Message')}
                 </button>
               </div>
             </div>
@@ -384,19 +455,19 @@ const BlockchainInteropDemo = () => {
                   <>
                     <div className="bg-slate-700 rounded p-3">
                       <div className="font-semibold text-blue-400 mb-2">
-  <T term="IBC" text={define('IBC')} />
-  Works
-</div>
+                        <T term="IBC" text={define('IBC')} />
+                        {tr('Works')}
+                      </div>
                       <ul className="space-y-1 text-xs text-slate-300">
-                        <li>• Light clients verify chain state</li>
-                        <li>• Cryptographic proofs ensure validity</li>
-                        <li>• No external validators needed</li>
-                        <li>• Trustless & fully decentralized</li>
-                        <li>• Acknowledgments confirm delivery</li>
+                        <li>{tr('• Light clients verify chain state')}</li>
+                        <li>{tr('• Cryptographic proofs ensure validity')}</li>
+                        <li>{tr('• No external validators needed')}</li>
+                        <li>{tr('• Trustless & fully decentralized')}</li>
+                        <li>{tr('• Acknowledgments confirm delivery')}</li>
                       </ul>
                     </div>
                     <div className="bg-emerald-900 bg-opacity-20 border border-emerald-700 rounded p-2 text-xs">
-                      <strong>Trust Model:</strong> Trustless - relies on cryptographic proofs and light client verification
+                      <strong>{tr('Trust Model')}:</strong> {tr('Trustless - relies on cryptographic proofs and light client verification')}
                     </div>
                   </>
                 )}
@@ -404,17 +475,17 @@ const BlockchainInteropDemo = () => {
                 {selectedProtocol === 'ccip' && (
                   <>
                     <div className="bg-slate-700 rounded p-3">
-                      <div className="font-semibold text-purple-400 mb-2">How CCIP Works</div>
+                      <div className="font-semibold text-purple-400 mb-2">{tr('How CCIP Works')}</div>
                       <ul className="space-y-1 text-xs text-slate-300">
-                        <li>• Decentralized Oracle Network observes</li>
-                        <li>• Multiple independent oracles verify</li>
-                        <li>• Risk Management Network validates</li>
-                        <li>• Cryptoeconomic security guarantees</li>
-                        <li>• Built-in rate limiting & monitoring</li>
+                        <li>{tr('• Decentralized Oracle Network observes')}</li>
+                        <li>{tr('• Multiple independent oracles verify')}</li>
+                        <li>{tr('• Risk Management Network validates')}</li>
+                        <li>{tr('• Cryptoeconomic security guarantees')}</li>
+                        <li>{tr('• Built-in rate limiting & monitoring')}</li>
                       </ul>
                     </div>
                     <div className="bg-purple-900 bg-opacity-20 border border-purple-700 rounded p-2 text-xs">
-                      <strong>Trust Model:</strong> Decentralized oracle consensus with economic incentives and penalties
+                      <strong>{tr('Trust Model')}:</strong> {tr('Decentralized oracle consensus with economic incentives and penalties')}
                     </div>
                   </>
                 )}
@@ -422,17 +493,17 @@ const BlockchainInteropDemo = () => {
                 {selectedProtocol === 'layerzero' && (
                   <>
                     <div className="bg-slate-700 rounded p-3">
-                      <div className="font-semibold text-green-400 mb-2">How LayerZero Works</div>
+                      <div className="font-semibold text-green-400 mb-2">{tr('How LayerZero Works')}</div>
                       <ul className="space-y-1 text-xs text-slate-300">
-                        <li>• Ultra-light nodes on each chain</li>
-                        <li>• Independent Oracle + Relayer system</li>
-                        <li>• Oracle monitors block headers</li>
-                        <li>• Relayer fetches transaction proofs</li>
-                        <li>• Destination validates both match</li>
+                        <li>{tr('• Ultra-light nodes on each chain')}</li>
+                        <li>{tr('• Independent Oracle + Relayer system')}</li>
+                        <li>{tr('• Oracle monitors block headers')}</li>
+                        <li>{tr('• Relayer fetches transaction proofs')}</li>
+                        <li>{tr('• Destination validates both match')}</li>
                       </ul>
                     </div>
                     <div className="bg-green-900 bg-opacity-20 border border-green-700 rounded p-2 text-xs">
-                      <strong>Trust Model:</strong> Oracle and Relayer must independently agree (configurable trust assumptions)
+                      <strong>{tr('Trust Model')}:</strong> {tr('Oracle and Relayer must independently agree (configurable trust assumptions)')}
                     </div>
                   </>
                 )}
@@ -441,11 +512,11 @@ const BlockchainInteropDemo = () => {
 
             {/* Event Log */}
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">Event Log</h2>
+              <h2 className="text-xl font-semibold mb-4">{tr('Event Log')}</h2>
               <div className="space-y-2 max-h-80 overflow-y-auto">
                 {events.length === 0 ? (
                   <div className="text-center text-slate-400 py-4 text-sm">
-                    No events yet
+                    {tr('No events yet')}
                   </div>
                 ) : (
                   events.map(event => (
@@ -464,13 +535,13 @@ const BlockchainInteropDemo = () => {
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Zap className="text-emerald-400" />
-                Message Packets ({packets.length})
+                {tr('Message Packets')} ({packets.length})
               </h2>
 
               <div className="space-y-3 max-h-[800px] overflow-y-auto">
                 {packets.length === 0 ? (
                   <div className="text-center text-slate-400 py-12 text-sm">
-                    No packets sent yet. Create a cross-chain message to begin.
+                    {tr('No packets sent yet. Create a cross-chain message to begin.')}
                   </div>
                 ) : (
                   packets.map(packet => (
@@ -481,7 +552,7 @@ const BlockchainInteropDemo = () => {
                     >
                       <div className="flex justify-between items-start mb-3">
                         <div>
-                          <div className="font-semibold text-lg">Packet #{packet.id}</div>
+                          <div className="font-semibold text-lg">{tr('Packet #{{id}}', { id: packet.id })}</div>
                           <div className="text-xs text-slate-400">
                             {protocols[packet.protocol].name}
                           </div>
@@ -493,28 +564,28 @@ const BlockchainInteropDemo = () => {
 
                       <div className="grid grid-cols-2 gap-3 mb-3 text-sm">
                         <div className="bg-slate-600 rounded p-2">
-                          <div className="text-xs text-slate-400">From</div>
+                          <div className="text-xs text-slate-400">{tr('From')}</div>
                           <div className="font-semibold">{chains[packet.source].name}</div>
                         </div>
                         <div className="bg-slate-600 rounded p-2">
-                          <div className="text-xs text-slate-400">To</div>
+                          <div className="text-xs text-slate-400">{tr('To')}</div>
                           <div className="font-semibold">{chains[packet.destination].name}</div>
                         </div>
                         <div className="bg-slate-600 rounded p-2">
-                          <div className="text-xs text-slate-400">Type</div>
+                          <div className="text-xs text-slate-400">{tr('Type')}</div>
                           <div className="font-semibold">
                             {messageTypes[packet.type].icon} {messageTypes[packet.type].name}
                           </div>
                         </div>
                         <div className="bg-slate-600 rounded p-2">
-                          <div className="text-xs text-slate-400">Amount</div>
+                          <div className="text-xs text-slate-400">{tr('Amount')}</div>
                           <div className="font-semibold text-emerald-400">{packet.amount}</div>
                         </div>
                       </div>
 
                       {packet.steps.length > 0 && (
                         <div className="mt-3 pt-3 border-t border-slate-600">
-                          <div className="text-xs font-semibold text-slate-300 mb-2">Processing Steps:</div>
+                          <div className="text-xs font-semibold text-slate-300 mb-2">{tr('Processing Steps')}:</div>
                           <div className="space-y-2">
                             {packet.steps.map((step, idx) => (
                               <div key={idx} className="flex items-start gap-2 text-xs">
@@ -541,12 +612,12 @@ const BlockchainInteropDemo = () => {
 
         {/* Comparison Table */}
         <div className="mt-6 bg-slate-800 rounded-lg p-4 border border-slate-700">
-          <h2 className="text-xl font-semibold mb-4">Protocol Comparison</h2>
+          <h2 className="text-xl font-semibold mb-4">{tr('Protocol Comparison')}</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-slate-700">
-                  <th className="text-left py-2 px-3 text-slate-400">Feature</th>
+                  <th className="text-left py-2 px-3 text-slate-400">{tr('Feature')}</th>
                   <th className="text-left py-2 px-3">IBC</th>
                   <th className="text-left py-2 px-3">CCIP</th>
                   <th className="text-left py-2 px-3">LayerZero</th>
@@ -554,49 +625,49 @@ const BlockchainInteropDemo = () => {
               </thead>
               <tbody className="text-slate-300">
                 <tr className="border-b border-slate-700">
-                  <td className="py-2 px-3 text-slate-400">Trust Model</td>
+                  <td className="py-2 px-3 text-slate-400">{tr('Trust Model')}</td>
                   <td className="py-2 px-3">Light Client (Trustless)</td>
                   <td className="py-2 px-3">Oracle Consensus</td>
                   <td className="py-2 px-3">Oracle + Relayer</td>
                 </tr>
                 <tr className="border-b border-slate-700">
-                  <td className="py-2 px-3 text-slate-400">Security Level</td>
+                  <td className="py-2 px-3 text-slate-400">{tr('Security Level')}</td>
                   <td className="py-2 px-3 text-emerald-400">Very High ⭐⭐⭐⭐⭐</td>
                   <td className="py-2 px-3 text-blue-400">High ⭐⭐⭐⭐</td>
                   <td className="py-2 px-3 text-yellow-400">Medium-High ⭐⭐⭐</td>
                 </tr>
                 <tr className="border-b border-slate-700">
-                  <td className="py-2 px-3 text-slate-400">Speed</td>
+                  <td className="py-2 px-3 text-slate-400">{tr('Speed')}</td>
                   <td className="py-2 px-3">6-20 seconds</td>
                   <td className="py-2 px-3">1-5 minutes</td>
                   <td className="py-2 px-3">20-60 seconds</td>
                 </tr>
                 <tr className="border-b border-slate-700">
-                  <td className="py-2 px-3 text-slate-400">Cost</td>
+                  <td className="py-2 px-3 text-slate-400">{tr('Cost')}</td>
                   <td className="py-2 px-3 text-emerald-400">Low</td>
                   <td className="py-2 px-3 text-yellow-400">Medium</td>
                   <td className="py-2 px-3 text-blue-400">Low-Medium</td>
                 </tr>
                 <tr className="border-b border-slate-700">
-                  <td className="py-2 px-3 text-slate-400">Verification</td>
+                  <td className="py-2 px-3 text-slate-400">{tr('Verification')}</td>
                   <td className="py-2 px-3">Cryptographic Proofs</td>
                   <td className="py-2 px-3">Oracle Consensus (DON)</td>
                   <td className="py-2 px-3">Independent Oracle & Relayer</td>
                 </tr>
                 <tr>
-                  <td className="py-2 px-3 text-slate-400">Setup Complexity</td>
+                  <td className="py-2 px-3 text-slate-400">{tr('Setup Complexity')}</td>
                   <td className="py-2 px-3">High (Light clients)</td>
                   <td className="py-2 px-3">Low (Managed service)</td>
                   <td className="py-2 px-3">Medium (Configure Oracle/Relayer)</td>
                 </tr>
                 <tr className="border-b border-slate-700">
-                  <td className="py-2 px-3 text-slate-400">Censorship Resistance</td>
+                  <td className="py-2 px-3 text-slate-400">{tr('Censorship Resistance')}</td>
                   <td className="py-2 px-3 text-emerald-400">Very High</td>
                   <td className="py-2 px-3 text-blue-400">High</td>
                   <td className="py-2 px-3 text-yellow-400">Medium</td>
                 </tr>
                 <tr>
-                  <td className="py-2 px-3 text-slate-400">Best For</td>
+                  <td className="py-2 px-3 text-slate-400">{tr('Best For')}</td>
                   <td className="py-2 px-3">Cosmos ecosystem, max security</td>
                   <td className="py-2 px-3">Enterprise, multi-chain apps</td>
                   <td className="py-2 px-3">Cost-sensitive, custom configs</td>
@@ -608,12 +679,12 @@ const BlockchainInteropDemo = () => {
 
         {/* Further Reading */}
         <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
-          <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 {tr('Further Reading')}</h2>
           <ul className="space-y-2 text-sm">
-            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ibcprotocol.dev/" target="_blank" rel="noopener noreferrer">IBC protocol docs →</a></li>
-            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://docs.chain.link/ccip" target="_blank" rel="noopener noreferrer">Chainlink CCIP docs →</a></li>
-            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://layerzero.gitbook.io/docs/" target="_blank" rel="noopener noreferrer">LayerZero docs →</a></li>
-            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://rekt.news/" target="_blank" rel="noopener noreferrer">Bridge incident archive (rekt.news) →</a></li>
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ibcprotocol.dev/" target="_blank" rel="noopener noreferrer">{tr('IBC protocol docs →')}</a></li>
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://docs.chain.link/ccip" target="_blank" rel="noopener noreferrer">{tr('Chainlink CCIP docs →')}</a></li>
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://layerzero.gitbook.io/docs/" target="_blank" rel="noopener noreferrer">{tr('LayerZero docs →')}</a></li>
+            <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://rekt.news/" target="_blank" rel="noopener noreferrer">{tr('Bridge incident archive (rekt.news) →')}</a></li>
           </ul>
         </div>
 
@@ -622,22 +693,30 @@ const BlockchainInteropDemo = () => {
           <div className="bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4">
             <h3 className="font-semibold mb-2 text-blue-300 flex items-center gap-2">
               <Shield size={18} />
-              IBC Security Model
+              {tr('IBC Security Model')}
             </h3>
             <div className="space-y-2 text-sm text-slate-300">
-              <p className="text-xs"><strong>Attack Vector:</strong> Must compromise source chain consensus OR forge cryptographic proofs (computationally infeasible)</p>
-              <p className="text-xs"><strong>Trust Assumptions:</strong> Zero - only relies on cryptographic security</p>
-              <p className="text-xs"><strong>Failure Mode:</strong> If light client falls behind, messages are delayed until sync completes</p>
+              <p className="text-xs">
+                <strong>{tr('Attack Vector')}:</strong>{' '}
+                {tr('Must compromise source chain consensus OR forge cryptographic proofs (computationally infeasible)')}
+              </p>
+              <p className="text-xs">
+                <strong>{tr('Trust Assumptions')}:</strong> {tr('Zero - only relies on cryptographic security')}
+              </p>
+              <p className="text-xs">
+                <strong>{tr('Failure Mode')}:</strong>{' '}
+                {tr('If light client falls behind, messages are delayed until sync completes')}
+              </p>
               <div className="mt-3 pt-3 border-t border-blue-700">
-                <div className="text-xs font-semibold text-blue-400 mb-1">Light Client Status:</div>
+                <div className="text-xs font-semibold text-blue-400 mb-1">{tr('Light Client Status')}:</div>
                 <div className="space-y-1 text-xs">
                   <div className="flex justify-between">
                     <span>Cosmos → Osmosis:</span>
-                    <span className="text-emerald-400">✓ Synced (Block {lightClients.cosmos.osmosis.height})</span>
+                    <span className="text-emerald-400">{tr('✓ Synced (Block {{height}})', { height: lightClients.cosmos.osmosis.height })}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Osmosis → Cosmos:</span>
-                    <span className="text-emerald-400">✓ Synced (Block {lightClients.osmosis.cosmos.height})</span>
+                    <span className="text-emerald-400">{tr('✓ Synced (Block {{height}})', { height: lightClients.osmosis.cosmos.height })}</span>
                   </div>
                 </div>
               </div>
@@ -647,14 +726,23 @@ const BlockchainInteropDemo = () => {
           <div className="bg-purple-900 bg-opacity-20 border border-purple-700 rounded-lg p-4">
             <h3 className="font-semibold mb-2 text-purple-300 flex items-center gap-2">
               <Shield size={18} />
-              CCIP Security Model
+              {tr('CCIP Security Model')}
             </h3>
             <div className="space-y-2 text-sm text-slate-300">
-              <p className="text-xs"><strong>Attack Vector:</strong> Must compromise majority of DON (Decentralized Oracle Network) nodes simultaneously</p>
-              <p className="text-xs"><strong>Trust Assumptions:</strong> Honest majority of oracles + Risk Management Network validation</p>
-              <p className="text-xs"><strong>Failure Mode:</strong> Rate limiting activates on suspicious activity; manual intervention may be required</p>
+              <p className="text-xs">
+                <strong>{tr('Attack Vector')}:</strong>{' '}
+                {tr('Must compromise majority of DON (Decentralized Oracle Network) nodes simultaneously')}
+              </p>
+              <p className="text-xs">
+                <strong>{tr('Trust Assumptions')}:</strong>{' '}
+                {tr('Honest majority of oracles + Risk Management Network validation')}
+              </p>
+              <p className="text-xs">
+                <strong>{tr('Failure Mode')}:</strong>{' '}
+                {tr('Rate limiting activates on suspicious activity; manual intervention may be required')}
+              </p>
               <div className="mt-3 pt-3 border-t border-purple-700">
-                <div className="text-xs font-semibold text-purple-400 mb-1">Network Status:</div>
+                <div className="text-xs font-semibold text-purple-400 mb-1">{tr('Network Status')}:</div>
                 <div className="space-y-1 text-xs">
                   <div className="flex justify-between">
                     <span>Active Oracle Nodes:</span>
@@ -676,14 +764,21 @@ const BlockchainInteropDemo = () => {
           <div className="bg-green-900 bg-opacity-20 border border-green-700 rounded-lg p-4">
             <h3 className="font-semibold mb-2 text-green-300 flex items-center gap-2">
               <Shield size={18} />
-              LayerZero Security Model
+              {tr('LayerZero Security Model')}
             </h3>
             <div className="space-y-2 text-sm text-slate-300">
-              <p className="text-xs"><strong>Attack Vector:</strong> Must compromise BOTH Oracle and Relayer (assumed to be independent entities)</p>
-              <p className="text-xs"><strong>Trust Assumptions:</strong> Oracle and Relayer do not collude</p>
-              <p className="text-xs"><strong>Failure Mode:</strong> If Oracle and Relayer provide conflicting data, transaction fails</p>
+              <p className="text-xs">
+                <strong>{tr('Attack Vector')}:</strong>{' '}
+                {tr('Must compromise BOTH Oracle and Relayer (assumed to be independent entities)')}
+              </p>
+              <p className="text-xs">
+                <strong>{tr('Trust Assumptions')}:</strong> {tr('Oracle and Relayer do not collude')}
+              </p>
+              <p className="text-xs">
+                <strong>{tr('Failure Mode')}:</strong> {tr('If Oracle and Relayer provide conflicting data, transaction fails')}
+              </p>
               <div className="mt-3 pt-3 border-t border-green-700">
-                <div className="text-xs font-semibold text-green-400 mb-1">Component Status:</div>
+                <div className="text-xs font-semibold text-green-400 mb-1">{tr('Component Status')}:</div>
                 <div className="space-y-1 text-xs">
                   <div className="flex justify-between">
                     <span>Oracle (Chainlink):</span>
@@ -695,7 +790,7 @@ const BlockchainInteropDemo = () => {
                   </div>
                   <div className="flex justify-between">
                     <span>Independence:</span>
-                    <span className="text-yellow-400">⚠ User-configurable</span>
+                    <span className="text-yellow-400">{tr('⚠ User-configurable')}</span>
                   </div>
                 </div>
               </div>
@@ -705,17 +800,17 @@ const BlockchainInteropDemo = () => {
 
         {/* Real-World Applications */}
         <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
-          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 {tr('Real-World Applications')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h3 className="font-semibold text-blue-400 mb-2">Cosmos IBC</h3>
               <p className="text-xs text-slate-300 mb-3">
-                Trust-minimized cross-chain transfers and messaging inside the Cosmos ecosystem.
+                {tr('Trust-minimized cross-chain transfers and messaging inside the Cosmos ecosystem.')}
               </p>
               <ul className="space-y-1 text-xs text-slate-300 mb-3">
-                <li>• Osmosis DEX trading Cosmos tokens</li>
-                <li>• Stride liquid staking across chains</li>
-                <li>• Interchain accounts, queries, and governance</li>
+                <li>{tr('• Osmosis DEX trading Cosmos tokens')}</li>
+                <li>{tr('• Stride liquid staking across chains')}</li>
+                <li>{tr('• Interchain accounts, queries, and governance')}</li>
               </ul>
               <a
                 href="https://ibcprotocol.dev/"
@@ -723,19 +818,19 @@ const BlockchainInteropDemo = () => {
                 rel="noopener noreferrer"
                 className="text-xs text-blue-300 hover:text-blue-200 underline"
               >
-                Official docs →
+                {tr('Official docs →')}
               </a>
             </div>
 
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h3 className="font-semibold text-purple-400 mb-2">Chainlink CCIP</h3>
               <p className="text-xs text-slate-300 mb-3">
-                Cross-chain messaging with oracle consensus and additional risk management.
+                {tr('Cross-chain messaging with oracle consensus and additional risk management.')}
               </p>
               <ul className="space-y-1 text-xs text-slate-300 mb-3">
-                <li>• Cross-chain DeFi orchestration (liquidity, lending)</li>
-                <li>• Multi-chain apps with standardized messaging</li>
-                <li>• Enterprise / compliance-friendly deployments</li>
+                <li>{tr('• Cross-chain DeFi orchestration (liquidity, lending)')}</li>
+                <li>{tr('• Multi-chain apps with standardized messaging')}</li>
+                <li>{tr('• Enterprise / compliance-friendly deployments')}</li>
               </ul>
               <a
                 href="https://docs.chain.link/ccip"
@@ -743,19 +838,19 @@ const BlockchainInteropDemo = () => {
                 rel="noopener noreferrer"
                 className="text-xs text-purple-300 hover:text-purple-200 underline"
               >
-                Official docs →
+                {tr('Official docs →')}
               </a>
             </div>
 
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h3 className="font-semibold text-green-400 mb-2">LayerZero</h3>
               <p className="text-xs text-slate-300 mb-3">
-                Omnichain messaging where the security model depends on independent Oracle + Relayer.
+                {tr('Omnichain messaging where the security model depends on independent Oracle + Relayer.')}
               </p>
               <ul className="space-y-1 text-xs text-slate-300 mb-3">
-                <li>• Omnichain NFTs & tokens</li>
-                <li>• Stargate cross-chain swaps</li>
-                <li>• Multi-chain governance and app coordination</li>
+                <li>{tr('• Omnichain NFTs & tokens')}</li>
+                <li>{tr('• Stargate cross-chain swaps')}</li>
+                <li>{tr('• Multi-chain governance and app coordination')}</li>
               </ul>
               <a
                 href="https://layerzero.gitbook.io/docs/"
@@ -763,19 +858,19 @@ const BlockchainInteropDemo = () => {
                 rel="noopener noreferrer"
                 className="text-xs text-green-300 hover:text-green-200 underline"
               >
-                Official docs →
+                {tr('Official docs →')}
               </a>
             </div>
 
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-              <h3 className="font-semibold text-yellow-400 mb-2">Bridge Risk in Practice</h3>
+              <h3 className="font-semibold text-yellow-400 mb-2">{tr('Bridge Risk in Practice')}</h3>
               <p className="text-xs text-slate-300 mb-3">
-                Many hacks historically targeted bridges. Choosing a trust model is a product decision: security vs speed vs cost.
+                {tr('Many hacks historically targeted bridges. Choosing a trust model is a product decision: security vs speed vs cost.')}
               </p>
               <ul className="space-y-1 text-xs text-slate-300 mb-3">
-                <li>• Prefer light-client / proof-based verification when possible</li>
-                <li>• Add monitoring, rate limits, and circuit breakers</li>
-                <li>• Consider smaller transfer limits for higher-risk routes</li>
+                <li>{tr('• Prefer light-client / proof-based verification when possible')}</li>
+                <li>{tr('• Add monitoring, rate limits, and circuit breakers')}</li>
+                <li>{tr('• Consider smaller transfer limits for higher-risk routes')}</li>
               </ul>
               <a
                 href="https://rekt.news/"
@@ -783,7 +878,7 @@ const BlockchainInteropDemo = () => {
                 rel="noopener noreferrer"
                 className="text-xs text-yellow-300 hover:text-yellow-200 underline"
               >
-                Bridge incident archive →
+                {tr('Bridge incident archive →')}
               </a>
             </div>
           </div>

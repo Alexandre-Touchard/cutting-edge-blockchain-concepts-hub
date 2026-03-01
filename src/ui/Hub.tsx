@@ -358,7 +358,16 @@ export default function Hub({
 
         {/* Results Count */}
         <div className="mb-6 text-sm text-slate-400">
-          Showing {filteredDemos.length} of {demos.length} demos{searchTerm && ` for "${searchTerm}"`}
+          {searchTerm
+            ? t('hub.showingCountWithQuery', {
+                filtered: filteredDemos.length,
+                total: demos.length,
+                query: searchTerm
+              })
+            : t('hub.showingCount', {
+                filtered: filteredDemos.length,
+                total: demos.length
+              })}
         </div>
 
         {/* Demos Grid */}
@@ -384,8 +393,17 @@ export default function Hub({
                   className={`h-32 bg-gradient-to-br ${categoryStyle.thumb} flex items-center justify-center relative overflow-hidden`}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black opacity-50"></div>
-                  <div className="text-6xl relative z-10 group-hover:scale-110 transition-transform">
-                    {demo.thumbnail}
+                  <div className="relative z-10 group-hover:scale-110 transition-transform">
+                    {/(\.png|\.jpe?g|\.webp|\.svg)(\?.*)?$/i.test(demo.thumbnail) ? (
+                      <img
+                        src={demo.thumbnail}
+                        alt=""
+                        className="h-20 w-20 object-contain drop-shadow"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="text-6xl">{demo.thumbnail}</div>
+                    )}
                   </div>
                   <div
                     className={`absolute top-3 right-3 px-2 py-1 rounded text-xs font-bold ${getDifficultyColor(
@@ -398,7 +416,7 @@ export default function Hub({
                   {/* Key Takeaways (thumbnail hover) */}
                   {hoveredThumbnailDemoId === demo.id && demo.keyTakeaways.length > 0 && (
                     <div className="absolute left-0 right-0 bottom-0 z-20 bg-slate-950/95 p-4 border-t-2 border-blue-500">
-                      <div className="text-xs font-semibold text-blue-400 mb-2">Key Takeaways:</div>
+                      <div className="text-xs font-semibold text-blue-400 mb-2">{t('hub.keyTakeaways')}:</div>
                       <ul className="space-y-1">
                         {demo.keyTakeaways.slice(0, 3).map((takeaway, idx) => (
                           <li key={idx} className="text-xs text-slate-300 flex items-start gap-2">
@@ -421,12 +439,12 @@ export default function Hub({
 
                   {/* Concepts */}
                   <div className="mb-4">
-                    <div className="text-xs font-semibold text-slate-500 mb-2">Key Concepts:</div>
+                    <div className="text-xs font-semibold text-slate-500 mb-2">{t('hub.keyConcepts')}:</div>
                     <div className="flex flex-wrap gap-1">
                       {demo.concepts.slice(0, 3).map((concept) => {
                         const chip = getConceptChip(concept, demo.category);
                         const Icon = chip.Icon;
-                        const def = chip.definition ?? 'Definition coming soon.';
+                        const def = chip.definition ?? t('common.definitionComingSoon');
 
                         return (
                           <span
@@ -467,7 +485,7 @@ export default function Hub({
                     }}
                     className="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors"
                   >
-                    View Details
+                    {t('hub.viewDetails')}
                     <ChevronRight size={16} />
                   </button>
                 </div>
@@ -481,8 +499,8 @@ export default function Hub({
         {filteredDemos.length === 0 && (
           <div className="text-center py-20">
             <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-2xl font-bold mb-2">No demos found</h3>
-            <p className="text-slate-400">Try adjusting your search or filters</p>
+            <h3 className="text-2xl font-bold mb-2">{t('hub.noDemosFound')}</h3>
+            <p className="text-slate-400">{t('hub.tryAdjustingSearch')}</p>
           </div>
         )}
 

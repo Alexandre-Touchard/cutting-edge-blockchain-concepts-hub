@@ -168,7 +168,7 @@ const RollupSimulation = () => {
   Simulation
 </h1>
           <p className="text-slate-300">
-            Watch how transactions are batched on L2 and submitted to L1 for security and cost savings
+            {tr('Watch how transactions are batched on L2 and submitted to L1 for security and cost savings')}
           </p>
         </div>
 
@@ -249,7 +249,7 @@ const RollupSimulation = () => {
 
               <div className="mb-4">
                 <label className="text-sm text-slate-400 mb-2 block">
-                  Batch Size: {batchSize} transactions
+                  {tr('Batch Size')}: {batchSize} {tr('transactions')}
                 </label>
                 <input
                   type="range"
@@ -298,18 +298,18 @@ const RollupSimulation = () => {
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 rounded-full bg-blue-600"></div>
-                  <span>Batched ({batchedTxs.length})</span>
+                  <span>{tr('Batched')} ({batchedTxs.length})</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="w-3 h-3 rounded-full bg-emerald-600"></div>
-                  <span>Finalized ({finalizedTxs.length})</span>
+                  <span>{tr('Finalized')} ({finalizedTxs.length})</span>
                 </div>
               </div>
 
               <div className="max-h-96 overflow-y-auto space-y-2">
                 {l2Transactions.length === 0 ? (
                   <div className="text-center text-slate-400 py-8">
-                    No transactions yet. Add some to get started!
+                    {tr('No transactions yet. Add some to get started!')}
                   </div>
                 ) : (
                   [...l2Transactions].reverse().map(tx => (
@@ -356,20 +356,20 @@ const RollupSimulation = () => {
             <div className="bg-slate-800 rounded-lg p-4 border-2 border-emerald-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Shield className="text-emerald-400" />
-                Layer 1 - Settlement Layer
+                {tr('Layer 1 - Settlement Layer')}
               </h2>
               
               <div className="text-sm text-slate-300 mb-4 p-3 bg-slate-700 rounded">
-                <p className="mb-2">L1 provides security and data availability for L2 batches.</p>
+                <p className="mb-2">{tr('L1 provides security and data availability for L2 batches.')}</p>
                 <p className="text-xs text-slate-400">
-                  Each batch contains a merkle root of L2 transactions and state updates.
+                  {tr('Each batch contains a merkle root of L2 transactions and state updates.')}
                 </p>
               </div>
 
               <div className="space-y-3 max-h-[600px] overflow-y-auto">
                 {l1Batches.length === 0 ? (
                   <div className="text-center text-slate-400 py-8 text-sm">
-                    No batches submitted yet
+                    {tr('No batches submitted yet')}
                   </div>
                 ) : (
                   [...l1Batches].reverse().map(batch => (
@@ -441,24 +441,24 @@ const RollupSimulation = () => {
 
         {/* Real-World Applications */}
         <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
-          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 {tr('Real-World Applications')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-              <h3 className="font-semibold text-lg mb-3 text-emerald-400">Popular Rollups</h3>
+              <h3 className="font-semibold text-lg mb-3 text-emerald-400">{tr('Popular Rollups')}</h3>
               <div className="space-y-3 text-sm">
                 <div className="bg-slate-700 rounded p-3">
                   <div className="font-bold text-blue-300">Optimism / Base</div>
-                  <p className="text-xs text-slate-300 mb-2">Optimistic rollups used for general-purpose apps (DeFi, NFTs). Post transaction data to L1 and use fraud proofs for security.</p>
+                  <p className="text-xs text-slate-300 mb-2">{tr('Optimistic rollups used for general-purpose apps (DeFi, NFTs). Post transaction data to L1 and use fraud proofs for security.')}</p>
                   <LinkWithCopy href="https://docs.optimism.io/" label={<>Optimism docs →</>} className="text-xs text-blue-300 hover:text-blue-200 underline" />
                 </div>
                 <div className="bg-slate-700 rounded p-3">
                   <div className="font-bold text-purple-300">Arbitrum</div>
-                  <p className="text-xs text-slate-300 mb-2">High-throughput optimistic rollup with advanced fraud proof system, widely used for DeFi and gaming.</p>
+                  <p className="text-xs text-slate-300 mb-2">{tr('High-throughput optimistic rollup with advanced fraud proof system, widely used for DeFi and gaming.')}</p>
                   <LinkWithCopy href="https://docs.arbitrum.io/" label={<>Arbitrum docs →</>} className="text-xs text-purple-300 hover:text-purple-200 underline" />
                 </div>
                 <div className="bg-slate-700 rounded p-3">
                   <div className="font-bold text-pink-300">zkSync / Starknet</div>
-                  <p className="text-xs text-slate-300 mb-2">ZK rollups use validity proofs to prove correct execution, enabling fast finality with strong guarantees.</p>
+                  <p className="text-xs text-slate-300 mb-2">{tr('ZK rollups use validity proofs to prove correct execution, enabling fast finality with strong guarantees.')}</p>
                   <div className="flex gap-3">
                     <LinkWithCopy href="https://docs.zksync.io/" label={<>zkSync docs →</>} className="text-xs text-pink-300 hover:text-pink-200 underline" />
                     <LinkWithCopy href="https://docs.starknet.io/" label={<>Starknet docs →</>} className="text-xs text-pink-300 hover:text-pink-200 underline" />
@@ -467,19 +467,19 @@ const RollupSimulation = () => {
               </div>
             </div>
             <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-              <h3 className="font-semibold text-lg mb-3 text-yellow-400">Production Use Cases</h3>
+              <h3 className="font-semibold text-lg mb-3 text-yellow-400">{tr('Production Use Cases')}</h3>
               <div className="space-y-3 text-sm">
                 <div className="bg-slate-700 rounded p-3">
-                  <div className="font-semibold text-blue-300 mb-1">🧾 Cheaper DeFi Trading</div>
-                  <p className="text-xs text-slate-300">AMMs, perps, and lending become usable for smaller trades thanks to lower fees and faster confirmations.</p>
+                  <div className="font-semibold text-blue-300 mb-1">🧾 {tr('Cheaper DeFi Trading')}</div>
+                  <p className="text-xs text-slate-300">{tr('AMMs, perps, and lending become usable for smaller trades thanks to lower fees and faster confirmations.')}</p>
                 </div>
                 <div className="bg-slate-700 rounded p-3">
-                  <div className="font-semibold text-purple-300 mb-1">🎮 Games & Social</div>
-                  <p className="text-xs text-slate-300">High-frequency interactions (mints, micro-transfers) become practical without L1 gas spikes.</p>
+                  <div className="font-semibold text-purple-300 mb-1">🎮 {tr('Games & Social')}</div>
+                  <p className="text-xs text-slate-300">{tr('High-frequency interactions (mints, micro-transfers) become practical without L1 gas spikes.')}</p>
                 </div>
                 <div className="bg-slate-700 rounded p-3">
                   <div className="font-semibold text-emerald-300 mb-1">🏢 Enterprise Settlement</div>
-                  <p className="text-xs text-slate-300">Batch many transactions and settle periodically to L1 for auditability and security.</p>
+                  <p className="text-xs text-slate-300">{tr('Batch many transactions and settle periodically to L1 for auditability and security.')}</p>
                 </div>
               </div>
             </div>
@@ -488,7 +488,7 @@ const RollupSimulation = () => {
 
         {/* Further Reading */}
         <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
-          <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 {tr('Further Reading')}</h2>
           <ul className="space-y-2 text-sm">
             <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ethereum.org/en/developers/docs/scaling/layer-2-rollups/" target="_blank" rel="noopener noreferrer">Ethereum.org: Rollups overview →</a></li>
             <li><LinkWithCopy href="https://l2beat.com/" label={<>L2BEAT: Rollup risk & stats →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
@@ -499,19 +499,19 @@ const RollupSimulation = () => {
 
         {/* Bottom Explanation */}
         <div className="mt-6 bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4">
-          <h3 className="font-semibold mb-2 text-blue-300">How Rollups Work</h3>
+          <h3 className="font-semibold mb-2 text-blue-300">{tr('How Rollups Work')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-slate-300">
             <div>
-              <div className="font-semibold text-blue-400 mb-1">1. Execute on L2</div>
-              <p>Transactions execute quickly and cheaply on Layer 2. Users get instant feedback with minimal gas costs (~{stats.l2GasCost} ETH per TX).</p>
+              <div className="font-semibold text-blue-400 mb-1">1. {tr('Execute on L2')}</div>
+              <p>{tr('Transactions execute quickly and cheaply on Layer 2. Users get instant feedback with minimal gas costs (~{{cost}} ETH per TX).', { cost: stats.l2GasCost })}</p>
             </div>
             <div>
-              <div className="font-semibold text-blue-400 mb-1">2. Batch Transactions</div>
-              <p>Multiple L2 transactions are bundled into a single batch. A merkle root proves all transactions are included.</p>
+              <div className="font-semibold text-blue-400 mb-1">2. {tr('Batch Transactions')}</div>
+              <p>{tr('Multiple L2 transactions are bundled into a single batch. A merkle root proves all transactions are included.')}</p>
             </div>
             <div>
-              <div className="font-semibold text-blue-400 mb-1">3. Submit to L1</div>
-              <p>Batches are posted to Ethereum L1 for security and data availability. One L1 TX secures {batchSize} L2 transactions, saving ~{((batchSize * stats.l1GasCost - stats.batchPostCost) / batchSize).toFixed(3)} ETH per TX!</p>
+              <div className="font-semibold text-blue-400 mb-1">3. {tr('Submit to L1')}</div>
+              <p>{tr('Batches are posted to Ethereum L1 for security and data availability. One L1 TX secures {{batchSize}} L2 transactions, saving ~{{saved}} ETH per TX.', { batchSize, saved: ((batchSize * stats.l1GasCost - stats.batchPostCost) / batchSize).toFixed(3) })}</p>
             </div>
           </div>
         </div>

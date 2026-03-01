@@ -287,7 +287,7 @@ const AMMDemo = () => {
             <div className="space-y-4">
               <div>
                 <div className="text-sm text-slate-400 mb-2">
-                  Add Liquidity
+                  {tr('Add Liquidity')}
                   <Tooltip text={define('Add Liquidity')} />
                 </div>
                 <div className="grid grid-cols-3 gap-2">
@@ -314,7 +314,7 @@ const AMMDemo = () => {
 
               <div className="bg-slate-700 rounded p-3">
                 <div className="text-xs text-slate-400 mb-2">
-                  Pool Share
+                  {tr('Pool Share')}
                   <Tooltip text={define('Pool Share')} />
                 </div>
                 <div className="text-xl font-bold">
@@ -327,13 +327,13 @@ const AMMDemo = () => {
 
               <div className="bg-slate-900 rounded p-3">
                 <div className="text-xs font-semibold text-yellow-300 mb-2">
-                  Impermanent Loss Calculator
+                  {tr('Impermanent Loss Calculator')}
                   <Tooltip text={define('Impermanent Loss Calculator')} />
                 </div>
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span className="text-slate-400">
-                      Initial Price
+                      {tr('Initial Price')}
                       <Tooltip text={define('Initial Price')} />
                     </span>
                     <input
@@ -346,14 +346,14 @@ const AMMDemo = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">
-                      Current Price
+                      {tr('Current Price')}
                       <Tooltip text={define('Current Price')} />
                     </span>
                     <span className="font-mono">{currentPrice.toFixed(4)}</span>
                   </div>
                   <div className="flex justify-between pt-2 border-t border-slate-700">
                     <span className="text-slate-400">
-                      Price Change
+                      {tr('Price Change')}
                       <Tooltip text={define('Price Change')} />
                     </span>
                     <span className={priceRatio > 1 ? 'text-emerald-400' : 'text-red-400'}>
@@ -373,9 +373,9 @@ const AMMDemo = () => {
               </div>
 
               <div className="bg-blue-900 bg-opacity-20 border border-blue-700 rounded p-3 text-xs">
-                <div className="font-semibold text-blue-300 mb-1">What is IL?</div>
+                <div className="font-semibold text-blue-300 mb-1">{tr('What is IL?')}</div>
                 <p className="text-slate-300 text-xs">
-                  Loss vs holding when price ratio changes. Formula: 2√(price_ratio) / (1 + price_ratio) - 1
+                  {tr('Loss vs holding when price ratio changes. Formula: 2√(price_ratio) / (1 + price_ratio) - 1')}
                 </p>
               </div>
             </div>
@@ -384,27 +384,27 @@ const AMMDemo = () => {
 
         {/* Formula Explanation */}
         <div className="mt-6 bg-slate-800 rounded-lg p-4 border border-slate-700">
-          <h2 className="text-lg font-semibold mb-3">How Constant Product AMM Works</h2>
+          <h2 className="text-lg font-semibold mb-3">{tr('How Constant Product AMM Works')}</h2>
           <div className="grid grid-cols-3 gap-4 text-sm">
             <div>
-              <div className="font-semibold text-blue-400 mb-1">1. Constant Product Formula</div>
+              <div className="font-semibold text-blue-400 mb-1">1. {tr('Constant Product Formula')}</div>
               <p className="text-xs text-slate-300">
-                x × y = k where x and y are reserve amounts. k stays constant during swaps.
-                When you buy A, you add B and remove A, keeping k the same.
+                {tr('x × y = k where x and y are reserve amounts. k stays constant during swaps.')}
+                {tr('When you buy A, you add B and remove A, keeping k the same.')}
               </p>
             </div>
             <div>
-              <div className="font-semibold text-purple-400 mb-1">2. Price Impact</div>
+              <div className="font-semibold text-purple-400 mb-1">2. {tr('Price Impact')}</div>
               <p className="text-xs text-slate-300">
-                Larger trades move the price more. If you buy 10% of reserves, price impact is significant.
-                Slippage = difference between expected and actual execution price.
+                {tr('Larger trades move the price more. If you buy 10% of reserves, price impact is significant.')}
+                {tr('Slippage = difference between expected and actual execution price.')}
               </p>
             </div>
             <div>
-              <div className="font-semibold text-emerald-400 mb-1">3. Impermanent Loss</div>
+              <div className="font-semibold text-emerald-400 mb-1">3. {tr('Impermanent Loss')}</div>
               <p className="text-xs text-slate-300">
-                When price changes, you would have been better off holding. At 2x price change, IL is -5.7%.
-                At 5x, it's -25.5%. Fees can offset IL over time.
+                {tr('When price changes, you would have been better off holding. At 2x price change, IL is -5.7%.')}
+                {tr("At 5x, it's -25.5%. Fees can offset IL over time.")}
               </p>
             </div>
           </div>
@@ -412,22 +412,22 @@ const AMMDemo = () => {
 
         {/* Real-World Applications */}
         <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
-          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 {tr('Real-World Applications')}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             {/* Major Protocols */}
             <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-              <h3 className="font-semibold text-lg mb-3 text-emerald-400">Major DEXs Using This Model</h3>
+              <h3 className="font-semibold text-lg mb-3 text-emerald-400">{tr('Major DEXs Using This Model')}</h3>
               <div className="space-y-3 text-sm">
                 <div className="bg-slate-700 rounded p-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-bold text-blue-300">Uniswap V2</span>
-                    <LinkWithCopy href="https://docs.uniswap.org/" label={<>Docs →</>} className="text-xs text-blue-300 hover:text-blue-200 underline" />
+                    <LinkWithCopy href="https://docs.uniswap.org/" label={<>{tr('Docs')} →</>} className="text-xs text-blue-300 hover:text-blue-200 underline" />
                     <span className="text-xs bg-blue-600 px-2 py-1 rounded">$3B+ TVL</span>
                   </div>
                   <p className="text-xs text-slate-300">
-                    The original constant product AMM. Exactly the x × y = k formula shown here with 0.3% fees.
-                    Powers thousands of token pairs on Ethereum.
+                    {tr('The original constant product AMM. Exactly the x × y = k formula shown here with 0.3% fees.')}
+                    {tr('Powers thousands of token pairs on Ethereum.')}
                   </p>
                 </div>
 
@@ -438,8 +438,8 @@ const AMMDemo = () => {
                     <span className="text-xs bg-purple-600 px-2 py-1 rounded">$500M+ TVL</span>
                   </div>
                   <p className="text-xs text-slate-300">
-                    Fork of Uniswap V2 with identical math. Adds governance token rewards for liquidity providers.
-                    Multi-chain deployment across 15+ networks.
+                    {tr('Fork of Uniswap V2 with identical math. Adds governance token rewards for liquidity providers.')}
+                    {tr('Multi-chain deployment across 15+ networks.')}
                   </p>
                 </div>
 
@@ -450,8 +450,8 @@ const AMMDemo = () => {
                     <span className="text-xs bg-pink-600 px-2 py-1 rounded">$2B+ TVL</span>
                   </div>
                   <p className="text-xs text-slate-300">
-                    Same constant product formula on BNB Chain. Largest DEX by user count.
-                    Lower gas fees make it accessible for smaller trades.
+                    {tr('Same constant product formula on BNB Chain. Largest DEX by user count.')}
+                    {tr('Lower gas fees make it accessible for smaller trades.')}
                   </p>
                 </div>
 
@@ -461,7 +461,7 @@ const AMMDemo = () => {
                     <span className="text-xs bg-cyan-600 px-2 py-1 rounded">$200M+ TVL</span>
                   </div>
                   <p className="text-xs text-slate-300">
-                    Leading Avalanche DEX using constant product pools. Also pioneered concentrated liquidity bins.
+                    {tr('Leading Avalanche DEX using constant product pools. Also pioneered concentrated liquidity bins.')}
                   </p>
                 </div>
               </div>
@@ -469,49 +469,49 @@ const AMMDemo = () => {
 
             {/* Use Cases */}
             <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-              <h3 className="font-semibold text-lg mb-3 text-yellow-400">Production Use Cases</h3>
+              <h3 className="font-semibold text-lg mb-3 text-yellow-400">{tr('Production Use Cases')}</h3>
               <div className="space-y-3 text-sm">
                 <div className="bg-slate-700 rounded p-3">
-                  <div className="font-semibold text-blue-300 mb-1">💱 Token Swaps</div>
+                  <div className="font-semibold text-blue-300 mb-1">💱 {tr('Token Swaps')}</div>
                   <p className="text-xs text-slate-300">
-                    <strong>Example:</strong> Swapping ETH for USDC on Uniswap.
+                    <strong>{tr('Example')}:</strong> {tr('Swapping ETH for USDC on Uniswap.')}
                     <br />
-                    <strong>Volume:</strong> $1B+ daily across all constant product DEXs.
+                    <strong>{tr('Volume')}:</strong> {tr('$1B+ daily across all constant product DEXs.')}
                     <br />
-                    <strong>Key Feature:</strong> No order book needed - instant execution.
+                    <strong>{tr('Key Feature')}:</strong> {tr('No order book needed - instant execution.')}
                   </p>
                 </div>
 
                 <div className="bg-slate-700 rounded p-3">
-                  <div className="font-semibold text-purple-300 mb-1">💰 Yield Farming</div>
+                  <div className="font-semibold text-purple-300 mb-1">💰 {tr('Yield Farming')}</div>
                   <p className="text-xs text-slate-300">
-                    <strong>Example:</strong> Provide ETH-USDC liquidity, earn 0.3% of all swap fees + SUSHI rewards.
+                    <strong>{tr('Example')}:</strong> {tr('Provide ETH-USDC liquidity, earn 0.3% of all swap fees + SUSHI rewards.')}
                     <br />
-                    <strong>Returns:</strong> 5-50% APY depending on trading volume and incentives.
+                    <strong>{tr('Returns')}:</strong> {tr('5-50% APY depending on trading volume and incentives.')}
                     <br />
-                    <strong>Risk:</strong> Impermanent loss vs fee income trade-off.
+                    <strong>{tr('Risk')}:</strong> {tr('Impermanent loss vs fee income trade-off.')}
                   </p>
                 </div>
 
                 <div className="bg-slate-700 rounded p-3">
-                  <div className="font-semibold text-emerald-300 mb-1">🎯 Price Discovery</div>
+                  <div className="font-semibold text-emerald-300 mb-1">🎯 {tr('Price Discovery')}</div>
                   <p className="text-xs text-slate-300">
-                    <strong>Example:</strong> New token launches bootstrap liquidity without centralized exchanges.
+                    <strong>{tr('Example')}:</strong> {tr('New token launches bootstrap liquidity without centralized exchanges.')}
                     <br />
-                    <strong>Impact:</strong> 1000s of tokens only tradeable via AMMs.
+                    <strong>{tr('Impact')}:</strong> {tr('1000s of tokens only tradeable via AMMs.')}
                     <br />
-                    <strong>Benefit:</strong> Permissionless listing - anyone can create a pool.
+                    <strong>{tr('Benefit')}:</strong> {tr('Permissionless listing - anyone can create a pool.')}
                   </p>
                 </div>
 
                 <div className="bg-slate-700 rounded p-3">
-                  <div className="font-semibold text-pink-300 mb-1">🤖 MEV & Arbitrage</div>
+                  <div className="font-semibold text-pink-300 mb-1">🤖 {tr('MEV & Arbitrage')}</div>
                   <p className="text-xs text-slate-300">
-                    <strong>Example:</strong> Bots profit from price differences between DEXs.
+                    <strong>{tr('Example')}:</strong> {tr('Bots profit from price differences between DEXs.')}
                     <br />
-                    <strong>Volume:</strong> $500M+ daily arbitrage keeps prices in sync.
+                    <strong>{tr('Volume')}:</strong> {tr('$500M+ daily arbitrage keeps prices in sync.')}
                     <br />
-                    <strong>Effect:</strong> Helps maintain consistent pricing across venues.
+                    <strong>{tr('Effect')}:</strong> {tr('Helps maintain consistent pricing across venues.')}
                   </p>
                 </div>
               </div>
@@ -520,7 +520,7 @@ const AMMDemo = () => {
 
           {/* Advanced Implementations */}
           <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4 mb-6">
-            <h3 className="font-semibold text-lg mb-3 text-cyan-400">🔬 Advanced Implementations</h3>
+            <h3 className="font-semibold text-lg mb-3 text-cyan-400">🔬 {tr('Advanced Implementations')}</h3>
             <div className="grid grid-cols-3 gap-4 text-xs">
               <div className="bg-slate-700 rounded p-3">
                 <div className="font-semibold text-blue-300 mb-2">Uniswap V3</div>
@@ -554,7 +554,7 @@ const AMMDemo = () => {
 
           {/* Integration Examples */}
           <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-            <h3 className="font-semibold text-lg mb-3 text-orange-400">🔗 How dApps Integrate AMMs</h3>
+            <h3 className="font-semibold text-lg mb-3 text-orange-400">🔗 {tr('How dApps Integrate AMMs')}</h3>
             <div className="grid grid-cols-2 gap-4 text-xs">
               <div>
                 <div className="font-semibold text-blue-300 mb-2">Aggregators (1inch, Matcha)</div>
@@ -615,24 +615,24 @@ Price increases as x decreases`}
           <div className="mt-4 bg-blue-900 bg-opacity-30 border border-blue-600 rounded-lg p-4">
             <div className="font-semibold text-blue-300 mb-2 flex items-center gap-2">
               <Info size={16} />
-              Why This Math Matters
+              {tr('Why This Math Matters')}
             </div>
             <div className="grid grid-cols-3 gap-4 text-xs text-slate-300">
               <div>
-                <strong className="text-emerald-400">✓ Permissionless</strong> - Anyone can create a pool or provide liquidity without approval.
+                <strong className="text-emerald-400">✓ {tr('Permissionless')}</strong> - {tr('Anyone can create a pool or provide liquidity without approval.')}
               </div>
               <div>
-                <strong className="text-emerald-400">✓ Always Liquid</strong> - Pools never run out of inventory (price just adjusts).
+                <strong className="text-emerald-400">✓ {tr('Always Liquid')}</strong> - {tr('Pools never run out of inventory (price just adjusts).')}
               </div>
               <div>
-                <strong className="text-emerald-400">✓ Transparent</strong> - All math is on-chain and verifiable. No hidden fees or manipulation.
+                <strong className="text-emerald-400">✓ {tr('Transparent')}</strong> - {tr('All math is on-chain and verifiable. No hidden fees or manipulation.')}
               </div>
             </div>
           </div>
 
           {/* Further Reading */}
           <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
-            <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+            <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 {tr('Further Reading')}</h2>
             <ul className="space-y-2 text-sm">
               <li>
                 <LinkWithCopy

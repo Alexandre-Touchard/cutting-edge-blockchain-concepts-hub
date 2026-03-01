@@ -12,7 +12,7 @@ export const demoMetaRegistry: Record<string, Partial<DemoMeta>> = {
     title: 'AMM Math & Impermanent Loss',
     category: 'defi',
     difficulty: 'Intermediate',
-    thumbnail: '💱',
+    thumbnail: new URL('../public/photo/Demo1.png', import.meta.url).href,
     description:
       'Interactive constant product AMM (x × y = k) with price impact, slippage, and impermanent loss calculations.',
     concepts: ['Constant Product', 'Price Impact', 'Slippage', 'Impermanent Loss', 'Liquidity Provision'],
@@ -28,7 +28,7 @@ export const demoMetaRegistry: Record<string, Partial<DemoMeta>> = {
     title: 'Parallel Transaction Executor',
     category: 'execution',
     difficulty: 'Intermediate',
-    thumbnail: '⚡',
+    thumbnail: new URL('../public/photo/Demo8.jpg', import.meta.url).href,
     description: 'Compare conservative (Solana) vs optimistic (Aptos Block-STM) parallel execution strategies.',
     concepts: ['Parallel Execution', 'Transaction Ordering', 'Conflict Detection', 'Block-STM'],
     keyTakeaways: [
@@ -43,7 +43,7 @@ export const demoMetaRegistry: Record<string, Partial<DemoMeta>> = {
     title: 'DAG Consensus (Tangle)',
     category: 'consensus',
     difficulty: 'Advanced',
-    thumbnail: '🕸️',
+    thumbnail: new URL('../public/photo/Demo3.png', import.meta.url).href,
     description:
       'Interactive DAG visualization showing how transactions reference tips and achieve consensus without traditional blocks.',
     concepts: ['Directed Acyclic Graph', 'Tip Selection', 'Cumulative Weight', 'Confirmation'],
@@ -59,7 +59,7 @@ export const demoMetaRegistry: Record<string, Partial<DemoMeta>> = {
     title: 'Layer 2 Rollup',
     category: 'scaling',
     difficulty: 'Intermediate',
-    thumbnail: '📦',
+    thumbnail: new URL('../public/photo/Demo6.png', import.meta.url).href,
     description: 'See how L2 transactions are batched and posted to L1 for massive gas savings.',
     concepts: ['Rollups', 'Batching', 'State Roots', 'Data Compression', 'Gas Economics'],
     keyTakeaways: [
@@ -74,7 +74,7 @@ export const demoMetaRegistry: Record<string, Partial<DemoMeta>> = {
     title: 'EigenLayer Restaking',
     category: 'security',
     difficulty: 'Advanced',
-    thumbnail: '🔄',
+    thumbnail: new URL('../public/photo/Demo4.png', import.meta.url).href,
     description: 'Reuse ETH stake to secure multiple protocols (AVS) and earn additional rewards.',
     concepts: ['Restaking', 'Shared Security', 'AVS', 'Economic Security', 'Slashing'],
     keyTakeaways: [
@@ -89,7 +89,7 @@ export const demoMetaRegistry: Record<string, Partial<DemoMeta>> = {
     title: 'PeerDAS Sampling',
     category: 'data',
     difficulty: 'Advanced',
-    thumbnail: '📊',
+    thumbnail: new URL('../public/photo/Demo9.png', import.meta.url).href,
     description: 'Peer Data Availability Sampling - nodes sample random columns instead of downloading everything.',
     concepts: ['Data Availability', 'Random Sampling', 'Erasure Coding', 'Column Distribution'],
     keyTakeaways: [

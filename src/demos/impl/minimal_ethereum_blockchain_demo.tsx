@@ -190,7 +190,7 @@ const EthereumBlockchainDemo = () => {
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">⛓️ {tr('Minimal Ethereum Blockchain')}</h1>
           <p className="text-slate-300">
-            Built with Rust concepts - Proof of Work, Account Model, Transaction Pool
+            {tr('Built with Rust concepts - Proof of Work, Account Model, Transaction Pool')}
           </p>
         </div>
 
@@ -207,7 +207,7 @@ const EthereumBlockchainDemo = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <Zap size={20} className="text-yellow-400" />
-              <span className="text-sm text-slate-400">Pending TXs</span>
+              <span className="text-sm text-slate-400">{tr('Pending TXs')}</span>
             </div>
             <div className="text-2xl font-bold text-yellow-400">{pendingTxs.length}</div>
           </div>
@@ -240,7 +240,7 @@ const EthereumBlockchainDemo = () => {
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Wallet className="text-emerald-400" />
-                Accounts
+                {tr('Accounts')}
               </h2>
               <div className="space-y-2">
                 {Object.entries(accounts).map(([name, account]) => (
@@ -261,12 +261,12 @@ const EthereumBlockchainDemo = () => {
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Plus className="text-blue-400" />
-                New Transaction
+                {tr('New Transaction')}
               </h2>
 
               <div className="space-y-3">
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">From</label>
+                  <label className="text-sm text-slate-400 block mb-1">{tr('From')}</label>
                   <select
                     value={txFrom}
                     onChange={(e) => setTxFrom(e.target.value)}
@@ -279,7 +279,7 @@ const EthereumBlockchainDemo = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">To</label>
+                  <label className="text-sm text-slate-400 block mb-1">{tr('To')}</label>
                   <select
                     value={txTo}
                     onChange={(e) => setTxTo(e.target.value)}
@@ -292,7 +292,7 @@ const EthereumBlockchainDemo = () => {
                 </div>
 
                 <div>
-                  <label className="text-sm text-slate-400 block mb-1">Amount (ETH)</label>
+                  <label className="text-sm text-slate-400 block mb-1">{tr('Amount (ETH)')}</label>
                   <input
                     type="number"
                     value={txValue}
@@ -308,7 +308,7 @@ const EthereumBlockchainDemo = () => {
                   className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 rounded font-semibold flex items-center justify-center gap-2"
                 >
                   <Plus size={18} />
-                  Add to Pool
+                  {tr('Add to Pool')}
                 </button>
               </div>
             </div>
@@ -317,12 +317,12 @@ const EthereumBlockchainDemo = () => {
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Pickaxe className="text-purple-400" />
-                Mining
+                {tr('Mining')}
               </h2>
 
               <div className="mb-4">
                 <label className="text-sm text-slate-400 block mb-2">
-                  Difficulty: {difficulty} (leading zeros)
+                  {tr('Difficulty')}: {difficulty} ({tr('leading zeros')})
                 </label>
                 <input
                   type="range"
@@ -334,8 +334,8 @@ const EthereumBlockchainDemo = () => {
                   className="w-full"
                 />
                 <div className="flex justify-between text-xs text-slate-500 mt-1">
-                  <span>Easy</span>
-                  <span>Hard</span>
+                  <span>{tr('Easy')}</span>
+                  <span>{tr('Hard')}</span>
                 </div>
               </div>
 
@@ -345,7 +345,7 @@ const EthereumBlockchainDemo = () => {
                 className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-600 disabled:cursor-not-allowed rounded font-semibold flex items-center justify-center gap-2"
               >
                 <Pickaxe size={18} />
-                {mining ? 'Mining...' : 'Mine Block'}
+                {mining ? tr('Mining...') : tr('Mine Block')}
               </button>
 
               <button
@@ -354,17 +354,17 @@ const EthereumBlockchainDemo = () => {
                 className="w-full mt-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 rounded font-semibold flex items-center justify-center gap-2"
               >
                 <CheckCircle size={18} />
-                Validate Chain
+                {tr('Validate Chain')}
               </button>
             </div>
 
             {/* Event Log */}
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">Event Log</h2>
+              <h2 className="text-xl font-semibold mb-4">{tr('Event Log')}</h2>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {events.length === 0 ? (
                   <div className="text-center text-slate-400 py-4 text-sm">
-                    No events yet
+                    {tr('No events yet')}
                   </div>
                 ) : (
                   events.map(event => (
@@ -383,13 +383,13 @@ const EthereumBlockchainDemo = () => {
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Zap className="text-yellow-400" />
-                Transaction Pool ({pendingTxs.length})
+                {tr('Transaction Pool')} ({pendingTxs.length})
               </h2>
 
               <div className="space-y-2 max-h-[600px] overflow-y-auto">
                 {pendingTxs.length === 0 ? (
                   <div className="text-center text-slate-400 py-8 text-sm">
-                    No pending transactions
+                    {tr('No pending transactions')}
                   </div>
                 ) : (
                   pendingTxs.map((tx, idx) => (
@@ -421,7 +421,7 @@ const EthereumBlockchainDemo = () => {
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Link className="text-blue-400" />
-                Blockchain ({chain.length} blocks)
+                {tr('Blockchain')} ({chain.length} {tr('blocks')})
               </h2>
 
               <div className="space-y-3 max-h-[800px] overflow-y-auto">
@@ -496,10 +496,10 @@ const EthereumBlockchainDemo = () => {
 
         {/* Real-World Applications */}
         <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
-          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 {tr('Real-World Applications')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-              <h3 className="font-semibold text-lg mb-3 text-emerald-400">How This Maps to Ethereum</h3>
+              <h3 className="font-semibold text-lg mb-3 text-emerald-400">{tr('How This Maps to Ethereum')}</h3>
               <div className="space-y-3 text-sm">
                 <div className="bg-slate-700 rounded p-3">
                   <div className="font-bold text-blue-300">Blocks & State Transitions</div>
@@ -517,19 +517,19 @@ const EthereumBlockchainDemo = () => {
               </div>
             </div>
             <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-              <h3 className="font-semibold text-lg mb-3 text-yellow-400">Practical Uses of a Minimal Chain</h3>
+              <h3 className="font-semibold text-lg mb-3 text-yellow-400">{tr('Practical Uses of a Minimal Chain')}</h3>
               <div className="space-y-3 text-sm">
                 <div className="bg-slate-700 rounded p-3">
-                  <div className="font-semibold text-blue-300 mb-1">🎓 Education & Prototyping</div>
-                  <p className="text-xs text-slate-300">Teach cryptographic linking, block validation, and mining/consensus basics without production complexity.</p>
+                  <div className="font-semibold text-blue-300 mb-1">🎓 {tr('Education & Prototyping')}</div>
+                  <p className="text-xs text-slate-300">{tr('Teach cryptographic linking, block validation, and mining/consensus basics without production complexity.')}</p>
                 </div>
                 <div className="bg-slate-700 rounded p-3">
-                  <div className="font-semibold text-purple-300 mb-1">🧪 Testnets / Private Chains</div>
-                  <p className="text-xs text-slate-300">Organizations build private ledgers or testnets to simulate transaction flows and smart contract interactions.</p>
+                  <div className="font-semibold text-purple-300 mb-1">🧪 {tr('Testnets / Private Chains')}</div>
+                  <p className="text-xs text-slate-300">{tr('Organizations build private ledgers or testnets to simulate transaction flows and smart contract interactions.')}</p>
                 </div>
                 <div className="bg-slate-700 rounded p-3">
-                  <div className="font-semibold text-emerald-300 mb-1">🔎 Client Understanding</div>
-                  <p className="text-xs text-slate-300">Helps new engineers reason about client architecture: networking → mempool → execution → block import.</p>
+                  <div className="font-semibold text-emerald-300 mb-1">🔎 {tr('Client Understanding')}</div>
+                  <p className="text-xs text-slate-300">{tr('Helps new engineers reason about client architecture: networking → mempool → execution → block import.')}</p>
                 </div>
               </div>
             </div>
@@ -538,7 +538,7 @@ const EthereumBlockchainDemo = () => {
 
         {/* Further Reading */}
         <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
-          <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+          <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 {tr('Further Reading')}</h2>
           <ul className="space-y-2 text-sm">
             <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ethereum.org/en/developers/docs/" target="_blank" rel="noopener noreferrer">Ethereum developer documentation →</a></li>
             <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ethereum.org/en/developers/docs/consensus-mechanisms/pow/" target="_blank" rel="noopener noreferrer">Proof of Work basics →</a></li>
@@ -548,19 +548,19 @@ const EthereumBlockchainDemo = () => {
 
         {/* Info Panel */}
         <div className="mt-6 bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4">
-          <h3 className="font-semibold mb-2 text-blue-300">How It Works</h3>
+          <h3 className="font-semibold mb-2 text-blue-300">{tr('How It Works')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-slate-300">
             <div>
-              <div className="font-semibold text-blue-400 mb-1">1. Add Transactions</div>
-              <p className="text-xs">Create transfers between accounts. Transactions go to the pending pool and check sender balance.</p>
+              <div className="font-semibold text-blue-400 mb-1">1. {tr('Add Transactions')}</div>
+              <p className="text-xs">{tr('Create transfers between accounts. Transactions go to the pending pool and check sender balance.')}</p>
             </div>
             <div>
-              <div className="font-semibold text-blue-400 mb-1">2. Mine Blocks</div>
-              <p className="text-xs">Mining finds a nonce that creates a hash with the required leading zeros (Proof of Work). Higher difficulty = more zeros needed.</p>
+              <div className="font-semibold text-blue-400 mb-1">2. {tr('Mine Blocks')}</div>
+              <p className="text-xs">{tr('Mining finds a nonce that creates a hash with the required leading zeros (Proof of Work). Higher difficulty = more zeros needed.')}</p>
             </div>
             <div>
-              <div className="font-semibold text-blue-400 mb-1">3. Update State</div>
-              <p className="text-xs">Once mined, transactions execute and update account balances. Each block links to the previous one via hash.</p>
+              <div className="font-semibold text-blue-400 mb-1">3. {tr('Update State')}</div>
+              <p className="text-xs">{tr('Once mined, transactions execute and update account balances. Each block links to the previous one via hash.')}</p>
             </div>
           </div>
         </div>

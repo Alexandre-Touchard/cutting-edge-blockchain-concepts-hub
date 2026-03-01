@@ -85,7 +85,7 @@ const EigenLayerDemo = () => {
     setValidators(prev => prev.map(v => {
       if (v.id === validatorId) {
         const restakeAmount = v.ethStaked;
-        addEvent(`${v.name} enabled restaking with ${restakeAmount} ETH`, 'success');
+        addEvent(tr('{{name}} enabled restaking with {{amount}} ETH', { name: v.name, amount: restakeAmount }), 'success');
         return { ...v, isRestaking: true, restakeAmount };
       }
       return v;
@@ -97,17 +97,27 @@ const EigenLayerDemo = () => {
     const avsService = avs.find(a => a.id === avsId);
 
     if (!validator.isRestaking) {
-      addEvent(`${validator.name} must enable restaking first!`, 'error');
+      addEvent(tr('{{name}} must enable restaking first!', { name: validator.name }), 'error');
       return;
     }
 
     if (validator.restakeAmount < avsService.requiredStake) {
-      addEvent(`${validator.name} needs ${avsService.requiredStake} ETH to join ${avsService.name}`, 'error');
+      addEvent(
+        tr('{{name}} needs {{stake}} ETH to join {{service}}', {
+          name: validator.name,
+          stake: avsService.requiredStake,
+          service: avsService.name
+        }),
+        'error'
+      );
       return;
     }
 
     if (validator.services.includes(avsId)) {
-      addEvent(`${validator.name} already securing ${avsService.name}`, 'error');
+      addEvent(
+        tr('{{name}} already securing {{service}}', { name: validator.name, service: avsService.name }),
+        'error'
+      );
       return;
     }
 
@@ -137,7 +147,14 @@ const EigenLayerDemo = () => {
     }));
 
     setTotalRestaked(prev => prev + validator.restakeAmount);
-    addEvent(`${validator.name} joined ${avsService.name} - earning ${avsService.rewardRate}% APY`, 'success');
+    addEvent(
+      tr('{{name}} joined {{service}} - earning {{apy}}% APY', {
+        name: validator.name,
+        service: avsService.name,
+        apy: avsService.rewardRate
+      }),
+      'success'
+    );
   };
 
   const leaveAVS = (validatorId, avsId) => {
@@ -170,14 +187,14 @@ const EigenLayerDemo = () => {
     }));
 
     setTotalRestaked(prev => prev - validator.restakeAmount);
-    addEvent(`${validator.name} left ${avsService.name}`, 'info');
+    addEvent(tr('{{name}} left {{service}}', { name: validator.name, service: avsService.name }), 'info');
   };
 
   const simulateRewards = () => {
     const activeRestakers = validators.filter(v => v.isRestaking);
 
     if (activeRestakers.length === 0) {
-      addEvent(`No active restakers to reward`, 'info');
+      addEvent(tr('No active restakers to reward'), 'info');
       return;
     }
 
@@ -208,13 +225,20 @@ const EigenLayerDemo = () => {
     });
 
     setValidators(updatedValidators);
-    addEvent(`Rewards distributed: ${totalRewardsDistributed.toFixed(4)} ETH to ${activeRestakers.length} restaker${activeRestakers.length > 1 ? 's' : ''}`, 'success');
+    addEvent(
+      tr('Rewards distributed: {{amount}} ETH to {{count}} restaker{{plural}}', {
+        amount: totalRewardsDistributed.toFixed(4),
+        count: activeRestakers.length,
+        plural: activeRestakers.length > 1 ? 's' : ''
+      }),
+      'success'
+    );
   };
 
   const simulateSlashing = (validatorId) => {
     const validator = validators.find(v => v.id === validatorId);
     if (!validator.isRestaking || validator.services.length === 0) {
-      addEvent(`${validator.name} is not restaking on any services`, 'error');
+      addEvent(tr('{{name}} is not restaking on any services', { name: validator.name }), 'error');
       return;
     }
 
@@ -232,7 +256,13 @@ const EigenLayerDemo = () => {
     }));
 
     setTotalRestaked(prev => prev - slashAmount);
-    addEvent(`⚠️ ${validator.name} was slashed ${slashAmount.toFixed(2)} ETH for protocol violation!`, 'error');
+    addEvent(
+      tr('⚠️ {{name}} was slashed {{amount}} ETH for protocol violation!', {
+        name: validator.name,
+        amount: slashAmount.toFixed(2)
+      }),
+      'error'
+    );
   };
 
   const calculateTotalAPY = (validator) => {
@@ -264,11 +294,11 @@ const EigenLayerDemo = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">
-  <T term="Restaking" text={define('Restaking')} />
-  Demo
-</h1>
+            <T term="Restaking" text={define('Restaking')} />
+            {tr('Demo')}
+          </h1>
           <p className="text-slate-300">
-            Reuse your ETH stake to secure multiple protocols and earn additional rewards
+            {tr('Reuse your ETH stake to secure multiple protocols and earn additional rewards')}
           </p>
         </div>
 
@@ -303,7 +333,7 @@ const EigenLayerDemo = () => {
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp size={20} className="text-purple-400" />
-              <span className="text-sm text-slate-400">Restakers</span>
+              <span className="text-sm text-slate-400">{tr('Restakers')}</span>
             </div>
             <div className="text-2xl font-bold">{validators.filter(v => v.isRestaking).length}/{validators.length}</div>
           </div>
@@ -315,7 +345,7 @@ const EigenLayerDemo = () => {
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Shield className="text-emerald-400" />
-                Ethereum Validators
+                {tr('Ethereum Validators')}
               </h2>
 
               <div className="space-y-3">
@@ -330,7 +360,7 @@ const EigenLayerDemo = () => {
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <div className="font-semibold text-lg">{validator.name}</div>
-                        <div className="text-xs text-slate-400">Validator #{validator.id}</div>
+                        <div className="text-xs text-slate-400">{tr('Validator #{{id}}', { id: validator.id })}</div>
                       </div>
                       <div className={`px-2 py-1 rounded text-xs font-semibold ${
                         validator.isRestaking ? 'bg-blue-600' : 'bg-slate-600'
@@ -341,30 +371,30 @@ const EigenLayerDemo = () => {
 
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-slate-400">ETH Staked:</span>
+                        <span className="text-slate-400">{tr('ETH Staked')}:</span>
                         <span className="font-semibold text-emerald-400">{validator.ethStaked.toFixed(1)} ETH</span>
                       </div>
                       
                       {validator.isRestaking && (
                         <>
                           <div className="flex justify-between">
-                            <span className="text-slate-400">Restaked:</span>
+                            <span className="text-slate-400">{tr('Restaked')}:</span>
                             <span className="font-semibold text-blue-400">{validator.restakeAmount.toFixed(1)} ETH</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-slate-400">Services:</span>
+                            <span className="text-slate-400">{tr('Services')}:</span>
                             <span className="font-semibold">{validator.services.length}</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-slate-400">Total APY:</span>
+                            <span className="text-slate-400">{tr('Total APY')}:</span>
                             <span className="font-semibold text-yellow-400">{calculateTotalAPY(validator).toFixed(1)}%</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-slate-400">Rewards Earned:</span>
+                            <span className="text-slate-400">{tr('Rewards Earned')}:</span>
                             <span className="font-semibold text-emerald-400">{validator.rewards.toFixed(4)} ETH</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-slate-400">Slash Risk:</span>
+                            <span className="text-slate-400">{tr('Slash Risk')}:</span>
                             <div className="flex items-center gap-1">
                               <div className="w-16 h-2 bg-slate-600 rounded-full overflow-hidden">
                                 <div 
@@ -390,12 +420,12 @@ const EigenLayerDemo = () => {
                             className="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold text-sm flex items-center justify-center gap-2"
                           >
                             <Lock size={16} />
-                            Enable Restaking
+                            {tr('Enable Restaking')}
                           </button>
                         ) : (
                           <>
                             <div className="text-xs text-slate-400 mb-2">
-                              Securing {validator.services.length} AVS:
+                              {tr('Securing {{count}} AVS', { count: validator.services.length })}:
                             </div>
                             {validator.services.map(avsId => {
                               const avsService = avs.find(a => a.id === avsId);
@@ -409,7 +439,7 @@ const EigenLayerDemo = () => {
                                     }}
                                     className="text-xs text-red-400 hover:text-red-300"
                                   >
-                                    Leave
+                                    {tr('Leave')}
                                   </button>
                                 </div>
                               );
@@ -422,7 +452,7 @@ const EigenLayerDemo = () => {
                               className="w-full px-3 py-1 bg-red-900 hover:bg-red-800 border border-red-600 rounded text-xs flex items-center justify-center gap-1"
                             >
                               <AlertCircle size={14} />
-                              Simulate Slash
+                              {tr('Simulate Slash')}
                             </button>
                           </>
                         )}
@@ -437,7 +467,7 @@ const EigenLayerDemo = () => {
                 className="w-full mt-4 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded font-semibold flex items-center justify-center gap-2"
               >
                 <DollarSign size={18} />
-                Distribute Rewards
+                {tr('Distribute Rewards')}
               </button>
             </div>
           </div>
@@ -447,7 +477,7 @@ const EigenLayerDemo = () => {
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Layers className="text-blue-400" />
-                Actively Validated Services
+                {tr('Actively Validated Services')}
               </h2>
 
               <div className="space-y-3">
@@ -469,7 +499,7 @@ const EigenLayerDemo = () => {
 
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div className="bg-slate-600 rounded p-2">
-                        <div className="text-xs text-slate-400">Min Stake</div>
+                        <div className="text-xs text-slate-400">{tr('Min Stake')}</div>
                         <div className="font-semibold">{service.requiredStake} ETH</div>
                       </div>
                       <div className="bg-slate-600 rounded p-2">
@@ -477,7 +507,7 @@ const EigenLayerDemo = () => {
                         <div className="font-semibold text-yellow-400">{service.rewardRate}%</div>
                       </div>
                       <div className="bg-slate-600 rounded p-2">
-                        <div className="text-xs text-slate-400">Validators</div>
+                        <div className="text-xs text-slate-400">{tr('Validators')}</div>
                         <div className="font-semibold">{service.validators.length}</div>
                       </div>
                       <div className="bg-slate-600 rounded p-2">
@@ -490,10 +520,10 @@ const EigenLayerDemo = () => {
                       <div className="mt-3 pt-3 border-t border-slate-600">
                         <div className="text-xs text-red-400 mb-3 flex items-center gap-1">
                           <AlertCircle size={12} />
-                          Slash condition: {service.slashCondition}
+                          {tr('Slash condition')}: {service.slashCondition}
                         </div>
 
-                        <div className="text-xs text-slate-400 mb-2">Select validator to join:</div>
+                        <div className="text-xs text-slate-400 mb-2">{tr('Select validator to join')}:</div>
                         <div className="space-y-1">
                           {validators.filter(v => v.isRestaking && !v.services.includes(service.id)).map(v => (
                             <button
@@ -505,12 +535,14 @@ const EigenLayerDemo = () => {
                               disabled={v.restakeAmount < service.requiredStake}
                               className="w-full px-3 py-1 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-600 disabled:cursor-not-allowed rounded text-xs font-semibold"
                             >
-                              {v.name} {v.restakeAmount < service.requiredStake && '(needs more stake)'}
+                              {v.name} {v.restakeAmount < service.requiredStake && `(${tr('needs more stake')})`}
                             </button>
                           ))}
                           {validators.filter(v => v.isRestaking && !v.services.includes(service.id)).length === 0 && (
                             <div className="text-xs text-slate-500 text-center py-2">
-                              {validators.every(v => !v.isRestaking) ? 'Enable restaking on validators first' : 'All eligible validators already joined'}
+                              {validators.every(v => !v.isRestaking)
+                                  ? tr('Enable restaking on validators first')
+                                  : tr('All eligible validators already joined')}
                             </div>
                           )}
                         </div>
@@ -527,13 +559,13 @@ const EigenLayerDemo = () => {
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <CheckCircle className="text-yellow-400" />
-                Activity Feed
+                {tr('Activity Feed')}
               </h2>
 
               <div className="space-y-2 max-h-[600px] overflow-y-auto">
                 {events.length === 0 ? (
                   <div className="text-center text-slate-400 py-8 text-sm">
-                    No activity yet. Enable restaking and join AVS to get started!
+                    {tr('No activity yet. Enable restaking and join AVS to get started!')}
                   </div>
                 ) : (
                   events.map(event => (
@@ -551,42 +583,54 @@ const EigenLayerDemo = () => {
 
             {/* Real-World Applications */}
             <div className="bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
-              <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+              <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 {tr('Real-World Applications')}</h2>
               <div className="grid grid-cols-1 gap-6">
                 <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-lg mb-3 text-emerald-400">Typical AVS Categories</h3>
+                  <h3 className="font-semibold text-lg mb-3 text-emerald-400">{tr('Typical AVS Categories')}</h3>
                   <div className="space-y-3 text-sm">
                     <div className="bg-slate-700 rounded p-3">
-                      <div className="font-bold text-blue-300">Data Availability (DA)</div>
-                      <p className="text-xs text-slate-300 mb-2">Services that make rollup data retrievable (e.g., DA layers). Restaked security can help deter withholding attacks.</p>
-                      <LinkWithCopy href="https://docs.eigenlayer.xyz/" label={<>EigenLayer docs →</>} className="text-xs text-blue-300 hover:text-blue-200 underline" />
+                      <div className="font-bold text-blue-300">{tr('Data Availability (DA)')}</div>
+                      <p className="text-xs text-slate-300 mb-2">{tr('Services that make rollup data retrievable (e.g., DA layers). Restaked security can help deter withholding attacks.')}</p>
+                      <LinkWithCopy
+                        href="https://docs.eigenlayer.xyz/"
+                        label={<>{tr('EigenLayer docs →')}</>}
+                        className="text-xs text-blue-300 hover:text-blue-200 underline"
+                      />
                     </div>
                     <div className="bg-slate-700 rounded p-3">
-                      <div className="font-bold text-purple-300">Cross-Chain / Bridges</div>
-                      <p className="text-xs text-slate-300 mb-2">Bridge validators/operators can be backed by restaked ETH, increasing the cost of misbehavior.</p>
-                      <LinkWithCopy href="https://docs.eigenlayer.xyz/" label={<>EigenLayer docs →</>} className="text-xs text-purple-300 hover:text-purple-200 underline" />
+                      <div className="font-bold text-purple-300">{tr('Cross-Chain / Bridges')}</div>
+                      <p className="text-xs text-slate-300 mb-2">{tr('Bridge validators/operators can be backed by restaked ETH, increasing the cost of misbehavior.')}</p>
+                      <LinkWithCopy
+                        href="https://docs.eigenlayer.xyz/"
+                        label={<>{tr('EigenLayer docs →')}</>}
+                        className="text-xs text-purple-300 hover:text-purple-200 underline"
+                      />
                     </div>
                     <div className="bg-slate-700 rounded p-3">
-                      <div className="font-bold text-pink-300">Oracles & Coprocessors</div>
-                      <p className="text-xs text-slate-300 mb-2">Extra computation or data feeds verified by a validator set with slashing conditions.</p>
-                      <LinkWithCopy href="https://docs.eigenlayer.xyz/" label={<>EigenLayer docs →</>} className="text-xs text-pink-300 hover:text-pink-200 underline" />
+                      <div className="font-bold text-pink-300">{tr('Oracles & Coprocessors')}</div>
+                      <p className="text-xs text-slate-300 mb-2">{tr('Extra computation or data feeds verified by a validator set with slashing conditions.')}</p>
+                      <LinkWithCopy
+                        href="https://docs.eigenlayer.xyz/"
+                        label={<>{tr('EigenLayer docs →')}</>}
+                        className="text-xs text-pink-300 hover:text-pink-200 underline"
+                      />
                     </div>
                   </div>
                 </div>
                 <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-lg mb-3 text-yellow-400">Why Teams Use Restaking</h3>
+                  <h3 className="font-semibold text-lg mb-3 text-yellow-400">{tr('Why Teams Use Restaking')}</h3>
                   <div className="space-y-3 text-sm">
                     <div className="bg-slate-700 rounded p-3">
-                      <div className="font-semibold text-blue-300 mb-1">🛡️ Bootstrapping Security</div>
-                      <p className="text-xs text-slate-300">New protocols can start with strong economic security without creating a new token and validator set from scratch.</p>
+                      <div className="font-semibold text-blue-300 mb-1">🛡️ {tr('Bootstrapping Security')}</div>
+                      <p className="text-xs text-slate-300">{tr('New protocols can start with strong economic security without creating a new token and validator set from scratch.')}</p>
                     </div>
                     <div className="bg-slate-700 rounded p-3">
-                      <div className="font-semibold text-purple-300 mb-1">💸 Capital Efficiency</div>
-                      <p className="text-xs text-slate-300">Stakers can earn additional yields from multiple services using the same underlying stake.</p>
+                      <div className="font-semibold text-purple-300 mb-1">💸 {tr('Capital Efficiency')}</div>
+                      <p className="text-xs text-slate-300">{tr('Stakers can earn additional yields from multiple services using the same underlying stake.')}</p>
                     </div>
                     <div className="bg-slate-700 rounded p-3">
-                      <div className="font-semibold text-emerald-300 mb-1">⚠️ Shared Risk Awareness</div>
-                      <p className="text-xs text-slate-300">Protocols can define slashing rules so bad behavior is economically punished, but risks compound across services.</p>
+                      <div className="font-semibold text-emerald-300 mb-1">⚠️ {tr('Shared Risk Awareness')}</div>
+                      <p className="text-xs text-slate-300">{tr('Protocols can define slashing rules so bad behavior is economically punished, but risks compound across services.')}</p>
                     </div>
                   </div>
                 </div>
@@ -595,29 +639,47 @@ const EigenLayerDemo = () => {
 
             {/* Further Reading */}
             <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-              <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+              <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 {tr('Further Reading')}</h2>
               <ul className="space-y-2 text-sm">
-                <li><LinkWithCopy href="https://docs.eigenlayer.xyz/" label={<>EigenLayer docs →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
-                <li><LinkWithCopy href="https://eigenlayer.xyz/" label={<>EigenLayer website →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
-                <li><LinkWithCopy href="https://ethereum.org/en/staking/" label={<>Ethereum staking overview →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+                <li>
+                <LinkWithCopy
+                  href="https://docs.eigenlayer.xyz/"
+                  label={<>{tr('EigenLayer docs →')}</>}
+                  className="text-blue-300 hover:text-blue-200 underline"
+                />
+              </li>
+                <li>
+                <LinkWithCopy
+                  href="https://eigenlayer.xyz/"
+                  label={<>{tr('EigenLayer website →')}</>}
+                  className="text-blue-300 hover:text-blue-200 underline"
+                />
+              </li>
+                <li>
+                <LinkWithCopy
+                  href="https://ethereum.org/en/staking/"
+                  label={<>{tr('Ethereum staking overview →')}</>}
+                  className="text-blue-300 hover:text-blue-200 underline"
+                />
+              </li>
               </ul>
             </div>
 
             {/* Info Panel */}
             <div className="bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4">
-              <h3 className="font-semibold mb-2 text-blue-300">How EigenLayer Works</h3>
+              <h3 className="font-semibold mb-2 text-blue-300">{tr('How EigenLayer Works')}</h3>
               <div className="space-y-2 text-sm text-slate-300">
                 <div>
-                  <div className="font-semibold text-blue-400 mb-1">1. Enable Restaking</div>
-                  <p className="text-xs">Point your ETH validator stake to EigenLayer contracts</p>
+                  <div className="font-semibold text-blue-400 mb-1">{tr('1. Enable Restaking')}</div>
+                  <p className="text-xs">{tr('Point your ETH validator stake to EigenLayer contracts')}</p>
                 </div>
                 <div>
-                  <div className="font-semibold text-blue-400 mb-1">2. Join AVS</div>
-                  <p className="text-xs">Opt-in to secure additional services and earn extra rewards</p>
+                  <div className="font-semibold text-blue-400 mb-1">{tr('2. Join AVS')}</div>
+                  <p className="text-xs">{tr('Opt-in to secure additional services and earn extra rewards')}</p>
                 </div>
                 <div>
-                  <div className="font-semibold text-blue-400 mb-1">3. Earn More</div>
-                  <p className="text-xs">Get base ETH staking rewards + AVS rewards, but take on additional slash risk</p>
+                  <div className="font-semibold text-blue-400 mb-1">{tr('3. Earn More')}</div>
+                  <p className="text-xs">{tr('Get base ETH staking rewards + AVS rewards, but take on additional slash risk')}</p>
                 </div>
               </div>
             </div>

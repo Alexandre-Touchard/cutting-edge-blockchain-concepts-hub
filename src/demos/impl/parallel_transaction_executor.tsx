@@ -519,7 +519,7 @@ const ParallelExecutor = () => {
   Executor
 </h1>
         <p className="text-slate-300">
-          Compare Conservative (Solana-style) vs Optimistic (Aptos Block-STM) parallel execution strategies
+          {tr('Compare Conservative (Solana-style) vs Optimistic (Aptos Block-STM) parallel execution strategies')}
         </p>
       </div>
 
@@ -607,7 +607,7 @@ const ParallelExecutor = () => {
             </div>
             <p className="text-sm text-slate-300">
               Pre-analyze dependencies, schedule non-conflicting transactions in parallel groups. 
-              No wasted work, but requires upfront analysis.
+              {tr('No wasted work, but requires upfront analysis.')}
             </p>
           </button>
           
@@ -625,8 +625,8 @@ const ParallelExecutor = () => {
               <span className="font-semibold">{tr('Optimistic (Aptos Block-STM)')}</span>
             </div>
             <p className="text-sm text-slate-300">
-              Execute everything in parallel speculatively, detect conflicts, re-execute only what's needed.
-              Max parallelism upfront, some wasted work on conflicts.
+              {tr("Execute everything in parallel speculatively, detect conflicts, re-execute only what's needed.")}
+              {tr('Max parallelism upfront, some wasted work on conflicts.')}
             </p>
           </button>
         </div>
@@ -638,13 +638,13 @@ const ParallelExecutor = () => {
           {/* Account Balances */}
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex justify-between items-center mb-3">
-              <h2 className="text-xl font-semibold">Account Balances</h2>
+              <h2 className="text-xl font-semibold">{tr('Account Balances')}</h2>
               <button
                 onClick={reset}
                 className="flex items-center gap-1 px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-sm"
               >
                 <RefreshCw size={14} />
-                Reset
+                {tr('Reset')}
               </button>
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -660,7 +660,7 @@ const ParallelExecutor = () => {
           {/* Transaction Queue */}
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
             <div className="flex justify-between items-center mb-3">
-              <h2 className="text-xl font-semibold">Transaction Queue</h2>
+              <h2 className="text-xl font-semibold">{tr('Transaction Queue')}</h2>
               <button
                 onClick={addTransaction}
                 className="flex items-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-sm"
@@ -733,7 +733,9 @@ const ParallelExecutor = () => {
               className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 disabled:cursor-not-allowed rounded font-semibold"
             >
               <Play size={18} />
-              {isExecuting ? 'Executing...' : `Execute (${executionMode === 'optimistic' ? 'Optimistic' : 'Conservative'})`}
+              {isExecuting
+                ? tr('Executing...')
+                : `${tr('Execute')} (${executionMode === 'optimistic' ? tr('Optimistic') : tr('Conservative')})`}
             </button>
             
             <button
@@ -749,7 +751,7 @@ const ParallelExecutor = () => {
           {/* Analysis Panel */}
           {executionMode === 'conservative' && (
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-              <h2 className="text-xl font-semibold mb-3">Conservative Analysis</h2>
+              <h2 className="text-xl font-semibold mb-3">{tr('Conservative Analysis')}</h2>
               <div className="space-y-3">
                 {conflictGroups.map((group, idx) => (
                   <div key={idx} className="bg-slate-700 rounded p-3">
@@ -770,7 +772,7 @@ const ParallelExecutor = () => {
               
               <div className="mt-4 pt-4 border-t border-slate-600 text-sm">
                 <div className="flex justify-between mb-1">
-                  <span className="text-slate-300">Parallel Groups:</span>
+                  <span className="text-slate-300">{tr('Parallel Groups')}:</span>
                   <span className="font-semibold">{conflictGroups.length}</span>
                 </div>
                 <div className="flex justify-between">
@@ -852,8 +854,8 @@ const ParallelExecutor = () => {
                   </div>
                   <div className="text-xs text-slate-400 mt-2">
                     {benchmarkResults.winner === 'conservative' 
-                      ? '✓ Conservative won - conflicts made re-executions costly'
-                      : '✓ Optimistic won - low conflicts meant full parallelism paid off'
+                      ? tr('✓ Conservative won - conflicts made re-executions costly')
+                      : tr('✓ Optimistic won - low conflicts meant full parallelism paid off')
                     }
                   </div>
                   {analysis && (
@@ -897,7 +899,7 @@ const ParallelExecutor = () => {
             <div className="space-y-2 max-h-[600px] overflow-y-auto">
               {executionLog.length === 0 ? (
                 <div className="text-slate-400 text-sm text-center py-8">
-                  No executions yet. Select a strategy and click "Execute".
+                  {tr('No executions yet. Select a strategy and click "Execute".')}
                 </div>
               ) : (
                 executionLog.map((entry, idx) => (
@@ -909,7 +911,7 @@ const ParallelExecutor = () => {
                     )}
                     {entry.type === 'optimistic_batch' && (
                       <div className="bg-purple-900 bg-opacity-20 rounded px-3 py-2 text-sm border border-purple-700">
-                        <div className="text-purple-300">⚡ Executed all {entry.count} transactions in parallel (speculative)</div>
+                        <div className="text-purple-300">⚡ {tr('Executed all {{count}} transactions in parallel (speculative)', { count: entry.count })}</div>
                       </div>
                     )}
                     {entry.type === 'group' && (
@@ -982,44 +984,44 @@ const ParallelExecutor = () => {
 
       {/* Real-World Applications */}
       <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
-        <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+        <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 {tr('Real-World Applications')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-            <h3 className="font-semibold text-lg mb-3 text-emerald-400">Who Uses Parallel Execution</h3>
+            <h3 className="font-semibold text-lg mb-3 text-emerald-400">{tr('Who Uses Parallel Execution')}</h3>
             <div className="space-y-3 text-sm">
               <div className="bg-slate-700 rounded p-3">
                 <div className="font-bold text-blue-300">Solana</div>
-                <p className="text-xs text-slate-300 mb-2">Uses a conservative model where transactions declare account access so the runtime can schedule non-conflicting transactions in parallel.</p>
+                <p className="text-xs text-slate-300 mb-2">{tr('Uses a conservative model where transactions declare account access so the runtime can schedule non-conflicting transactions in parallel.')}</p>
                 <a href="https://solana.com/docs" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-300 hover:text-blue-200 underline">Solana docs →</a>
               </div>
               <div className="bg-slate-700 rounded p-3">
                 <div className="font-bold text-purple-300">Aptos / Sui-style research</div>
-                <p className="text-xs text-slate-300 mb-2">Optimistic approaches (like Block-STM) execute in parallel and re-run conflicting transactions to maximize throughput.</p>
+                <p className="text-xs text-slate-300 mb-2">{tr('Optimistic approaches (like Block-STM) execute in parallel and re-run conflicting transactions to maximize throughput.')}</p>
                 <div className="flex gap-3">
                   <a href="https://aptos.dev/" target="_blank" rel="noopener noreferrer" className="text-xs text-purple-300 hover:text-purple-200 underline">Aptos docs →</a>
                   <a href="https://docs.sui.io/" target="_blank" rel="noopener noreferrer" className="text-xs text-purple-300 hover:text-purple-200 underline">Sui docs →</a>
                 </div>
               </div>
               <div className="bg-slate-700 rounded p-3">
-                <div className="font-bold text-pink-300">Execution clients in general</div>
-                <p className="text-xs text-slate-300">Many runtimes explore parallelism to scale smart contract execution beyond single-threaded EVM execution.</p>
+                <div className="font-bold text-pink-300">{tr('Execution clients in general')}</div>
+                <p className="text-xs text-slate-300">{tr('Many runtimes explore parallelism to scale smart contract execution beyond single-threaded EVM execution.')}</p>
               </div>
             </div>
           </div>
           <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-            <h3 className="font-semibold text-lg mb-3 text-yellow-400">Production Use Cases</h3>
+            <h3 className="font-semibold text-lg mb-3 text-yellow-400">{tr('Production Use Cases')}</h3>
             <div className="space-y-3 text-sm">
               <div className="bg-slate-700 rounded p-3">
-                <div className="font-semibold text-blue-300 mb-1">🧾 High-Volume Token Transfers</div>
-                <p className="text-xs text-slate-300">Payments, airdrops, and market making can process many independent transfers in parallel.</p>
+                <div className="font-semibold text-blue-300 mb-1">🧾 {tr('High-Volume Token Transfers')}</div>
+                <p className="text-xs text-slate-300">{tr('Payments, airdrops, and market making can process many independent transfers in parallel.')}</p>
               </div>
               <div className="bg-slate-700 rounded p-3">
-                <div className="font-semibold text-purple-300 mb-1">🧠 On-Chain Orderbooks / Games</div>
-                <p className="text-xs text-slate-300">Parallelism helps when state can be sharded across accounts/objects so many actions don’t conflict.</p>
+                <div className="font-semibold text-purple-300 mb-1">🧠 {tr('On-Chain Orderbooks / Games')}</div>
+                <p className="text-xs text-slate-300">{tr('Parallelism helps when state can be sharded across accounts/objects so many actions do not conflict.')}</p>
               </div>
               <div className="bg-slate-700 rounded p-3">
-                <div className="font-semibold text-emerald-300 mb-1">📈 Better Block Utilization</div>
-                <p className="text-xs text-slate-300">Block producers can pack more transactions per block when the runtime can safely execute non-overlapping state changes concurrently.</p>
+                <div className="font-semibold text-emerald-300 mb-1">📈 {tr('Better Block Utilization')}</div>
+                <p className="text-xs text-slate-300">{tr('Block producers can pack more transactions per block when the runtime can safely execute non-overlapping state changes concurrently.')}</p>
               </div>
             </div>
           </div>
@@ -1028,7 +1030,7 @@ const ParallelExecutor = () => {
 
       {/* Further Reading */}
       <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
-        <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+        <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 {tr('Further Reading')}</h2>
         <ul className="space-y-2 text-sm">
           <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://solana.com/docs" target="_blank" rel="noopener noreferrer">Solana runtime & accounts docs →</a></li>
           <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://aptos.dev/" target="_blank" rel="noopener noreferrer">Aptos documentation (Block-STM lineage) →</a></li>
@@ -1038,24 +1040,24 @@ const ParallelExecutor = () => {
 
       {/* Explanation */}
       <div className="mt-6 bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4">
-        <h3 className="font-semibold mb-2 text-blue-300">Strategy Comparison</h3>
+        <h3 className="font-semibold mb-2 text-blue-300">{tr('Strategy Comparison')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-300">
           <div>
-            <div className="font-semibold text-emerald-400 mb-1">Conservative (Solana)</div>
+            <div className="font-semibold text-emerald-400 mb-1">{tr('Conservative (Solana)')}</div>
             <ul className="space-y-1">
-              <li>• Pre-analyzes dependencies before execution</li>
-              <li>• No wasted computation</li>
-              <li>• Requires developers to declare account access</li>
-              <li>• Groups may have sequential bottlenecks</li>
+              <li>• {tr('Pre-analyzes dependencies before execution')}</li>
+              <li>• {tr('No wasted computation')}</li>
+              <li>• {tr('Requires developers to declare account access')}</li>
+              <li>• {tr('Groups may have sequential bottlenecks')}</li>
             </ul>
           </div>
           <div>
-            <div className="font-semibold text-purple-400 mb-1">Optimistic (Aptos Block-STM)</div>
+            <div className="font-semibold text-purple-400 mb-1">{tr('Optimistic (Aptos Block-STM)')}</div>
             <ul className="space-y-1">
-              <li>• Maximum parallelism from the start</li>
-              <li>• Auto-detects conflicts after execution</li>
-              <li>• Some transactions may re-execute</li>
-              <li>• Better for workloads with few conflicts</li>
+              <li>• {tr('Maximum parallelism from the start')}</li>
+              <li>• {tr('Auto-detects conflicts after execution')}</li>
+              <li>• {tr('Some transactions may re-execute')}</li>
+              <li>• {tr('Better for workloads with few conflicts')}</li>
             </ul>
           </div>
         </div>

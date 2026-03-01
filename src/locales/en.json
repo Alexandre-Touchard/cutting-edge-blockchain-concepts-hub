@@ -31,5 +31,14 @@
     "en": "English",
     "fr": "French",
     "es": "Spanish"
+  },
+  "hub": {
+    "showingCount": "Showing {{filtered}} of {{total}} demos",
+    "showingCountWithQuery": "Showing {{filtered}} of {{total}} demos for \"{{query}}\"", 
+    "keyConcepts": "Key Concepts",
+    "keyTakeaways": "Key Takeaways",
+    "viewDetails": "View Details",
+    "noDemosFound": "No demos found",
+    "tryAdjustingSearch": "Try adjusting your search or filters"
   }
 }

@@ -227,11 +227,13 @@ const DAGConsensus = () => {
     <div className="w-full min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2">
-  <T term="DAG Consensus" text={define('DAG Consensus')} />
-  Interactive Demo
-</h1>
+          <T term="DAG Consensus" text={define('DAG Consensus')} />
+          {tr('Interactive Demo')}
+        </h1>
         <p className="text-slate-300">
-          Directed Acyclic Graph consensus - transactions reference previous ones, forming a web instead of a chain
+          {tr(
+            'Directed Acyclic Graph consensus - transactions reference previous ones, forming a web instead of a chain'
+          )}
         </p>
       </div>
 
@@ -265,11 +267,11 @@ const DAGConsensus = () => {
                   );
                 })
               ) : (
-                <div className="text-slate-400 text-sm">No tips available</div>
+                <div className="text-slate-400 text-sm">{tr('No tips available')}</div>
               )}
             </div>
             <p className="text-xs text-slate-400 mt-2">
-              Click tips to view details • Shift+Click to select as parents
+              {tr('Click tips to view details • Shift+Click to select as parents')}
             </p>
           </div>
 
@@ -293,7 +295,7 @@ const DAGConsensus = () => {
 
             <div className="mb-3">
               <label className="text-sm text-slate-400 mb-2 block">
-                Selected Parents ({selectedParents.length}/2)
+                {tr('Selected Parents')} ({selectedParents.length}/2)
               </label>
               <div className="min-h-[60px] bg-slate-700 rounded p-2 flex flex-wrap gap-2">
                 {selectedParents.length > 0 ? (
@@ -321,16 +323,16 @@ const DAGConsensus = () => {
               className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 disabled:cursor-not-allowed rounded font-semibold transition-all"
             >
               <Plus size={18} />
-              Add Transaction {nextId}
+              {tr('Add Transaction {{id}}', { id: nextId })}
             </button>
             
             {selectedParents.length === 0 && (
-              <p className="text-xs text-blue-400 mt-2">Will auto-select tips if none chosen</p>
+              <p className="text-xs text-blue-400 mt-2">{tr('Will auto-select tips if none chosen')}</p>
             )}
 
             <div className="mt-3 mb-2">
               <label className="text-sm text-slate-400 mb-2 block">
-                Auto-Generate Amount
+                {tr('Auto-Generate Amount')}
               </label>
               <div className="flex items-center gap-3">
                 <input
@@ -358,7 +360,7 @@ const DAGConsensus = () => {
               className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed rounded font-semibold transition-all"
             >
               <Play size={18} />
-              {isAnimating ? 'Generating...' : `Auto-Generate ${numToGenerate} TXs`}
+              {isAnimating ? tr('Generating...') : tr('Auto-Generate {{count}} TXs', { count: numToGenerate })}
             </button>
 
             <button
@@ -366,7 +368,7 @@ const DAGConsensus = () => {
               className="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded transition-all"
             >
               <RefreshCw size={16} />
-              Reset
+              {tr('Reset')}
             </button>
           </div>
 
@@ -399,28 +401,28 @@ const DAGConsensus = () => {
 
           {/* Legend */}
           <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-            <h2 className="text-lg font-semibold mb-3">Legend</h2>
+            <h2 className="text-lg font-semibold mb-3">{tr('Legend')}</h2>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full bg-emerald-600 border-2 border-emerald-400"></div>
-                <span>Confirmed</span>
+                <span>{tr('Confirmed')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full bg-slate-700 border-2 border-slate-500"></div>
-                <span>Unconfirmed</span>
+                <span>{tr('Unconfirmed')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 rounded-full bg-yellow-600 border-2 border-yellow-400"></div>
-                <span>Selected Parent</span>
+                <span>{tr('Selected Parent')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <GitBranch size={16} className="text-blue-400" />
-                <span>Tip</span>
+                <span>{tr('Tip')}</span>
               </div>
             </div>
             <div className="mt-3 pt-3 border-t border-slate-700 text-xs text-slate-400">
-              <p>💡 Click node = View details</p>
-              <p>💡 Shift+Click = Select parent</p>
+              <p>💡 {tr('Click node = View details')}</p>
+              <p>💡 {tr('Shift+Click = Select parent')}</p>
             </div>
           </div>
 
@@ -428,7 +430,7 @@ const DAGConsensus = () => {
           {selectedNode && (
             <div className="bg-slate-800 rounded-lg p-4 border-2 border-blue-600">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-semibold text-blue-300">Transaction Details</h2>
+                <h2 className="text-lg font-semibold text-blue-300">{tr('Transaction Details')}</h2>
                 <button
                   onClick={() => setSelectedNode(null)}
                   className="text-slate-400 hover:text-white text-xl"
@@ -440,7 +442,7 @@ const DAGConsensus = () => {
               <div className="space-y-3 text-sm">
                 <div className="bg-slate-700 rounded p-3">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-slate-400">Transaction ID</span>
+                    <span className="text-slate-400">{tr('Transaction ID')}</span>
                     <span className="font-bold text-xl" style={{ color: getValidatorColor(selectedNode.validator) }}>
                       {selectedNode.id}
                     </span>
@@ -448,23 +450,23 @@ const DAGConsensus = () => {
                   <div className={`inline-block px-2 py-1 rounded text-xs font-semibold ${
                     selectedNode.confirmed ? 'bg-emerald-600' : 'bg-yellow-600'
                   }`}>
-                    {selectedNode.confirmed ? '✓ CONFIRMED' : '⏳ PENDING'}
+                    {selectedNode.confirmed ? tr('✓ CONFIRMED') : tr('⏳ PENDING')}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-slate-700 rounded p-2">
-                    <div className="text-xs text-slate-400">Type</div>
+                    <div className="text-xs text-slate-400">{tr('Type')}</div>
                     <div className="font-semibold">{selectedNode.type}</div>
                   </div>
                   <div className="bg-slate-700 rounded p-2">
-                    <div className="text-xs text-slate-400">Amount</div>
+                    <div className="text-xs text-slate-400">{tr('Amount')}</div>
                     <div className="font-semibold text-emerald-400">{selectedNode.amount}</div>
                   </div>
                 </div>
 
                 <div className="bg-slate-700 rounded p-2">
-                  <div className="text-xs text-slate-400 mb-1">From → To</div>
+                  <div className="text-xs text-slate-400 mb-1">{tr('From → To')}</div>
                   <div className="font-semibold">
                     <span style={{ color: getValidatorColor(selectedNode.from) }}>{selectedNode.from}</span>
                     <span className="mx-2">→</span>
@@ -474,19 +476,19 @@ const DAGConsensus = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-slate-700 rounded p-2">
-                    <div className="text-xs text-slate-400">Validator</div>
+                    <div className="text-xs text-slate-400">{tr('Validator')}</div>
                     <div className="font-semibold" style={{ color: getValidatorColor(selectedNode.validator) }}>
                       {selectedNode.validator}
                     </div>
                   </div>
                   <div className="bg-slate-700 rounded p-2">
-                    <div className="text-xs text-slate-400">Fee</div>
+                    <div className="text-xs text-slate-400">{tr('Fee')}</div>
                     <div className="font-semibold">{selectedNode.fee}</div>
                   </div>
                 </div>
 
                 <div className="bg-slate-700 rounded p-2">
-                  <div className="text-xs text-slate-400 mb-1">Parent References</div>
+                  <div className="text-xs text-slate-400 mb-1">{tr('Parent References')}</div>
                   <div className="flex gap-2">
                     {selectedNode.parents.length > 0 ? (
                       selectedNode.parents.map(parentId => {
@@ -506,7 +508,7 @@ const DAGConsensus = () => {
                         );
                       })
                     ) : (
-                      <span className="text-slate-400 text-xs">Genesis (no parents)</span>
+                      <span className="text-slate-400 text-xs">{tr('Genesis (no parents)')}</span>
                     )}
                   </div>
                 </div>
@@ -519,13 +521,13 @@ const DAGConsensus = () => {
                     <div className="font-semibold text-blue-400">{calculateWeight(selectedNode.id)}</div>
                   </div>
                   <div className="bg-slate-700 rounded p-2">
-                    <div className="text-xs text-slate-400">Nonce</div>
+                    <div className="text-xs text-slate-400">{tr('Nonce')}</div>
                     <div className="font-semibold">{selectedNode.nonce}</div>
                   </div>
                 </div>
 
                 <div className="bg-slate-700 rounded p-2">
-                  <div className="text-xs text-slate-400">Timestamp</div>
+                  <div className="text-xs text-slate-400">{tr('Timestamp')}</div>
                   <div className="font-mono text-xs">
                     {new Date(selectedNode.timestamp).toLocaleString()}
                   </div>
@@ -662,7 +664,7 @@ const DAGConsensus = () => {
                       fontSize="11"
                       style={{ pointerEvents: 'none' }}
                     >
-                      Weight: {weight}
+                      {tr('Weight: {{weight}}', { weight })}
                     </text>
                   </g>
                 );
@@ -674,42 +676,54 @@ const DAGConsensus = () => {
 
       {/* Real-World Applications */}
       <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
-        <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+        <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 {tr('Real-World Applications')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-            <h3 className="font-semibold text-lg mb-3 text-emerald-400">Where DAGs Show Up</h3>
+            <h3 className="font-semibold text-lg mb-3 text-emerald-400">{tr('Where DAGs Show Up')}</h3>
             <div className="space-y-3 text-sm">
               <div className="bg-slate-700 rounded p-3">
                 <div className="font-bold text-blue-300">IOTA (Tangle)</div>
-                <p className="text-xs text-slate-300 mb-2">DAG-based ledger designed for IoT-style micro-transactions and high throughput without traditional blocks.</p>
-                <LinkWithCopy href="https://wiki.iota.org/" label={<>IOTA docs →</>} className="text-xs text-blue-300 hover:text-blue-200 underline" />
+                <p className="text-xs text-slate-300 mb-2">{tr('DAG-based ledger designed for IoT-style micro-transactions and high throughput without traditional blocks.')}</p>
+                <LinkWithCopy
+                  href="https://wiki.iota.org/"
+                  label={<>{tr('IOTA docs →')}</>}
+                  className="text-xs text-blue-300 hover:text-blue-200 underline"
+                />
               </div>
               <div className="bg-slate-700 rounded p-3">
                 <div className="font-bold text-purple-300">Avalanche (DAG family)</div>
-                <p className="text-xs text-slate-300 mb-2">Consensus inspired by repeated random sampling; includes DAG-like structures in parts of its design.</p>
-                <LinkWithCopy href="https://docs.avax.network/" label={<>Avalanche docs →</>} className="text-xs text-purple-300 hover:text-purple-200 underline" />
+                <p className="text-xs text-slate-300 mb-2">{tr('Consensus inspired by repeated random sampling; includes DAG-like structures in parts of its design.')}</p>
+                <LinkWithCopy
+                  href="https://docs.avax.network/"
+                  label={<>{tr('Avalanche docs →')}</>}
+                  className="text-xs text-purple-300 hover:text-purple-200 underline"
+                />
               </div>
               <div className="bg-slate-700 rounded p-3">
                 <div className="font-bold text-pink-300">Mempool / Block DAG research</div>
-                <p className="text-xs text-slate-300 mb-2">Many projects explore DAGs for parallel transaction ordering and faster confirmations.</p>
-                <LinkWithCopy href="https://eprint.iacr.org/" label={<>Cryptography ePrint (papers) →</>} className="text-xs text-pink-300 hover:text-pink-200 underline" />
+                <p className="text-xs text-slate-300 mb-2">{tr('Many projects explore DAGs for parallel transaction ordering and faster confirmations.')}</p>
+                <LinkWithCopy
+                  href="https://eprint.iacr.org/"
+                  label={<>{tr('Cryptography ePrint (papers) →')}</>}
+                  className="text-xs text-pink-300 hover:text-pink-200 underline"
+                />
               </div>
             </div>
           </div>
           <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-            <h3 className="font-semibold text-lg mb-3 text-yellow-400">Production Use Cases</h3>
+            <h3 className="font-semibold text-lg mb-3 text-yellow-400">{tr('Production Use Cases')}</h3>
             <div className="space-y-3 text-sm">
               <div className="bg-slate-700 rounded p-3">
-                <div className="font-semibold text-blue-300 mb-1">⚡ High-Throughput Payments</div>
-                <p className="text-xs text-slate-300">When many users create transactions simultaneously, DAGs can confirm in parallel instead of queuing behind a single block leader.</p>
+                <div className="font-semibold text-blue-300 mb-1">⚡ {tr('High-Throughput Payments')}</div>
+                <p className="text-xs text-slate-300">{tr('When many users create transactions simultaneously, DAGs can confirm in parallel instead of queuing behind a single block leader.')}</p>
               </div>
               <div className="bg-slate-700 rounded p-3">
-                <div className="font-semibold text-purple-300 mb-1">🤖 IoT & Micro-Transactions</div>
-                <p className="text-xs text-slate-300">Device-to-device payments or data exchange benefit from low fees and parallel confirmations.</p>
+                <div className="font-semibold text-purple-300 mb-1">🤖 {tr('IoT & Micro-Transactions')}</div>
+                <p className="text-xs text-slate-300">{tr('Device-to-device payments or data exchange benefit from low fees and parallel confirmations.')}</p>
               </div>
               <div className="bg-slate-700 rounded p-3">
-                <div className="font-semibold text-emerald-300 mb-1">📈 Data & Event Ordering</div>
-                <p className="text-xs text-slate-300">DAG-style structures also appear in distributed systems for causal ordering and conflict resolution.</p>
+                <div className="font-semibold text-emerald-300 mb-1">📈 {tr('Data & Event Ordering')}</div>
+                <p className="text-xs text-slate-300">{tr('DAG-style structures also appear in distributed systems for causal ordering and conflict resolution.')}</p>
               </div>
             </div>
           </div>
@@ -718,33 +732,51 @@ const DAGConsensus = () => {
 
       {/* Further Reading */}
       <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
-        <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+        <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 {tr('Further Reading')}</h2>
         <ul className="space-y-2 text-sm">
-          <li><LinkWithCopy href="https://wiki.iota.org/" label={<>IOTA documentation →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
-          <li><LinkWithCopy href="https://docs.avax.network/" label={<>Avalanche documentation →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
-          <li><LinkWithCopy href="https://eprint.iacr.org/" label={<>IACR ePrint (research papers) →</>} className="text-blue-300 hover:text-blue-200 underline" /></li>
+          <li>
+            <LinkWithCopy
+              href="https://wiki.iota.org/"
+              label={<>{tr('IOTA documentation →')}</>}
+              className="text-blue-300 hover:text-blue-200 underline"
+            />
+          </li>
+          <li>
+            <LinkWithCopy
+              href="https://docs.avax.network/"
+              label={<>{tr('Avalanche documentation →')}</>}
+              className="text-blue-300 hover:text-blue-200 underline"
+            />
+          </li>
+          <li>
+            <LinkWithCopy
+              href="https://eprint.iacr.org/"
+              label={<>{tr('IACR ePrint (research papers) →')}</>}
+              className="text-blue-300 hover:text-blue-200 underline"
+            />
+          </li>
         </ul>
       </div>
 
       {/* Bottom Info */}
       <div className="mt-6 bg-blue-900 bg-opacity-20 border border-blue-700 rounded-lg p-4">
-        <h3 className="font-semibold mb-2 text-blue-300">How DAG Consensus Works</h3>
+        <h3 className="font-semibold mb-2 text-blue-300">{tr('How DAG Consensus Works')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-slate-300">
           <div>
-            <div className="font-semibold text-blue-400 mb-1">1. Reference Parents</div>
-            <p>Each transaction references 1-2 previous transactions (usually tips). This creates a web structure instead of a single chain.</p>
+            <div className="font-semibold text-blue-400 mb-1">{tr('1. Reference Parents')}</div>
+            <p>{tr('Each transaction references 1-2 previous transactions (usually tips). This creates a web structure instead of a single chain.')}</p>
           </div>
           <div>
-            <div className="font-semibold text-blue-400 mb-1">2. Cumulative Weight</div>
-            <p>Weight increases as more transactions reference it (directly or indirectly). Higher weight = more consensus.</p>
+            <div className="font-semibold text-blue-400 mb-1">{tr('2. Cumulative Weight')}</div>
+            <p>{tr('Weight increases as more transactions reference it (directly or indirectly). Higher weight = more consensus.')}</p>
           </div>
           <div>
-            <div className="font-semibold text-blue-400 mb-1">3. Confirmation</div>
-            <p>Once a transaction has enough cumulative weight (≥3 references), it becomes confirmed and immutable.</p>
+            <div className="font-semibold text-blue-400 mb-1">{tr('3. Confirmation')}</div>
+            <p>{tr('Once a transaction has enough cumulative weight (≥3 references), it becomes confirmed and immutable.')}</p>
           </div>
         </div>
         <p className="text-xs text-slate-400 mt-3">
-          💡 Try: Click tips to select parents, then add your transaction. Watch weight propagate and confirmations happen!
+          💡 {tr('Try: Click tips to select parents, then add your transaction. Watch weight propagate and confirmations happen!')}
         </p>
       </div>
     </div>

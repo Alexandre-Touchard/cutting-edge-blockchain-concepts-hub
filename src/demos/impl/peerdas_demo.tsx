@@ -81,14 +81,14 @@ const PeerDASDemo = () => {
     };
     
     setBlobData(blob);
-    addEvent(`Blob created: ${numColumns} columns, ${blob.size}KB`, 'success');
+    addEvent(tr('Blob created: {{columns}} columns, {{size}}KB', { columns: numColumns, size: blob.size }), 'success');
   };
 
   const publishBlob = async () => {
     if (!blobData) return;
     
     setIsPublishing(true);
-    addEvent('Publishing blob to network...', 'info');
+    addEvent(tr('Publishing blob to network...'), 'info');
     
     // Simulate column distribution
     await new Promise(resolve => setTimeout(resolve, 800));
@@ -111,7 +111,13 @@ const PeerDASDemo = () => {
     setIsPublishing(false);
     
     const totalCustodians = blobData.columns.reduce((sum, col) => sum + col.custody.length, 0);
-    addEvent(`Blob published! ${totalCustodians} column assignments across ${numNodes} nodes`, 'success');
+    addEvent(
+      tr('Blob published! {{assignments}} column assignments across {{nodes}} nodes', {
+        assignments: totalCustodians,
+        nodes: numNodes
+      }),
+      'success'
+    );
   };
 
   const performSampling = async () => {
@@ -120,7 +126,7 @@ const PeerDASDemo = () => {
     setIsSampling(true);
     setAvailabilityConfirmed(false);
     setSamplingResults([]);
-    addEvent('Starting random sampling...', 'info');
+    addEvent(tr('Starting random sampling...'), 'info');
     
     // Each node samples random columns
     const results = [];
@@ -165,8 +171,14 @@ const PeerDASDemo = () => {
         n.id === node.id ? { ...n, sampledColumns, samplingSuccess: successRate === 1.0 } : n
       ));
       
-      addEvent(`Node ${node.id} sampled ${samplingTarget} columns - ${(successRate * 100).toFixed(0)}% success`, 
-               successRate === 1.0 ? 'success' : 'error');
+      addEvent(
+        tr('Node {{id}} sampled {{count}} columns - {{pct}}% success', {
+          id: node.id,
+          count: samplingTarget,
+          pct: (successRate * 100).toFixed(0)
+        }),
+        successRate === 1.0 ? 'success' : 'error'
+      );
     }
     
     setSamplingResults(results);
@@ -177,10 +189,13 @@ const PeerDASDemo = () => {
     setAvailabilityConfirmed(allNodesSucceeded);
     
     if (allNodesSucceeded) {
-      addEvent('✓ Data availability CONFIRMED - All nodes successfully sampled', 'success');
+      addEvent(tr('✓ Data availability CONFIRMED - All nodes successfully sampled'), 'success');
     } else {
       const failedNodes = results.filter(r => !r.allSuccess).length;
-      addEvent(`⚠ Data availability UNCERTAIN - ${failedNodes} nodes had sampling failures`, 'error');
+      addEvent(
+        tr('⚠ Data availability UNCERTAIN - {{count}} nodes had sampling failures', { count: failedNodes }),
+        'error'
+      );
     }
   };
 
@@ -229,7 +244,7 @@ const PeerDASDemo = () => {
         <div className="mb-6">
           <h1 className="text-3xl font-bold mb-2">{tr('PeerDAS: Peer Data Availability Sampling')}</h1>
           <p className="text-slate-300">
-            Ethereum's scalable data availability layer - nodes sample random columns instead of downloading everything
+            {tr("Ethereum's scalable data availability layer - nodes sample random columns instead of downloading everything")}
           </p>
         </div>
 
@@ -239,7 +254,7 @@ const PeerDASDemo = () => {
             <div className="flex items-center gap-2 mb-2">
               <Users size={20} className="text-blue-400" />
               <span className="text-sm text-slate-400">
-                Network Nodes
+                {tr('Network Nodes')}
                 <Tooltip text={define('Network Nodes')} />
               </span>
             </div>
@@ -250,7 +265,7 @@ const PeerDASDemo = () => {
             <div className="flex items-center gap-2 mb-2">
               <Database size={20} className="text-purple-400" />
               <span className="text-sm text-slate-400">
-                Columns/Node
+                {tr('Columns/Node')}
                 <Tooltip text={define('Columns/Node')} />
               </span>
             </div>
@@ -261,7 +276,7 @@ const PeerDASDemo = () => {
             <div className="flex items-center gap-2 mb-2">
               <Zap size={20} className="text-yellow-400" />
               <span className="text-sm text-slate-400">
-                Samples/Node
+                {tr('Samples/Node')}
                 <Tooltip text={define('Samples/Node')} />
               </span>
             </div>
@@ -272,7 +287,7 @@ const PeerDASDemo = () => {
             <div className="flex items-center gap-2 mb-2">
               <Shield size={20} className="text-emerald-400" />
               <span className="text-sm text-slate-400">
-                Coverage
+                {tr('Coverage')}
                 <Tooltip text={define('Coverage')} />
               </span>
             </div>
@@ -287,12 +302,16 @@ const PeerDASDemo = () => {
                 <AlertCircle size={20} className="text-yellow-400" />
               )}
               <span className="text-sm text-slate-400">
-                Availability
+                {tr('Availability')}
                 <Tooltip text={define('Availability')} />
               </span>
             </div>
             <div className="text-lg font-bold">
-              {availabilityConfirmed ? '✓ Confirmed' : samplingResults.length > 0 ? `${samplingSuccessRate}%` : 'N/A'}
+              {availabilityConfirmed
+                  ? tr('✓ Confirmed')
+                  : samplingResults.length > 0
+                    ? `${samplingSuccessRate}%`
+                    : tr('N/A')}
             </div>
           </div>
         </div>
@@ -302,12 +321,12 @@ const PeerDASDemo = () => {
           <div className="space-y-6">
             {/* Network Config */}
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">Network Configuration</h2>
+              <h2 className="text-xl font-semibold mb-4">{tr('Network Configuration')}</h2>
               
               <div className="space-y-4">
                 <div>
                   <label className="text-sm text-slate-400 mb-2 block">
-                    Number of Nodes: {numNodes}
+                    {tr('Number of Nodes')}: {numNodes}
                   </label>
                   <input
                     type="range"
@@ -322,7 +341,7 @@ const PeerDASDemo = () => {
 
                 <div>
                   <label className="text-sm text-slate-400 mb-2 block">
-                    Columns Per Node: {columnsPerNode}
+                    {tr('Columns Per Node')}: {columnsPerNode}
                   </label>
                   <input
                     type="range"
@@ -337,7 +356,7 @@ const PeerDASDemo = () => {
 
                 <div>
                   <label className="text-sm text-slate-400 mb-2 block">
-                    Samples Per Node: {samplingTarget}
+                    {tr('Samples Per Node')}: {samplingTarget}
                   </label>
                   <input
                     type="range"
@@ -354,7 +373,7 @@ const PeerDASDemo = () => {
 
             {/* Blob Actions */}
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">Blob Operations</h2>
+              <h2 className="text-xl font-semibold mb-4">{tr('Blob Operations')}</h2>
               
               <div className="space-y-3">
                 <button
@@ -363,7 +382,7 @@ const PeerDASDemo = () => {
                   className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 rounded font-semibold flex items-center justify-center gap-2"
                 >
                   <Database size={18} />
-                  Create Blob ({numColumns} columns)
+                  {tr('Create Blob ({{count}} columns)', { count: numColumns })}
                 </button>
 
                 <button
@@ -388,24 +407,24 @@ const PeerDASDemo = () => {
                   onClick={initializeNetwork}
                   className="w-full px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded font-semibold"
                 >
-                  Reset Network
+                  {tr('Reset Network')}
                 </button>
               </div>
 
               {blobData && (
                 <div className="mt-4 p-3 bg-slate-700 rounded text-sm">
-                  <div className="font-semibold mb-2">Blob Info:</div>
+                  <div className="font-semibold mb-2">{tr('Blob Info')}:</div>
                   <div className="space-y-1 text-xs">
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Total Columns:</span>
+                      <span className="text-slate-400">{tr('Total Columns')}:</span>
                       <span className="font-semibold">{numColumns}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Size:</span>
+                      <span className="text-slate-400">{tr('Size')}:</span>
                       <span className="font-semibold">{blobData.size} KB</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-400">Redundancy:</span>
+                      <span className="text-slate-400">{tr('Redundancy')}:</span>
                       <span className="font-semibold">{coverage.avg}x</span>
                     </div>
                   </div>
@@ -415,11 +434,11 @@ const PeerDASDemo = () => {
 
             {/* Event Log */}
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">Event Log</h2>
+              <h2 className="text-xl font-semibold mb-4">{tr('Event Log')}</h2>
               <div className="space-y-2 max-h-80 overflow-y-auto">
                 {events.length === 0 ? (
                   <div className="text-center text-slate-400 py-4 text-sm">
-                    No events yet
+                    {tr('No events yet')}
                   </div>
                 ) : (
                   events.map(event => (
@@ -436,7 +455,7 @@ const PeerDASDemo = () => {
           {/* Middle Column - Node Network */}
           <div className="space-y-6">
             <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-              <h2 className="text-xl font-semibold mb-4">Network Nodes</h2>
+              <h2 className="text-xl font-semibold mb-4">{tr('Network Nodes')}</h2>
               
               <div className="grid grid-cols-4 gap-2 max-h-[700px] overflow-y-auto">
                 {nodes.map(node => (
@@ -462,19 +481,19 @@ const PeerDASDemo = () => {
               <div className="mt-4 pt-4 border-t border-slate-700 text-xs space-y-1">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-slate-700 border-2 border-slate-600 rounded"></div>
-                  <span>Not sampled yet</span>
+                  <span>{tr('Not sampled yet')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-blue-700 border-2 border-blue-500 rounded"></div>
-                  <span>Has blob data</span>
+                  <span>{tr('Has blob data')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-emerald-700 border-2 border-emerald-500 rounded"></div>
-                  <span>Sampling success</span>
+                  <span>{tr('Sampling success')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-red-700 border-2 border-red-500 rounded"></div>
-                  <span>Sampling failed</span>
+                  <span>{tr('Sampling failed')}</span>
                 </div>
               </div>
             </div>
@@ -484,14 +503,14 @@ const PeerDASDemo = () => {
           <div className="space-y-6">
             {selectedNode !== null ? (
               <div className="bg-slate-800 rounded-lg p-4 border-2 border-yellow-500">
-                <h2 className="text-xl font-semibold mb-4">Node {selectedNode} Details</h2>
+                <h2 className="text-xl font-semibold mb-4">{tr('Node {{id}} Details', { id: selectedNode })}</h2>
                 
                 {(() => {
                   const node = nodes.find(n => n.id === selectedNode);
                   return (
                     <div className="space-y-4">
                       <div>
-                        <div className="text-sm text-slate-400 mb-2">Custodied Columns ({node.assignedColumns.length}):</div>
+                        <div className="text-sm text-slate-400 mb-2">{tr('Custodied Columns ({{count}})', { count: node.assignedColumns.length })}:</div>
                         <div className="flex flex-wrap gap-1">
                           {node.assignedColumns.map(col => (
                             <div key={col} className="px-2 py-1 bg-blue-900 text-blue-300 rounded text-xs font-mono">
@@ -504,7 +523,7 @@ const PeerDASDemo = () => {
                       {node.sampledColumns.length > 0 && (
                         <div>
                           <div className="text-sm text-slate-400 mb-2">
-                            Sampled Columns ({node.sampledColumns.length}):
+                            {tr('Sampled Columns ({{count}})', { count: node.sampledColumns.length })}:
                           </div>
                           <div className="space-y-1 max-h-96 overflow-y-auto">
                             {node.sampledColumns.map((sample, idx) => (
@@ -520,11 +539,11 @@ const PeerDASDemo = () => {
                                   ) : (
                                     <XCircle size={14} className="text-red-400" />
                                   )}
-                                  <span className="font-mono">Column {sample.columnIndex}</span>
+                                  <span className="font-mono">{tr('Column {{index}}', { index: sample.columnIndex })}</span>
                                 </div>
                                 {sample.success && (
                                   <span className="text-slate-400">
-                                    from Node {sample.provider}
+                                    {tr('from Node {{id}}', { id: sample.provider })}
                                   </span>
                                 )}
                               </div>
@@ -540,40 +559,40 @@ const PeerDASDemo = () => {
               <>
               {/* Real-World Applications */}
               <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
-                <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 Real-World Applications</h2>
+                <h2 className="text-2xl font-bold mb-4 text-blue-300">🌐 {tr('Real-World Applications')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-                    <h3 className="font-semibold text-lg mb-3 text-emerald-400">Where Data Sampling Matters</h3>
+                    <h3 className="font-semibold text-lg mb-3 text-emerald-400">{tr('Where Data Sampling Matters')}</h3>
                     <div className="space-y-3 text-sm">
                       <div className="bg-slate-700 rounded p-3">
-                        <div className="font-bold text-blue-300">Ethereum Danksharding (Roadmap)</div>
-                        <p className="text-xs text-slate-300 mb-2">PeerDAS-style sampling helps clients verify that blob data is available without downloading everything.</p>
-                        <a href="https://ethereum.org/en/roadmap/danksharding/" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-300 hover:text-blue-200 underline">Ethereum roadmap →</a>
+                        <div className="font-bold text-blue-300">{tr('Ethereum Danksharding (Roadmap)')}</div>
+                        <p className="text-xs text-slate-300 mb-2">{tr('PeerDAS-style sampling helps clients verify that blob data is available without downloading everything.')}</p>
+                        <a href="https://ethereum.org/en/roadmap/danksharding/" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-300 hover:text-blue-200 underline">{tr('Ethereum roadmap →')}</a>
                       </div>
                       <div className="bg-slate-700 rounded p-3">
-                        <div className="font-bold text-purple-300">Rollup Data Availability</div>
-                        <p className="text-xs text-slate-300">Rollups depend on DA to let anyone reconstruct state. Sampling makes DA scalable to many validators/nodes.</p>
+                        <div className="font-bold text-purple-300">{tr('Rollup Data Availability')}</div>
+                        <p className="text-xs text-slate-300">{tr('Rollups depend on DA to let anyone reconstruct state. Sampling makes DA scalable to many validators/nodes.')}</p>
                       </div>
                       <div className="bg-slate-700 rounded p-3">
-                        <div className="font-bold text-pink-300">Light Clients</div>
-                        <p className="text-xs text-slate-300">Light nodes can participate in DA checks, increasing decentralization while keeping bandwidth low.</p>
+                        <div className="font-bold text-pink-300">{tr('Light Clients')}</div>
+                        <p className="text-xs text-slate-300">{tr('Light nodes can participate in DA checks, increasing decentralization while keeping bandwidth low.')}</p>
                       </div>
                     </div>
                   </div>
                   <div className="bg-slate-800 bg-opacity-50 rounded-lg p-4">
-                    <h3 className="font-semibold text-lg mb-3 text-yellow-400">Production Use Cases</h3>
+                    <h3 className="font-semibold text-lg mb-3 text-yellow-400">{tr('Production Use Cases')}</h3>
                     <div className="space-y-3 text-sm">
                       <div className="bg-slate-700 rounded p-3">
-                        <div className="font-semibold text-blue-300 mb-1">📦 Large Batch Posting</div>
-                        <p className="text-xs text-slate-300">More blob capacity means rollups can post more transactions, reducing fees for end users.</p>
+                        <div className="font-semibold text-blue-300 mb-1">📦 {tr('Large Batch Posting')}</div>
+                        <p className="text-xs text-slate-300">{tr('More blob capacity means rollups can post more transactions, reducing fees for end users.')}</p>
                       </div>
                       <div className="bg-slate-700 rounded p-3">
-                        <div className="font-semibold text-purple-300 mb-1">🌍 Decentralized Verification</div>
-                        <p className="text-xs text-slate-300">Sampling lets many nodes independently verify availability, reducing reliance on a small set of powerful nodes.</p>
+                        <div className="font-semibold text-purple-300 mb-1">🌍 {tr('Decentralized Verification')}</div>
+                        <p className="text-xs text-slate-300">{tr('Sampling lets many nodes independently verify availability, reducing reliance on a small set of powerful nodes.')}</p>
                       </div>
                       <div className="bg-slate-700 rounded p-3">
-                        <div className="font-semibold text-emerald-300 mb-1">🧱 Fault Tolerance</div>
-                        <p className="text-xs text-slate-300">Redundant column distribution means the network can tolerate node outages while still recovering the full blob.</p>
+                        <div className="font-semibold text-emerald-300 mb-1">🧱 {tr('Fault Tolerance')}</div>
+                        <p className="text-xs text-slate-300">{tr('Redundant column distribution means the network can tolerate node outages while still recovering the full blob.')}</p>
                       </div>
                     </div>
                   </div>
@@ -582,53 +601,88 @@ const PeerDASDemo = () => {
 
               {/* Further Reading */}
               <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
-                <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 Further Reading</h2>
+                <h2 className="text-2xl font-bold mb-4 text-blue-300">📚 {tr('Further Reading')}</h2>
                 <ul className="space-y-2 text-sm">
-                  <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://ethereum.org/en/roadmap/danksharding/" target="_blank" rel="noopener noreferrer">Ethereum roadmap: Danksharding →</a></li>
-                  <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://notes.ethereum.org/@vbuterin/proto_danksharding_faq" target="_blank" rel="noopener noreferrer">Vitalik: Proto-danksharding FAQ →</a></li>
-                  <li><a className="text-blue-300 hover:text-blue-200 underline" href="https://eips.ethereum.org/EIPS/eip-4844" target="_blank" rel="noopener noreferrer">EIP-4844 (proto-danksharding) →</a></li>
+                  <li>
+                    <a
+                      className="text-blue-300 hover:text-blue-200 underline"
+                      href="https://ethereum.org/en/roadmap/danksharding/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {tr('Ethereum roadmap: Danksharding →')}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="text-blue-300 hover:text-blue-200 underline"
+                      href="https://notes.ethereum.org/@vbuterin/proto_danksharding_faq"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {tr('Vitalik: Proto-danksharding FAQ →')}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="text-blue-300 hover:text-blue-200 underline"
+                      href="https://eips.ethereum.org/EIPS/eip-4844"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {tr('EIP-4844 (proto-danksharding) →')}
+                    </a>
+                  </li>
                 </ul>
               </div>
 
               <div className="bg-slate-800 rounded-lg p-4 border border-slate-700">
-                <h2 className="text-xl font-semibold mb-4">How PeerDAS Works</h2>
+                <h2 className="text-xl font-semibold mb-4">{tr('How PeerDAS Works')}</h2>
                 
                 <div className="space-y-4 text-sm text-slate-300">
                   <div>
-                    <div className="font-semibold text-blue-400 mb-2">1. Data Sharding</div>
+                    <div className="font-semibold text-blue-400 mb-2">{tr('1. Data Sharding')}</div>
                     <p className="text-xs">
-                      Blob data is split into {numColumns} columns. Each node only stores a subset ({columnsPerNode} columns) instead of the entire blob.
+                      {tr('Blob data is split into {{numColumns}} columns. Each node only stores a subset ({{columnsPerNode}} columns) instead of the entire blob.', { numColumns, columnsPerNode })}
                     </p>
                   </div>
 
                   <div>
-                    <div className="font-semibold text-blue-400 mb-2">2. Random Distribution</div>
+                    <div className="font-semibold text-blue-400 mb-2">{tr('2. Random Distribution')}</div>
                     <p className="text-xs">
-                      Columns are distributed across the network with redundancy (average {coverage.avg}x coverage). Multiple nodes hold each column for reliability.
+                      {tr('Columns are distributed across the network with redundancy (average {{coverage}}x coverage). Multiple nodes hold each column for reliability.', { coverage: coverage.avg })}
                     </p>
                   </div>
 
                   <div>
-                    <div className="font-semibold text-blue-400 mb-2">3. Sampling</div>
+                    <div className="font-semibold text-blue-400 mb-2">{tr('3. Sampling')}</div>
                     <p className="text-xs">
-                      Instead of downloading everything, nodes sample {samplingTarget} random columns. If all samples succeed, data is statistically available.
+                      {tr('Instead of downloading everything, nodes sample {{samplingTarget}} random columns. If all samples succeed, data is statistically available.', { samplingTarget })}
                     </p>
                   </div>
 
                   <div>
-                    <div className="font-semibold text-blue-400 mb-2">4. Availability Proof</div>
+                    <div className="font-semibold text-blue-400 mb-2">{tr('4. Availability Proof')}</div>
                     <p className="text-xs">
-                      With {samplingTarget} samples from {numColumns} columns, there's {'>'}99.9% confidence the entire blob is retrievable if all nodes succeed.
+                      {tr("With {{samplingTarget}} samples from {{numColumns}} columns, there's >99.9% confidence the entire blob is retrievable if all nodes succeed.", { samplingTarget, numColumns })}
                     </p>
                   </div>
 
                   <div className="bg-blue-900 bg-opacity-20 border border-blue-700 rounded p-3">
-                    <div className="text-xs font-semibold text-blue-300 mb-1">Key Benefits:</div>
+                    <div className="text-xs font-semibold text-blue-300 mb-1">{tr('Key Benefits')}:</div>
                     <ul className="text-xs space-y-1 text-slate-300">
-                      <li>• Nodes store only {((columnsPerNode / numColumns) * 100).toFixed(0)}% of data</li>
-                      <li>• Network bandwidth reduced {Math.floor(numColumns / samplingTarget)}x vs full download</li>
-                      <li>• Scales to hundreds of nodes efficiently</li>
-                      <li>• Maintains strong availability guarantees</li>
+                      <li>
+                        {tr('• Nodes store only {{pct}}% of data', {
+                          pct: ((columnsPerNode / numColumns) * 100).toFixed(0)
+                        })}
+                      </li>
+                      <li>
+                        {tr('• Network bandwidth reduced {{factor}}x vs full download', {
+                          factor: Math.floor(numColumns / samplingTarget)
+                        })}
+                      </li>
+                      <li>{tr('• Scales to hundreds of nodes efficiently')}</li>
+                      <li>{tr('• Maintains strong availability guarantees')}</li>
                     </ul>
                   </div>
                 </div>

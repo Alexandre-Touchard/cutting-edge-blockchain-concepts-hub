@@ -70,17 +70,19 @@ function RealWorldApplications({
   tr
 }: {
   items: Array<{ title: string; href: string; color: string; body: string }>;
-  tr: TrFn;
+  tr?: TrFn;
 }) {
+  const { tr: trLocal } = useDemoI18n('erc-standards');
+  const trResolved = tr ?? trLocal;
   return (
     <div className="mt-6 bg-gradient-to-r from-blue-900 to-purple-900 bg-opacity-30 rounded-lg p-6 border border-blue-700">
-      <h2 className="text-2xl font-bold mb-4 text-blue-300">{tr('Real-World Applications')}</h2>
+      <h2 className="text-2xl font-bold mb-4 text-blue-300">{trResolved('Real-World Applications')}</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {items.map((it) => (
           <div key={it.title} className="bg-slate-700 rounded p-3">
             <div className={`font-bold ${it.color} flex items-center justify-between gap-3`}>
               <span>{it.title}</span>
-              <LinkWithCopy href={it.href} label={<>{tr('Docs')}</>} className={`text-xs ${it.color} hover:opacity-90 underline`} />
+              <LinkWithCopy href={it.href} label={<>{trResolved('Docs')}</>} className={`text-xs ${it.color} hover:opacity-90 underline`} />
             </div>
             <p className="text-xs text-slate-300 mt-1">{it.body}</p>
           </div>
@@ -95,11 +97,13 @@ function FurtherReading({
   tr
 }: {
   links: Array<{ label: string; href: string; summary: string }>;
-  tr: TrFn;
+  tr?: TrFn;
 }) {
+  const { tr: trLocal } = useDemoI18n('erc-standards');
+  const trResolved = tr ?? trLocal;
   return (
     <div className="mt-6 bg-slate-800 rounded-lg p-6 border border-slate-700">
-      <h2 className="text-2xl font-bold mb-4 text-blue-300">{tr('Further Reading')}</h2>
+      <h2 className="text-2xl font-bold mb-4 text-blue-300">{trResolved('Further Reading')}</h2>
       <ul className="space-y-3 text-sm">
         {links.map((l) => (
           <li key={l.href} className="bg-slate-900 rounded-lg p-4 border border-slate-700">
@@ -118,24 +122,85 @@ function FurtherReading({
   );
 }
 
-function ImplementationSection({
-  items,
-  tr
-}: {
-  items: Array<{ title: string; body: React.ReactNode }>;
-  tr: TrFn;
-}) {
+type ImplementationApiRow =
+  | { kind: string; sig: string }
+  | { label: string; value: string }
+  | Record<string, unknown>;
+
+type ImplementationSectionProps =
+  | {
+      // Old-style: grid cards
+      items: Array<{ title: string; body: React.ReactNode }>;
+      title?: string;
+      bullets?: never;
+      api?: never;
+      tr?: TrFn;
+    }
+  | {
+      // New-style: bullets + API list
+      title?: string;
+      bullets: string[];
+      api?: ImplementationApiRow[];
+      items?: never;
+      tr?: TrFn;
+    };
+
+function ImplementationSection(props: ImplementationSectionProps) {
+  const { tr: trLocal } = useDemoI18n('erc-standards');
+  const trResolved = props.tr ?? trLocal;
+
+  const title = props.title ?? 'How the Standard Works (Implementation)';
+
   return (
     <div className="mt-6 bg-slate-900 rounded-lg p-6 border border-slate-700">
-      <h3 className="text-lg font-bold mb-3 text-blue-200">{tr('How the Standard Works (Implementation)')}</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {items.map((it) => (
-          <div key={it.title} className="bg-slate-800 rounded p-4 border border-slate-700">
-            <div className="font-semibold text-slate-100 mb-1">{it.title}</div>
-            <div className="text-sm text-slate-300 leading-relaxed">{it.body}</div>
-          </div>
-        ))}
-      </div>
+      <h3 className="text-lg font-bold mb-3 text-blue-200">{trResolved(title)}</h3>
+
+      {'items' in props ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {props.items.map((it) => (
+            <div key={it.title} className="bg-slate-800 rounded p-4 border border-slate-700">
+              <div className="font-semibold text-slate-100 mb-1">{it.title}</div>
+              <div className="text-sm text-slate-300 leading-relaxed">{it.body}</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <>
+          <ul className="list-disc pl-5 space-y-1 text-sm text-slate-300">
+            {props.bullets.map((b, idx) => (
+              <li key={idx} className="leading-relaxed">
+                {b}
+              </li>
+            ))}
+          </ul>
+
+          {props.api && props.api.length > 0 ? (
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+              {props.api.map((row, idx) => {
+                const label =
+                  typeof (row as any).label === 'string'
+                    ? (row as any).label
+                    : typeof (row as any).kind === 'string'
+                      ? (row as any).kind
+                      : trResolved('API');
+                const value =
+                  typeof (row as any).value === 'string'
+                    ? (row as any).value
+                    : typeof (row as any).sig === 'string'
+                      ? (row as any).sig
+                      : '';
+
+                return (
+                  <div key={idx} className="bg-slate-800 rounded p-3 border border-slate-700">
+                    <div className="text-xs text-slate-400 mb-1">{label}</div>
+                    <div className="font-mono text-xs text-slate-200 break-words">{value}</div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
+        </>
+      )}
     </div>
   );
 }
@@ -353,32 +418,31 @@ function ERC721Demo() {
     <div className="space-y-6">
       <Card>
         <SectionTitle>
-          ERC-721: NFTs <T text={def('ERC-721')} />
+          {tr('ERC-721')}: {tr('NFTs')} <T text={def('ERC-721')} />
         </SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          ERC-721 tracks ownership per <strong>tokenId</strong>. Approvals can be per-token or per-operator in the full standard
-          (this simplified demo shows per-token approvals).
+          {tr('ERC-721 tracks ownership per')} <strong>{tr('tokenId')}</strong>. {tr('Approvals can be per-token or per-operator in the full standard')} ({tr('this simplified demo shows per-token approvals')}).
         </p>
 
         <ImplementationSection
           items={[
             {
-              title: 'Core interface + events',
+              title: tr('Core interface + events'),
               body: (
                 <>
                   <div><code>ownerOf(tokenId)</code>, <code>balanceOf(owner)</code>, <code>approve(to, tokenId)</code>, <code>getApproved(tokenId)</code></div>
                   <div><code>setApprovalForAll(operator, approved)</code>, <code>isApprovedForAll(owner, operator)</code></div>
                   <div><code>safeTransferFrom(from, to, tokenId[, data])</code>, <code>transferFrom(from, to, tokenId)</code></div>
-                  <div className="mt-2">Events: <code>Transfer(from, to, tokenId)</code>, <code>Approval(owner, approved, tokenId)</code>, <code>ApprovalForAll(owner, operator, approved)</code></div>
+                  <div className="mt-2">{tr('Events')}: <code>Transfer(from, to, tokenId)</code>, <code>Approval(owner, approved, tokenId)</code>, <code>ApprovalForAll(owner, operator, approved)</code></div>
                 </>
               )
             },
             {
-              title: 'Storage + receiver check',
+              title: tr('Storage + receiver check'),
               body: (
                 <>
-                  <div>Common storage: <code>mapping(uint256 =&gt; address) ownerOf</code>, <code>mapping(address =&gt; uint256) balance</code>, plus approvals mappings.</div>
-                  <div className="mt-2"><code>safeTransferFrom</code> must call <code>onERC721Received</code> on contracts to prevent tokens being locked in non-receiver contracts.</div>
+                  <div>{tr('Common storage')}: <code>mapping(uint256 =&gt; address) ownerOf</code>, <code>mapping(address =&gt; uint256) balance</code>, {tr('plus approvals mappings.')}</div>
+                  <div className="mt-2"><code>safeTransferFrom</code> {tr('must call')} <code>onERC721Received</code> {tr('on contracts to prevent tokens being locked in non-receiver contracts.')}</div>
                 </>
               )
             }
@@ -387,7 +451,7 @@ function ERC721Demo() {
 
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-2">Tokens</div>
+            <div className="text-xs text-slate-400 mb-2">{tr('Tokens')}</div>
             <div className="flex flex-wrap gap-2">
               {tokenIds.map((id) => (
                 <button
@@ -402,7 +466,7 @@ function ERC721Demo() {
           </div>
 
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-2">Selected token</div>
+            <div className="text-xs text-slate-400 mb-2">{tr('Selected token')}</div>
             <div className="text-sm">
               ownerOf({selectedId}) <T text={def('ownerOf')} /> = <span className="font-bold">{ownerOf ?? '-'}</span>
             </div>
@@ -413,10 +477,10 @@ function ERC721Demo() {
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-          <AddressSelect value={caller} onChange={setCaller} label="Caller" />
-          <AddressSelect value={to} onChange={setTo} label="To (recipient / approved)" />
+          <AddressSelect value={caller} onChange={setCaller} label={tr('Caller')} />
+          <AddressSelect value={to} onChange={setTo} label={tr('To (recipient / approved)')} />
           <label className="text-sm text-slate-300 flex flex-col gap-1">
-            <span className="text-slate-400">Token ID <T text={def('Token ID')} /></span>
+            <span className="text-slate-400">{tr('Token ID')} <T text={def('Token ID')} /></span>
             <select value={selectedId} onChange={(e) => setSelectedId(Number(e.target.value))} className="bg-slate-900 border border-slate-700 rounded px-3 py-2">
               {tokenIds.map((id) => (
                 <option key={id} value={id}>#{id}</option>
@@ -426,49 +490,49 @@ function ERC721Demo() {
 
           <div className="flex flex-wrap gap-3 md:col-span-4 mt-2">
             <button onClick={mint} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded font-semibold inline-flex items-center gap-2">
-              <Plus size={16} /> mint <T text={def('mint')} />
+              <Plus size={16} /> {tr('mint')} <T text={def('mint')} />
             </button>
             <button onClick={approve} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded font-semibold">
               {tr('approve')} <T text={def('approve')} />
             </button>
             <button onClick={transfer} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold">
-              safeTransferFrom <T text={def('safeTransferFrom')} />
+              {tr('safeTransferFrom')} <T text={def('safeTransferFrom')} />
             </button>
           </div>
 
           <div className="md:col-span-4 mt-4 text-xs text-slate-400">
-            Tip: to simulate an approved transfer, set Caller to the approved address and click safeTransferFrom.
+            {tr('Tip')}: {tr('to simulate an approved transfer, set Caller to the approved address and click safeTransferFrom.')}
           </div>
         </div>
       </Card>
 
       <RealWorldApplications
         items={[
-          { title: 'Art & collectibles', href: 'https://ethereum.org/en/nft/', color: 'text-blue-300', body: 'Unique token IDs represent unique items; marketplaces rely on standard calls.' },
-          { title: 'Gaming items', href: 'https://docs.opensea.io/', color: 'text-purple-300', body: 'Ownership and transfers are composable across games, wallets, and marketplaces.' },
-          { title: 'Membership / access', href: 'https://eips.ethereum.org/EIPS/eip-721', color: 'text-pink-300', body: 'NFT ownership can gate access to communities, content, or events.' }
+          { title: tr('Art & collectibles'), href: 'https://ethereum.org/en/nft/', color: 'text-blue-300', body: tr('Unique token IDs represent unique items; marketplaces rely on standard calls.') },
+          { title: tr('Gaming items'), href: 'https://docs.opensea.io/', color: 'text-purple-300', body: tr('Ownership and transfers are composable across games, wallets, and marketplaces.') },
+          { title: tr('Membership / access'), href: 'https://eips.ethereum.org/EIPS/eip-721', color: 'text-pink-300', body: tr('NFT ownership can gate access to communities, content, or events.') }
         ]}
       />
 
       <FurtherReading
         links={[
           {
-            label: 'EIP-721: Non-Fungible Token Standard',
+            label: tr('EIP-721: Non-Fungible Token Standard'),
             href: 'https://eips.ethereum.org/EIPS/eip-721',
             summary:
-              'Defines NFT ownership, transfer rules, and approval mechanisms. Also documents safe transfer checks for contract recipients.'
+              tr('Defines NFT ownership, transfer rules, and approval mechanisms. Also documents safe transfer checks for contract recipients.')
           },
           {
-            label: 'OpenZeppelin ERC-721 guide',
+            label: tr('OpenZeppelin ERC-721 guide'),
             href: 'https://docs.openzeppelin.com/contracts/5.x/erc721',
             summary:
-              'Shows standard ERC-721 implementations and common patterns like enumerable extensions, metadata URIs, and safe transfers.'
+              tr('Shows standard ERC-721 implementations and common patterns like enumerable extensions, metadata URIs, and safe transfers.')
           },
           {
-            label: 'Ethereum.org ERC-721 overview',
+            label: tr('Ethereum.org ERC-721 overview'),
             href: 'https://ethereum.org/en/developers/docs/standards/tokens/erc-721/',
             summary:
-              'Explains NFTs and how wallets/marketplaces rely on standard methods like ownerOf, approve, and safeTransferFrom.'
+              tr('Explains NFTs and how wallets/marketplaces rely on standard methods like ownerOf, approve, and safeTransferFrom.')
           }
         ]}
       />
@@ -528,10 +592,10 @@ function ERC1155Demo() {
     <div className="space-y-6">
       <Card>
         <SectionTitle>
-          ERC-1155: Multi-token <T text={def('ERC-1155')} />
+          {tr('ERC-1155')}: {tr('Multi-token')} <T text={def('ERC-1155')} />
         </SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          ERC-1155 represents many token IDs within one contract. Each id has an amount per owner. This enables batch transfers and efficient games/collections.
+          {tr('ERC-1155 represents many token IDs within one contract. Each id has an amount per owner. This enables batch transfers and efficient games/collections.')}
         </p>
 
         <ImplementationSection
@@ -543,16 +607,16 @@ function ERC1155Demo() {
                   <div><code>balanceOf(account, id)</code>, <code>balanceOfBatch(accounts, ids)</code></div>
                   <div><code>safeTransferFrom(from, to, id, amount, data)</code>, <code>safeBatchTransferFrom(...)</code></div>
                   <div><code>setApprovalForAll(operator, approved)</code>, <code>isApprovedForAll(owner, operator)</code></div>
-                  <div className="mt-2">Events: <code>TransferSingle</code>, <code>TransferBatch</code>, <code>ApprovalForAll</code>, <code>URI</code></div>
+                  <div className="mt-2">{tr('Events')}: <code>TransferSingle</code>, <code>TransferBatch</code>, <code>ApprovalForAll</code>, <code>URI</code></div>
                 </>
               )
             },
             {
-              title: 'IDs + receiver checks',
+              title: tr('IDs + receiver checks'),
               body: (
                 <>
-                  <div>Balances are per (owner, id): typically <code>mapping(uint256 =&gt; mapping(address =&gt; uint256))</code>.</div>
-                  <div className="mt-2">Like ERC-721, safe transfers require contract recipients to implement <code>IERC1155Receiver</code> (onERC1155Received/onERC1155BatchReceived).</div>
+                  <div>{tr('Balances are per (owner, id)')}: {tr('typically')} <code>mapping(uint256 =&gt; mapping(address =&gt; uint256))</code>.</div>
+                  <div className="mt-2">{tr('Like ERC-721, safe transfers require contract recipients to implement')} <code>IERC1155Receiver</code> (onERC1155Received/onERC1155BatchReceived).</div>
                 </>
               )
             }
@@ -560,7 +624,7 @@ function ERC1155Demo() {
         />
 
         <div className="mt-4 bg-slate-900 rounded p-4 border border-slate-700">
-          <div className="text-xs text-slate-400 mb-2">Balances (tokenId to amount)</div>
+          <div className="text-xs text-slate-400 mb-2">{tr('Balances (tokenId to amount)')}</div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
             {ADDRESSES.map((a) => (
               <div key={a} className="bg-slate-800 rounded p-3 border border-slate-700">
@@ -579,30 +643,30 @@ function ERC1155Demo() {
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-          <AddressSelect value={from} onChange={setFrom} label="From" />
-          <AddressSelect value={to} onChange={setTo} label="To" />
+          <AddressSelect value={from} onChange={setFrom} label={tr('From')} />
+          <AddressSelect value={to} onChange={setTo} label={tr('To')} />
 
           <label className="text-sm text-slate-300 flex flex-col gap-1">
-            <span className="text-slate-400">Token ID <T text={def('Token ID')} /></span>
+            <span className="text-slate-400">{tr('Token ID')} <T text={def('Token ID')} /></span>
             <select value={tokenId} onChange={(e) => setTokenId(Number(e.target.value))} className="bg-slate-900 border border-slate-700 rounded px-3 py-2">
               {tokenIds.map((id) => (
                 <option key={id} value={id}>#{id}</option>
               ))}
-              <option value={999}>#999 (new)</option>
+              <option value={999}>#999 ({tr('new')})</option>
             </select>
           </label>
 
-          <AmountInput value={amount} onChange={setAmount} label="Amount" />
+          <AmountInput value={amount} onChange={setAmount} label={tr('Amount')} />
 
           <div className="md:col-span-4 flex flex-wrap gap-3 mt-2">
             <button onClick={mint} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded font-semibold inline-flex items-center gap-2">
-              <Plus size={16} /> mint <T text={def('mint')} />
+              <Plus size={16} /> {tr('mint')} <T text={def('mint')} />
             </button>
             <button onClick={burn} className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded font-semibold inline-flex items-center gap-2">
-              <Flame size={16} /> burn <T text={def('burn')} />
+              <Flame size={16} /> {tr('burn')} <T text={def('burn')} />
             </button>
             <button onClick={transfer} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold">
-              safeTransferFrom <T text={def('safeTransferFrom')} />
+              {tr('safeTransferFrom')} <T text={def('safeTransferFrom')} />
             </button>
           </div>
         </div>
@@ -610,31 +674,31 @@ function ERC1155Demo() {
 
       <RealWorldApplications
         items={[
-          { title: 'On-chain games', href: 'https://eips.ethereum.org/EIPS/eip-1155', color: 'text-blue-300', body: 'Batch transfers and multiple IDs reduce gas for inventories and crafting.' },
-          { title: 'Semi-fungible tickets', href: 'https://ethereum.org/en/nft/', color: 'text-purple-300', body: 'A token ID can represent a ticket class; amounts track remaining supply.' },
-          { title: 'Marketplace listings', href: 'https://docs.opensea.io/', color: 'text-pink-300', body: 'Marketplaces can support multiple asset types with a single standard interface.' }
+          { title: tr('On-chain games'), href: 'https://eips.ethereum.org/EIPS/eip-1155', color: 'text-blue-300', body: tr('Batch transfers and multiple IDs reduce gas for inventories and crafting.') },
+          { title: tr('Semi-fungible tickets'), href: 'https://ethereum.org/en/nft/', color: 'text-purple-300', body: tr('A token ID can represent a ticket class; amounts track remaining supply.') },
+          { title: tr('Marketplace listings'), href: 'https://docs.opensea.io/', color: 'text-pink-300', body: tr('Marketplaces can support multiple asset types with a single standard interface.') }
         ]}
       />
 
       <FurtherReading
         links={[
           {
-            label: 'EIP-1155: Multi Token Standard',
+            label: tr('EIP-1155: Multi Token Standard'),
             href: 'https://eips.ethereum.org/EIPS/eip-1155',
             summary:
-              'Specifies a single contract managing many token IDs with per-ID balances, plus safe transfer acceptance checks and batch operations.'
+              tr('Specifies a single contract managing many token IDs with per-ID balances, plus safe transfer acceptance checks and batch operations.')
           },
           {
-            label: 'OpenZeppelin ERC-1155 guide',
+            label: tr('OpenZeppelin ERC-1155 guide'),
             href: 'https://docs.openzeppelin.com/contracts/5.x/erc1155',
             summary:
-              'Practical implementation guidance and APIs. Useful for understanding how games and marketplaces implement multi-token inventories.'
+              tr('Practical implementation guidance and APIs. Useful for understanding how games and marketplaces implement multi-token inventories.')
           },
           {
-            label: 'Ethereum.org token standards',
+            label: tr('Ethereum.org token standards'),
             href: 'https://ethereum.org/en/developers/docs/standards/tokens/',
             summary:
-              'Overview page that situates ERC-20/721/1155 and related token standards in the ecosystem.'
+              tr('Overview page that situates ERC-20/721/1155 and related token standards in the ecosystem.')
           }
         ]}
       />
@@ -644,6 +708,7 @@ function ERC1155Demo() {
 
 
 function ERC1400Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   type Partition = 'COMMON' | 'RESTRICTED';
   const [balances, setBalances] = useState<Record<Partition, Record<Address, number>>>(() => ({
     COMMON: { Alice: 1000, Bob: 200, Carol: 0, Dex: 0 },
@@ -689,32 +754,32 @@ function ERC1400Demo() {
     <div className="space-y-6">
       <Card>
         <SectionTitle>
-          ERC-1400: Security tokens (partitions + compliance)
+          {tr('ERC-1400')}: {tr('Security tokens (partitions + compliance)')}
         </SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          <strong>ERC-1400</strong> is a family of proposals for <strong>security tokens</strong>: tokens that need
-          transfer restrictions (KYC/AML, jurisdiction rules, lockups). A common pattern is splitting balances into
-          <strong> partitions </strong>
-          <T text={def('Partition')} /> and enforcing rules per partition.
+          <strong>{tr('ERC-1400')}</strong> {tr('is a family of proposals for')} <strong>{tr('security tokens')}</strong>: {tr('tokens that need')}
+          {tr('transfer restrictions (KYC/AML, jurisdiction rules, lockups). A common pattern is splitting balances into')}
+          <strong> {tr('partitions')} </strong>
+          <T text={def('Partition')} /> {tr('and enforcing rules per partition.')}
         </p>
 
         <ImplementationSection
           items={[
             {
-              title: 'Partitions + transfer methods',
+              title: tr('Partitions + transfer methods'),
               body: (
                 <>
-                  <div>Balances are tracked per partition (often <code>bytes32</code> IDs): <code>balanceOfByPartition(partition, holder)</code>.</div>
-                  <div className="mt-2">Transfers include the partition: <code>transferByPartition(partition, to, value, data)</code> (and operator variants in some implementations).</div>
+                  <div>{tr('Balances are tracked per partition')} ({tr('often')} <code>bytes32</code> {tr('IDs')}): <code>balanceOfByPartition(partition, holder)</code>.</div>
+                  <div className="mt-2">{tr('Transfers include the partition')}: <code>transferByPartition(partition, to, value, data)</code> ({tr('and operator variants in some implementations')}).</div>
                 </>
               )
             },
             {
-              title: 'Compliance rules + reporting',
+              title: tr('Compliance rules + reporting'),
               body: (
                 <>
-                  <div>Transfers can enforce KYC/allowlists, lockups, or jurisdiction rules at the token layer.</div>
-                  <div className="mt-2">Many security-token stacks add reason codes / controllers to explain or override failed transfers for regulated workflows.</div>
+                  <div>{tr('Transfers can enforce KYC/allowlists, lockups, or jurisdiction rules at the token layer.')}</div>
+                  <div className="mt-2">{tr('Many security-token stacks add reason codes / controllers to explain or override failed transfers for regulated workflows.')}</div>
                 </>
               )
             }
@@ -723,7 +788,7 @@ function ERC1400Demo() {
 
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-2">Whitelist (KYC)</div>
+            <div className="text-xs text-slate-400 mb-2">{tr('Whitelist (KYC)')}</div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {ADDRESSES.map((a) => (
                 <button
@@ -735,7 +800,7 @@ function ERC1400Demo() {
                 >
                   <div className="text-xs text-slate-400">{a}</div>
                   <div className={`font-bold ${whitelist[a] ? 'text-emerald-200' : 'text-red-200'}`}>
-                    {whitelist[a] ? 'Whitelisted' : 'Blocked'}
+                    {whitelist[a] ? tr('Whitelisted') : tr('Blocked')}
                   </div>
                 </button>
               ))}
@@ -743,13 +808,19 @@ function ERC1400Demo() {
           </div>
 
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-2">Partition balances</div>
+            <div className="text-xs text-slate-400 mb-2">{tr('Partition balances')}</div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {(['COMMON', 'RESTRICTED'] as const).map((p) => (
                 <div key={p} className="bg-slate-800 rounded p-3 border border-slate-700">
                   <div className="text-sm font-semibold mb-2 inline-flex items-center gap-2">
                     {p}{' '}
-                    <T text={p === 'RESTRICTED' ? 'Restricted partition enforces KYC/lockup rules.' : 'Common partition is freely transferable in this simplified model.'} />
+                    <T
+                      text={
+                        p === 'RESTRICTED'
+                          ? tr('Restricted partition enforces KYC/lockup rules.')
+                          : tr('Common partition is freely transferable in this simplified model.')
+                      }
+                    />
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     {ADDRESSES.map((a) => (
@@ -767,7 +838,7 @@ function ERC1400Demo() {
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
           <label className="text-sm text-slate-300 flex flex-col gap-1">
-            <span className="text-slate-400">Partition <T text={def('Partition')} /></span>
+            <span className="text-slate-400">{tr('Partition')} <T text={def('Partition')} /></span>
             <select
               value={partition}
               onChange={(e) => setPartition(e.target.value as Partition)}
@@ -777,18 +848,18 @@ function ERC1400Demo() {
               <option value="RESTRICTED">RESTRICTED</option>
             </select>
           </label>
-          <AddressSelect value={from} onChange={setFrom} label="From" />
-          <AddressSelect value={to} onChange={setTo} label="To" />
-          <AmountInput value={amount} onChange={setAmount} label="Amount" />
+          <AddressSelect value={from} onChange={setFrom} label={tr('From')} />
+          <AddressSelect value={to} onChange={setTo} label={tr('To')} />
+          <AmountInput value={amount} onChange={setAmount} label={tr('Amount')} />
 
           <div className="md:col-span-4 flex flex-wrap gap-3 mt-2">
             <button onClick={transfer} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold">
-              transferByPartition <T text={def('transferByPartition')} />
+              {tr('transferByPartition')} <T text={def('transferByPartition')} />
             </button>
           </div>
 
           <div className="md:col-span-4 mt-4 text-xs text-slate-400">
-            Rule in this demo: <strong>RESTRICTED</strong> transfers only succeed if the recipient is whitelisted.
+            {tr('Rule in this demo')}: <strong>RESTRICTED</strong> {tr('transfers only succeed if the recipient is whitelisted.')}
           </div>
         </div>
       </Card>
@@ -796,22 +867,22 @@ function ERC1400Demo() {
       <RealWorldApplications
         items={[
           {
-            title: 'Regulated tokenized equity',
+            title: tr('Regulated tokenized equity'),
             href: 'https://eips.ethereum.org/EIPS/eip-1400',
             color: 'text-blue-300',
-            body: 'Securities require transfer restrictions (jurisdiction, KYC, lockups). Partitions help model these rules.'
+            body: tr('Securities require transfer restrictions (jurisdiction, KYC, lockups). Partitions help model these rules.')
           },
           {
-            title: 'Private funds / cap tables',
+            title: tr('Private funds / cap tables'),
             href: 'https://ethereum.org/en/enterprise/',
             color: 'text-purple-300',
-            body: 'Investor eligibility and lockups can be enforced at transfer time rather than off-chain agreements.'
+            body: tr('Investor eligibility and lockups can be enforced at transfer time rather than off-chain agreements.')
           },
           {
-            title: 'Tokenized bonds',
+            title: tr('Tokenized bonds'),
             href: 'https://www.bis.org/publ/othp72.htm',
             color: 'text-pink-300',
-            body: 'Coupon/settlement flows can be tokenized while keeping compliance constraints.'
+            body: tr('Coupon/settlement flows can be tokenized while keeping compliance constraints.')
           }
         ]}
       />
@@ -843,6 +914,7 @@ function ERC1400Demo() {
 }
 
 function ERC777Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   const [balances, setBalances] = useState<Record<Address, number>>({ Alice: 1000, Bob: 250, Carol: 0, Dex: 0 });
   const [operators, setOperators] = useState<Record<Address, Record<Address, boolean>>>(() => ({
     Alice: { Alice: true, Bob: false, Carol: false, Dex: false },
@@ -880,17 +952,17 @@ function ERC777Demo() {
     if (sender === recipient) return;
     if (balances[sender] < amount) return;
 
-    if (senderHook) push(`tokensToSend hook called for ${sender}`);
+    if (senderHook) push(tr('tokensToSend hook called for {{sender}}', { sender }));
 
     // recipient hook could reject; simulate reject when recipientHook disabled
     if (!recipientHook) {
-      push(`tokensReceived hook rejected for ${recipient}`);
+      push(tr('tokensReceived hook rejected for {{recipient}}', { recipient }));
       return;
     }
 
     setBalances((b) => ({ ...b, [sender]: b[sender] - amount, [recipient]: b[recipient] + amount }));
-    push(`send: ${sender} -> ${recipient} (${amount})`);
-    push(`tokensReceived hook called for ${recipient}`);
+    push(tr('send: {{sender}} -> {{recipient}} ({{amount}})', { sender, recipient, amount }));
+    push(tr('tokensReceived hook called for {{recipient}}', { recipient }));
   }
 
   function operatorSend() {
@@ -898,47 +970,47 @@ function ERC777Demo() {
     if (sender === recipient) return;
     if (balances[sender] < amount) return;
 
-    if (senderHook) push(`tokensToSend hook called for ${sender} (via operator ${operator})`);
+    if (senderHook) push(tr('tokensToSend hook called for {{sender}} (via operator {{operator}})', { sender, operator }));
 
     if (!recipientHook) {
-      push(`tokensReceived hook rejected for ${recipient}`);
+      push(tr('tokensReceived hook rejected for {{recipient}}', { recipient }));
       return;
     }
 
     setBalances((b) => ({ ...b, [sender]: b[sender] - amount, [recipient]: b[recipient] + amount }));
-    push(`operatorSend: ${operator} moved ${amount} from ${sender} -> ${recipient}`);
-    push(`tokensReceived hook called for ${recipient}`);
+    push(tr('operatorSend: {{operator}} moved {{amount}} from {{sender}} -> {{recipient}}', { operator, amount, sender, recipient }));
+    push(tr('tokensReceived hook called for {{recipient}}', { recipient }));
   }
 
   return (
     <div className="space-y-6">
       <Card>
         <SectionTitle>
-          ERC-777: Operators + hooks
+          {tr('ERC-777')}: {tr('Operators + hooks')}
         </SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          <strong>ERC-777</strong> is a fungible token standard that adds <strong>operators</strong>
-          <T text={def('Operator')} /> and <strong>hooks</strong> (<code>tokensToSend</code>/<code>tokensReceived</code>). Hooks enable richer UX,
-          but also introduce re-entrancy and integration complexity.
+          <strong>{tr('ERC-777')}</strong> {tr('is a fungible token standard that adds')} <strong>{tr('operators')}</strong>
+          <T text={def('Operator')} /> {tr('and')} <strong>{tr('hooks')}</strong> (<code>tokensToSend</code>/<code>tokensReceived</code>). {tr('Hooks enable richer UX,')}
+          {tr('but also introduce re-entrancy and integration complexity.')}
         </p>
 
         <ImplementationSection
           items={[
             {
-              title: 'Operator model',
+              title: tr('Operator model'),
               body: (
                 <>
-                  <div><code>authorizeOperator(op)</code> / <code>revokeOperator(op)</code> grant operator permissions.</div>
-                  <div className="mt-2">Operators use <code>operatorSend(from, to, amount, data, operatorData)</code> without ERC-20 allowances.</div>
+                  <div><code>authorizeOperator(op)</code> / <code>revokeOperator(op)</code> {tr('grant operator permissions.')}</div>
+                  <div className="mt-2">{tr('Operators use')} <code>operatorSend(from, to, amount, data, operatorData)</code> {tr('without ERC-20 allowances.')}</div>
                 </>
               )
             },
             {
-              title: 'Hooks via ERC-1820 registry',
+              title: tr('Hooks via ERC-1820 registry'),
               body: (
                 <>
-                  <div>ERC-777 relies on the <code>ERC1820Registry</code> to detect whether addresses implement hook interfaces.</div>
-                  <div className="mt-2">During send/mint/burn it calls <code>tokensToSend</code> and <code>tokensReceived</code> if registered (careful: this is reentrancy-sensitive).</div>
+                  <div>{tr('ERC-777 relies on the')} <code>ERC1820Registry</code> {tr('to detect whether addresses implement hook interfaces.')}</div>
+                  <div className="mt-2">{tr('During send/mint/burn it calls')} <code>tokensToSend</code> {tr('and')} <code>tokensReceived</code> {tr('if registered (careful: this is reentrancy-sensitive).')}</div>
                 </>
               )
             }
@@ -947,7 +1019,7 @@ function ERC777Demo() {
 
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-2">Balances</div>
+            <div className="text-xs text-slate-400 mb-2">{tr('Balances')}</div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {ADDRESSES.map((a) => (
                 <div key={a} className="bg-slate-800 rounded p-2 border border-slate-700">
@@ -959,46 +1031,46 @@ function ERC777Demo() {
           </div>
 
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-2">Hook simulation</div>
+            <div className="text-xs text-slate-400 mb-2">{tr('Hook simulation')}</div>
             <div className="space-y-2 text-sm">
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={senderHook} onChange={(e) => setSenderHook(e.target.checked)} />
-                tokensToSend enabled
+                {tr('tokensToSend enabled')}
               </label>
               <label className="flex items-center gap-2">
                 <input type="checkbox" checked={recipientHook} onChange={(e) => setRecipientHook(e.target.checked)} />
-                tokensReceived enabled (if unchecked, transfer reverts)
+                {tr('tokensReceived enabled (if unchecked, transfer reverts)')}
               </label>
             </div>
           </div>
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-          <AddressSelect value={sender} onChange={setSender} label="Token holder" />
-          <AddressSelect value={recipient} onChange={setRecipient} label="Recipient" />
-          <AddressSelect value={operator} onChange={setOperator} label="Operator" />
-          <AmountInput value={amount} onChange={setAmount} label="Amount" />
+          <AddressSelect value={sender} onChange={setSender} label={tr('Token holder')} />
+          <AddressSelect value={recipient} onChange={setRecipient} label={tr('Recipient')} />
+          <AddressSelect value={operator} onChange={setOperator} label={tr('Operator')} />
+          <AmountInput value={amount} onChange={setAmount} label={tr('Amount')} />
 
           <div className="md:col-span-4 flex flex-wrap gap-3 mt-2">
             <button onClick={toggleOperator} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded font-semibold">
-              {isOp(sender, operator) ? 'Revoke operator' : 'Authorize operator'} <T text={def('authorizeOperator')} />
+              {isOp(sender, operator) ? tr('Revoke operator') : tr('Authorize operator')} <T text={def('authorizeOperator')} />
             </button>
             <button onClick={send} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold">
-              send <T text={def('send')} />
+              {tr('send')} <T text={def('send')} />
             </button>
             <button onClick={operatorSend} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded font-semibold">
-              operatorSend <T text={def('operatorSend')} />
+              {tr('operatorSend')} <T text={def('operatorSend')} />
             </button>
           </div>
 
           <div className="md:col-span-4 mt-4 bg-slate-900 rounded p-4 border border-slate-700">
             <div className="text-xs text-slate-400 mb-2">
-              Operator status: {sender} to {operator}:{' '}
-              <span className="font-bold">{isOp(sender, operator) ? 'Authorized' : 'Not authorized'}</span>
+              {tr('Operator status')}: {sender} {tr('to')} {operator}:{' '}
+              <span className="font-bold">{isOp(sender, operator) ? tr('Authorized') : tr('Not authorized')}</span>
             </div>
-            <div className="text-xs text-slate-400 mb-2">Event log</div>
+            <div className="text-xs text-slate-400 mb-2">{tr('Event log')}</div>
             <div className="space-y-1">
-              {log.length === 0 ? <div className="text-sm text-slate-400">No events yet.</div> : null}
+              {log.length === 0 ? <div className="text-sm text-slate-400">{tr('No events yet.')}</div> : null}
               {log.map((l, i) => (
                 <div key={i} className="text-sm text-slate-200">- {l}</div>
               ))}
@@ -1010,22 +1082,22 @@ function ERC777Demo() {
       <RealWorldApplications
         items={[
           {
-            title: 'Token UX with hooks',
+            title: tr('Token UX with hooks'),
             href: 'https://eips.ethereum.org/EIPS/eip-777',
             color: 'text-blue-300',
-            body: 'Hooks allow contracts to react on send/receive (e.g., automatic accounting, vault deposits).'
+            body: tr('Hooks allow contracts to react on send/receive (e.g., automatic accounting, vault deposits).')
           },
           {
-            title: 'Operator-based spending',
+            title: tr('Operator-based spending'),
             href: 'https://eips.ethereum.org/EIPS/eip-777',
             color: 'text-purple-300',
-            body: 'Operators can move tokens without the ERC-20 allowance pattern (different security model).'
+            body: tr('Operators can move tokens without the ERC-20 allowance pattern (different security model).')
           },
           {
-            title: 'Compatibility concerns',
+            title: tr('Compatibility concerns'),
             href: 'https://docs.openzeppelin.com/contracts/5.x/erc777',
             color: 'text-pink-300',
-            body: 'More moving parts can mean more integration risk compared to plain ERC-20.'
+            body: tr('More moving parts can mean more integration risk compared to plain ERC-20.')
           }
         ]}
       />
@@ -1033,22 +1105,22 @@ function ERC777Demo() {
       <FurtherReading
         links={[
           {
-            label: 'EIP-777: Token Standard',
+            label: tr('EIP-777: Token Standard'),
             href: 'https://eips.ethereum.org/EIPS/eip-777',
             summary:
-              'Specifies ERC-777 send/burn, operator permissions, and the hook mechanism that notifies sender/recipient contracts via ERC-1820 interface lookups.'
+              tr('Specifies ERC-777 send/burn, operator permissions, and the hook mechanism that notifies sender/recipient contracts via ERC-1820 interface lookups.')
           },
           {
-            label: 'OpenZeppelin ERC-777 guide',
+            label: tr('OpenZeppelin ERC-777 guide'),
             href: 'https://docs.openzeppelin.com/contracts/5.x/erc777',
             summary:
-              'Implementation notes and cautions (hook reentrancy, integration compatibility). Good for understanding what production-ready ERC-777 looks like.'
+              tr('Implementation notes and cautions (hook reentrancy, integration compatibility). Good for understanding what production-ready ERC-777 looks like.')
           },
           {
-            label: 'ERC-1820 registry (used by ERC-777)',
+            label: tr('ERC-1820 registry (used by ERC-777)'),
             href: 'https://eips.ethereum.org/EIPS/eip-1820',
             summary:
-              'The on-chain registry ERC-777 uses to discover whether an address implements tokensToSend/tokensReceived hooks.'
+              tr('The on-chain registry ERC-777 uses to discover whether an address implements tokensToSend/tokensReceived hooks.')
           }
         ]}
       />
@@ -1057,6 +1129,7 @@ function ERC777Demo() {
 }
 
 function ERC998Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   type Node = { id: number; owner: Address; children: number[]; name: string };
   const [nodes, setNodes] = useState<Record<number, Node>>({
     1: { id: 1, owner: 'Alice', children: [2], name: 'Parent NFT #1' },
@@ -1127,30 +1200,30 @@ function ERC998Demo() {
     <div className="space-y-6">
       <Card>
         <SectionTitle>
-          ERC-998: Composable NFTs
+          {tr('ERC-998')}: {tr('Composable NFTs')}
         </SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          <strong>ERC-998</strong> proposes a way for an NFT to <strong>own other tokens</strong> (NFTs or ERC-20), enabling
-          <strong> composability</strong> <T text={def('Composable NFT')} />. This demo models a parent NFT that can have child NFTs.
+          <strong>{tr('ERC-998')}</strong> {tr('proposes a way for an NFT to')} <strong>{tr('own other tokens')}</strong> ({tr('NFTs or ERC-20')}), {tr('enabling')}
+          <strong> {tr('composability')}</strong> <T text={def('Composable NFT')} />. {tr('This demo models a parent NFT that can have child NFTs.')}
         </p>
 
         <ImplementationSection
           items={[
             {
-              title: 'Top-down vs bottom-up',
+              title: tr('Top-down vs bottom-up'),
               body: (
                 <>
-                  <div>Composable ownership needs a rule for representing nesting: parent holds children (top-down) or children point to a parent (bottom-up).</div>
-                  <div className="mt-2">Both approaches must define how approvals and transfers propagate to nested assets.</div>
+                  <div>{tr('Composable ownership needs a rule for representing nesting: parent holds children (top-down) or children point to a parent (bottom-up).')}</div>
+                  <div className="mt-2">{tr('Both approaches must define how approvals and transfers propagate to nested assets.')}</div>
                 </>
               )
             },
             {
-              title: 'Market/wallet compatibility',
+              title: tr('Market/wallet compatibility'),
               body: (
                 <>
-                  <div>Indexing nested ownership is hard: UIs need to know which assets are â  insideâ   a token to display and transfer them safely.</div>
-                  <div className="mt-2">Many projects instead model composition via ERC-6551 (token-bound accounts) for simpler integration.</div>
+                  <div>{tr('Indexing nested ownership is hard: UIs need to know which assets are inside a token to display and transfer them safely.')}</div>
+                  <div className="mt-2">{tr('Many projects instead model composition via ERC-6551 (token-bound accounts) for simpler integration.')}</div>
                 </>
               )
             }
@@ -1159,27 +1232,27 @@ function ERC998Demo() {
 
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-2">NFTs</div>
+            <div className="text-xs text-slate-400 mb-2">{tr('NFTs')}</div>
             <div className="space-y-2">
               {ids.map((id) => (
                 <div key={id} className="bg-slate-800 rounded p-3 border border-slate-700">
                   <div className="flex items-center justify-between">
                     <div className="font-semibold">{nodes[id].name}</div>
-                    <div className="text-xs text-slate-400">owner: <span className="font-bold text-slate-200">{nodes[id].owner}</span></div>
+                    <div className="text-xs text-slate-400">{tr('owner')}: <span className="font-bold text-slate-200">{nodes[id].owner}</span></div>
                   </div>
-                  <div className="text-xs text-slate-400 mt-2">children: {nodes[id].children.length === 0 ? 'â  ' : nodes[id].children.map((c) => `#${c}`).join(', ')}</div>
+                  <div className="text-xs text-slate-400 mt-2">{tr('children')}: {nodes[id].children.length === 0 ? tr('none') : nodes[id].children.map((c) => `#${c}`).join(', ')}</div>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-2">Actions</div>
+            <div className="text-xs text-slate-400 mb-2">{tr('Actions')}</div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-end">
-              <AddressSelect value={caller} onChange={setCaller} label="Caller" />
+              <AddressSelect value={caller} onChange={setCaller} label={tr('Caller')} />
 
               <label className="text-sm text-slate-300 flex flex-col gap-1">
-                <span className="text-slate-400">Parent NFT</span>
+                <span className="text-slate-400">{tr('Parent NFT')}</span>
                 <select value={selectedParent} onChange={(e) => setSelectedParent(Number(e.target.value))} className="bg-slate-900 border border-slate-700 rounded px-3 py-2">
                   {ids.map((id) => (
                     <option key={id} value={id}>#{id}</option>
@@ -1188,7 +1261,7 @@ function ERC998Demo() {
               </label>
 
               <label className="text-sm text-slate-300 flex flex-col gap-1">
-                <span className="text-slate-400">Child NFT</span>
+                <span className="text-slate-400">{tr('Child NFT')}</span>
                 <select value={selectedChild} onChange={(e) => setSelectedChild(Number(e.target.value))} className="bg-slate-900 border border-slate-700 rounded px-3 py-2">
                   {ids.map((id) => (
                     <option key={id} value={id}>#{id}</option>
@@ -1198,26 +1271,26 @@ function ERC998Demo() {
 
               <div className="flex flex-wrap gap-3 md:col-span-2 mt-2">
                 <button onClick={attach} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded font-semibold">
-                  Attach child
+                  {tr('Attach child')}
                 </button>
                 <button onClick={detach} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded font-semibold">
-                  Detach child
+                  {tr('Detach child')}
                 </button>
               </div>
 
               <div className="md:col-span-2 mt-4">
-                <div className="text-xs text-slate-400 mb-2">Transfer parent (moves whole subtree in this simplified model)</div>
+                <div className="text-xs text-slate-400 mb-2">{tr('Transfer parent (moves whole subtree in this simplified model)')}</div>
                 <div className="flex flex-wrap gap-2">
                   {ADDRESSES.map((a) => (
                     <button key={a} onClick={() => transferParent(a)} className="px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold">
-                      To {a}
+                      {tr('To')} {a}
                     </button>
                   ))}
                 </div>
               </div>
 
               <div className="md:col-span-2 mt-4 text-xs text-slate-400">
-                Rule in this demo: caller must own both parent and child to attach, and must own the parent to detach/transfer.
+                {tr('Rule in this demo')}: {tr('caller must own both parent and child to attach, and must own the parent to detach/transfer.')}
               </div>
             </div>
           </div>
@@ -1226,25 +1299,25 @@ function ERC998Demo() {
 
       <RealWorldApplications
         items={[
-          { title: 'Avatar + inventory', href: 'https://eips.ethereum.org/EIPS/eip-998', color: 'text-blue-300', body: 'A character NFT could own item NFTs, bundling them for transfers and marketplaces.' },
-          { title: 'DAO memberships', href: 'https://ethereum.org/en/dao/', color: 'text-purple-300', body: 'A membership NFT could contain nested badges/permissions represented as child tokens.' },
-          { title: 'Complex financial positions', href: 'https://eips.ethereum.org/EIPS/eip-998', color: 'text-pink-300', body: 'A position NFT could hold LP NFTs or other tokens as components.' }
+          { title: tr('Avatar + inventory'), href: 'https://eips.ethereum.org/EIPS/eip-998', color: 'text-blue-300', body: tr('A character NFT could own item NFTs, bundling them for transfers and marketplaces.') },
+          { title: tr('DAO memberships'), href: 'https://ethereum.org/en/dao/', color: 'text-purple-300', body: tr('A membership NFT could contain nested badges/permissions represented as child tokens.') },
+          { title: tr('Complex financial positions'), href: 'https://eips.ethereum.org/EIPS/eip-998', color: 'text-pink-300', body: tr('A position NFT could hold LP NFTs or other tokens as components.') }
         ]}
       />
 
       <FurtherReading
         links={[
           {
-            label: 'EIP-998: Composable Non-Fungible Tokens',
+            label: tr('EIP-998: Composable Non-Fungible Tokens'),
             href: 'https://eips.ethereum.org/EIPS/eip-998',
             summary:
-              'Defines patterns for NFTs that can own other ERC-20/ERC-721 assets. Useful for understanding the composability goal and why implementation complexity is high.'
+              tr('Defines patterns for NFTs that can own other ERC-20/ERC-721 assets. Useful for understanding the composability goal and why implementation complexity is high.')
           },
           {
-            label: 'Ethereum.org NFTs overview',
+            label: tr('Ethereum.org NFTs overview'),
             href: 'https://ethereum.org/en/nft/',
             summary:
-              'A beginner-friendly explanation of NFTs, marketplaces, and typical NFT mechanics that composable NFTs build on top of.'
+              tr('A beginner-friendly explanation of NFTs, marketplaces, and typical NFT mechanics that composable NFTs build on top of.')
           }
         ]}
       />
@@ -1255,6 +1328,7 @@ function ERC998Demo() {
 // INSERT_NEXT3_BEGIN
 
 function ERC4626Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   const [assets, setAssets] = useState<Record<Address, number>>({ Alice: 1000, Bob: 200, Carol: 0, Dex: 0 });
   const [shares, setShares] = useState<Record<Address, number>>({ Alice: 0, Bob: 0, Carol: 0, Dex: 0 });
   const [vaultAssets, setVaultAssets] = useState(0);
@@ -1291,19 +1365,19 @@ function ERC4626Demo() {
     <div className="space-y-6">
       <Card>
         <SectionTitle>
-          ERC-4626: Tokenized vaults <T text={def('ERC-4626')} />
+          {tr('ERC-4626')}: {tr('Tokenized vaults')} <T text={def('ERC-4626')} />
         </SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          ERC-4626 standardizes vaults that accept an <strong>asset</strong> token and issue <strong>share</strong> tokens.
-          Deposits mint shares; withdrawals burn shares. The standard also defines preview/convert functions so UIs can
-          estimate outcomes.
+          {tr('ERC-4626 standardizes vaults that accept an')} <strong>{tr('asset')}</strong> {tr('token and issue')} <strong>{tr('share')}</strong> {tr('tokens.')}
+          {tr('Deposits mint shares; withdrawals burn shares. The standard also defines preview/convert functions so UIs can')}
+          {tr('estimate outcomes.')}
         </p>
 
         <ImplementationSection
           bullets={[
-            'Vault shares are ERC-20 tokens representing a proportional claim on the vault\'s underlying assets.',
-            'deposit/mint increase share supply; withdraw/redeem decrease share supply (often with fees).',
-            'preview* and convert* helpers let integrators quote expected outcomes (still sensitive to rounding/fees).'
+            tr("Vault shares are ERC-20 tokens representing a proportional claim on the vault's underlying assets."),
+            tr('deposit/mint increase share supply; withdraw/redeem decrease share supply (often with fees).'),
+            tr('preview* and convert* helpers let integrators quote expected outcomes (still sensitive to rounding/fees).'),
           ]}
           api={[
             { kind: 'function', sig: 'asset() -> address' },
@@ -1318,10 +1392,10 @@ function ERC4626Demo() {
         <ImplementationSection
           title="How the Standard Works (Implementation)"
           bullets={[
-            'Vault is an ERC-20 share token; it holds an underlying ERC-20 asset.',
+            tr('Vault is an ERC-20 share token; it holds an underlying ERC-20 asset.'),
             'Core entrypoints: deposit(assets, receiver), mint(shares, receiver), withdraw(assets, receiver, owner), redeem(shares, receiver, owner).',
-            'Conversion helpers: convertToShares, convertToAssets + previewDeposit/previewWithdraw for quoting.',
-            'Events: Deposit(sender, owner, assets, shares) and Withdraw(sender, receiver, owner, assets, shares).'
+            tr('Conversion helpers: convertToShares, convertToAssets + previewDeposit/previewWithdraw for quoting.'),
+            tr('Events: Deposit(sender, owner, assets, shares) and Withdraw(sender, receiver, owner, assets, shares).')
           ]}
           api={[
             { label: 'State', value: 'asset() address, totalAssets() uint256, totalSupply() shares' },
@@ -1332,21 +1406,21 @@ function ERC4626Demo() {
 
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-1">Vault assets</div>
+            <div className="text-xs text-slate-400 mb-1">{tr('Vault assets')}</div>
             <div className="text-2xl font-bold">{vaultAssets}</div>
           </div>
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-1">Vault shares</div>
+            <div className="text-xs text-slate-400 mb-1">{tr('Vault shares')}</div>
             <div className="text-2xl font-bold">{vaultShares}</div>
           </div>
           <div className="bg-slate-900 rounded p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 mb-1">Share price</div>
+            <div className="text-xs text-slate-400 mb-1">{tr('Share price')}</div>
             <div className="text-2xl font-bold">{sharePrice.toFixed(3)}</div>
           </div>
         </div>
 
         <div className="mt-4 bg-slate-900 rounded p-4 border border-slate-700">
-          <div className="text-xs text-slate-400 mb-2">User balances</div>
+          <div className="text-xs text-slate-400 mb-2">{tr('User balances')}</div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
             {ADDRESSES.map((a) => (
               <div key={a} className="bg-slate-800 rounded p-2 border border-slate-700">
@@ -1359,14 +1433,14 @@ function ERC4626Demo() {
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
-          <AddressSelect value={from} onChange={setFrom} label="User" />
-          <AmountInput value={amount} onChange={setAmount} label="Amount" />
+          <AddressSelect value={from} onChange={setFrom} label={tr('User')} />
+          <AmountInput value={amount} onChange={setAmount} label={tr('Amount')} />
           <div className="flex gap-3">
             <button onClick={deposit} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded font-semibold">
-              deposit <T text={def('deposit')} />
+              {tr('deposit')} <T text={def('deposit')} />
             </button>
             <button onClick={withdraw} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold">
-              withdraw <T text={def('withdraw')} />
+              {tr('withdraw')} <T text={def('withdraw')} />
             </button>
           </div>
         </div>
@@ -1401,16 +1475,16 @@ function ERC4626Demo() {
       <FurtherReading
         links={[
           {
-            label: 'EIP-4626: Tokenized Vault Standard',
+            label: tr('EIP-4626: Tokenized Vault Standard'),
             href: 'https://eips.ethereum.org/EIPS/eip-4626',
             summary:
               'Defines the vault interface (deposit/mint/withdraw/redeem), conversion helpers (convertToShares/convertToAssets), and preview functions. The goal is consistent integration for vaults across the ecosystem.'
           },
           {
-            label: 'OpenZeppelin ERC-4626 guide',
+            label: tr('OpenZeppelin ERC-4626 guide'),
             href: 'https://docs.openzeppelin.com/contracts/5.x/erc4626',
             summary:
-              'Practical implementation reference. Discusses rounding behavior, limits, and extension points. Useful when comparing how real vaults implement fees and how integrators should call preview functions.'
+              tr('Practical implementation reference. Discusses rounding behavior, limits, and extension points. Useful when comparing how real vaults implement fees and how integrators should call preview functions.')
           },
           {
             label: 'Yearn documentation',
@@ -1431,6 +1505,7 @@ function ERC4626Demo() {
 }
 
 function ERC223Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   const [balances, setBalances] = useState<Record<Address, number>>({ Alice: 500, Bob: 0, Carol: 0, Dex: 0 });
   const [to, setTo] = useState<Address>('Dex');
   const [from, setFrom] = useState<Address>('Alice');
@@ -1448,11 +1523,11 @@ function ERC223Demo() {
     <div className="space-y-6">
       <Card>
         <SectionTitle>
-          ERC-223: Safer transfers to contracts <T text={def('ERC-223')} />
+          {tr('ERC-223')}: {tr('Safer transfers to contracts')} <T text={def('ERC-223')} />
         </SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          ERC-223 tries to prevent accidental token transfers to contracts that cannot handle them. When sending to a
-          contract, the token calls <code>tokenFallback</code> on the recipient.
+          {tr('ERC-223 tries to prevent accidental token transfers to contracts that cannot handle them. When sending to a')}
+          {tr('contract, the token calls')} <code>tokenFallback</code> {tr('on the recipient.')}
         </p>
 
         <ImplementationSection
@@ -1476,7 +1551,7 @@ function ERC223Demo() {
               <div className="flex items-center justify-between">
                 <div className="text-xs text-slate-400">{a}</div>
                 <span className={`text-xs px-2 py-1 rounded ${isContract[a] ? 'bg-purple-700' : 'bg-slate-700'}`}>
-                  {isContract[a] ? 'contract' : 'EOA'}
+                  {isContract[a] ? tr('contract') : tr('EOA')}
                 </span>
               </div>
               <div className="text-xl font-bold mt-1">{balances[a]}</div>
@@ -1485,9 +1560,9 @@ function ERC223Demo() {
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-          <AddressSelect value={from} onChange={setFrom} label="From" />
-          <AddressSelect value={to} onChange={setTo} label="To" />
-          <AmountInput value={amount} onChange={setAmount} label="Amount" />
+          <AddressSelect value={from} onChange={setFrom} label={tr('From')} />
+          <AddressSelect value={to} onChange={setTo} label={tr('To')} />
+          <AmountInput value={amount} onChange={setAmount} label={tr('Amount')} />
 
           <div className="md:col-span-4 flex flex-wrap items-center gap-4 mt-2">
             <label className="text-sm text-slate-300 flex items-center gap-2">
@@ -1496,19 +1571,19 @@ function ERC223Demo() {
                 checked={isContract.Dex}
                 onChange={(e) => setIsContract((s) => ({ ...s, Dex: e.target.checked }))}
               />
-              Treat Dex as contract
+              {tr('Treat Dex as contract')}
             </label>
             <label className="text-sm text-slate-300 flex items-center gap-2">
               <input type="checkbox" checked={dexAccepts} onChange={(e) => setDexAccepts(e.target.checked)} />
-              Dex implements tokenFallback (accepts)
+              {tr('Dex implements tokenFallback (accepts)')}
             </label>
 
             <button onClick={transfer223} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold">
-              transfer (ERC-223)
+              {tr('transfer (ERC-223)')}
             </button>
 
             {isContract[to] && !dexAccepts ? (
-              <div className="text-sm text-red-300">Transfer would revert: tokenFallback rejected</div>
+              <div className="text-sm text-red-300">{tr('Transfer would fail: tokenFallback rejected')}</div>
             ) : null}
           </div>
         </div>
@@ -1517,25 +1592,25 @@ function ERC223Demo() {
       <RealWorldApplications
         items={[
           {
-            title: 'Stuck-token mitigation (original motivation)',
+            title: tr('Stuck-token mitigation (original motivation)'),
             href: 'https://eips.ethereum.org/EIPS/eip-223',
             color: 'text-blue-300',
             body:
-              'Problem: ERC-20 transfers can send tokens to a contract that cannot handle them, effectively locking funds. ERC-223 adds tokenFallback(receiver) to make transfers revert unless the receiver can accept. Adoption: limited; the ecosystem standardized on ERC-721/1155 receiver checks instead.'
+              tr('Problem: ERC-20 transfers can send tokens to a contract that cannot handle them, effectively locking funds. ERC-223 adds tokenFallback(receiver) to make transfers revert unless the receiver can accept. Adoption: limited; the ecosystem standardized on ERC-721/1155 receiver checks instead.')
           },
           {
-            title: 'Wallet + exchange compatibility',
+            title: tr('Wallet + exchange compatibility'),
             href: 'https://ethereum.org/en/developers/docs/standards/tokens/erc-20/',
             color: 'text-purple-300',
             body:
-              'Drawback: changing transfer semantics breaks expectations and tooling built around ERC-20. Most wallets/exchanges standardized on ERC-20 + safe patterns (checks, UIs, and standards like ERC-721/1155) rather than adopting ERC-223 broadly.'
+              tr('Drawback: changing transfer semantics breaks expectations and tooling built around ERC-20. Most wallets/exchanges standardized on ERC-20 + safe patterns (checks, UIs, and standards like ERC-721/1155) rather than adopting ERC-223 broadly.')
           },
           {
-            title: 'Modern alternative: safe transfers',
+            title: tr('Modern alternative: safe transfers'),
             href: 'https://eips.ethereum.org/EIPS/eip-1155',
             color: 'text-pink-300',
             body:
-              'ERC-721/1155 include safeTransferFrom with explicit receiver interfaces (onERC721Received / IERC1155Receiver). This became the widely-adopted "receiver-aware" transfer pattern.'
+              tr('ERC-721/1155 include safeTransferFrom with explicit receiver interfaces (onERC721Received / IERC1155Receiver). This became the widely-adopted "receiver-aware" transfer pattern.')
           }
         ]}
       />
@@ -1543,28 +1618,28 @@ function ERC223Demo() {
       <FurtherReading
         links={[
           {
-            label: 'EIP-223: Token Standard',
+            label: tr('EIP-223: Token Standard'),
             href: 'https://eips.ethereum.org/EIPS/eip-223',
             summary:
-              'Defines tokenFallback and the idea that transfers to contracts should call a receiver hook (or revert). Good to understand why "stuck tokens" was a persistent ERC-20 UX issue.'
+              tr('Defines tokenFallback and the idea that transfers to contracts should call a receiver hook (or revert). Good to understand why "stuck tokens" was a persistent ERC-20 UX issue.')
           },
           {
             label: 'Ethereum.org ERC-20 overview (contrast)',
             href: 'https://ethereum.org/en/developers/docs/standards/tokens/erc-20/',
             summary:
-              'Baseline ERC-20 semantics: transfer does not distinguish EOAs vs contracts. Helps compare why later standards added explicit receiver interfaces.'
+              tr('Baseline ERC-20 semantics: transfer does not distinguish EOAs vs contracts. Helps compare why later standards added explicit receiver interfaces.')
           },
           {
             label: 'EIP-721 (onERC721Received)',
             href: 'https://eips.ethereum.org/EIPS/eip-721',
             summary:
-              'Shows the safeTransferFrom pattern that became the mainstream "receiver-aware" transfer mechanism for NFTs.'
+              tr('Shows the safeTransferFrom pattern that became the mainstream "receiver-aware" transfer mechanism for NFTs.')
           },
           {
             label: 'EIP-1155 (IERC1155Receiver)',
             href: 'https://eips.ethereum.org/EIPS/eip-1155',
             summary:
-              'Defines the multi-token safe transfer acceptance checks. Useful as the modern, widely-adopted solution to prevent accidental token loss.'
+              tr('Defines the multi-token safe transfer acceptance checks. Useful as the modern, widely-adopted solution to prevent accidental token loss.')
           }
         ]}
       />
@@ -1573,6 +1648,7 @@ function ERC223Demo() {
 }
 
 function ERC827Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   const [balances, setBalances] = useState<Record<Address, number>>({ Alice: 400, Bob: 0, Carol: 0, Dex: 0 });
   const [from, setFrom] = useState<Address>('Alice');
   const [to, setTo] = useState<Address>('Dex');
@@ -1584,22 +1660,22 @@ function ERC827Demo() {
   function transferAndCall() {
     if (balances[from] < amount) return;
     if (!allowCall) {
-      setLastCall('CALL REVERTED');
+      setLastCall(tr('CALL REVERTED'));
       return;
     }
     setBalances((b) => ({ ...b, [from]: b[from] - amount, [to]: b[to] + amount }));
-    setLastCall(`Executed call on ${to} with data: ${callData}`);
+    setLastCall(tr('Executed call on {{to}} with data: {{callData}}', { to, callData }));
   }
 
   return (
     <div className="space-y-6">
       <Card>
         <SectionTitle>
-          ERC-827: ERC-20 with call data <T text={def('ERC-827')} />
+          {tr('ERC-827')}: {tr('ERC-20 with call data')} <T text={def('ERC-827')} />
         </SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          ERC-827 extends ERC-20 by allowing extra <strong>call data</strong> to be executed as part of a transfer/approval.
-          This can reduce multi-step UX but increases complexity and risk.
+          {tr('ERC-827 extends ERC-20 by allowing extra')} <strong>{tr('call data')}</strong> {tr('to be executed as part of a transfer/approval.')}
+          {tr('This can reduce multi-step UX but increases complexity and risk.')}
         </p>
 
         <ImplementationSection
@@ -1638,12 +1714,12 @@ function ERC827Demo() {
         </div>
 
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
-          <AddressSelect value={from} onChange={setFrom} label="From" />
-          <AddressSelect value={to} onChange={setTo} label="To" />
-          <AmountInput value={amount} onChange={setAmount} label="Amount" />
+          <AddressSelect value={from} onChange={setFrom} label={tr('From')} />
+          <AddressSelect value={to} onChange={setTo} label={tr('To')} />
+          <AmountInput value={amount} onChange={setAmount} label={tr('Amount')} />
 
           <label className="md:col-span-3 text-sm text-slate-300 flex flex-col gap-1">
-            <span className="text-slate-400">Call data (example)</span>
+            <span className="text-slate-400">{tr('Call data (example)')}</span>
             <input
               value={callData}
               onChange={(e) => setCallData(e.target.value)}
@@ -1654,10 +1730,10 @@ function ERC827Demo() {
           <div className="md:col-span-3 flex flex-wrap items-center gap-4 mt-1">
             <label className="text-sm text-slate-300 flex items-center gap-2">
               <input type="checkbox" checked={allowCall} onChange={(e) => setAllowCall(e.target.checked)} />
-              Contract call succeeds
+              {tr('Contract call succeeds')}
             </label>
             <button onClick={transferAndCall} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold">
-              transferAndCall
+              {tr('transferAndCall')}
             </button>
             {lastCall ? <div className="text-xs text-slate-300">{lastCall}</div> : null}
           </div>
@@ -1667,11 +1743,11 @@ function ERC827Demo() {
       <RealWorldApplications
         items={[
           {
-            title: 'Meta-actions / bundled calls',
+            title: tr('Meta-actions / bundled calls'),
             href: 'https://eips.ethereum.org/EIPS/eip-827',
             color: 'text-blue-300',
             body:
-              'Idea: attach calldata to transfer/approve so the token contract can call another contract as part of the action (transferAndCall / approveAndCall). Benefit: fewer user transactions. Drawbacks: larger attack surface and unexpected execution paths.'
+              tr('Idea: attach calldata to transfer/approve so the token contract can call another contract as part of the action (transferAndCall / approveAndCall). Benefit: fewer user transactions. Drawbacks: larger attack surface and unexpected execution paths.')
           },
           {
             title: 'Real-world pattern: routers',
@@ -1681,11 +1757,11 @@ function ERC827Demo() {
               'Adoption note: the dominant ecosystem pattern kept ERC-20 tokens minimal and pushed complex execution into routers (DEX routers, permit flows, multicalls). This improves compatibility across wallets and infra.'
           },
           {
-            title: 'Security + audit complexity',
+            title: tr('Security + audit complexity'),
             href: 'https://consensys.io/diligence/',
             color: 'text-pink-300',
             body:
-              'Known issues: external calls during token operations can enable reentrancy or surprising control flow. Improvements needed: better, composable transaction-bundling primitives without changing token core semantics.'
+              tr('Known issues: external calls during token operations can enable reentrancy or surprising control flow. Improvements needed: better, composable transaction-bundling primitives without changing token core semantics.')
           }
         ]}
       />
@@ -1693,10 +1769,10 @@ function ERC827Demo() {
       <FurtherReading
         links={[
           {
-            label: 'EIP-827: Token Standard',
+            label: tr('EIP-827: Token Standard'),
             href: 'https://eips.ethereum.org/EIPS/eip-827',
             summary:
-              'Proposes adding calldata parameters to ERC-20 operations so the token can execute an additional call. Good for learning why bundling was attractive and why it is risky inside token logic.'
+              tr('Proposes adding calldata parameters to ERC-20 operations so the token can execute an additional call. Good for learning why bundling was attractive and why it is risky inside token logic.')
           },
           {
             label: 'Uniswap docs (router pattern)',
@@ -1721,6 +1797,7 @@ function ERC827Demo() {
 // INSERT_4337_864_865_BEGIN
 
 function ERC4337Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   const [hasPaymaster, setHasPaymaster] = useState(true);
   const [mode, setMode] = useState<'passwordless' | 'sessionKey'>('passwordless');
   const [log, setLog] = useState<string[]>([]);
@@ -1730,29 +1807,29 @@ function ERC4337Demo() {
   }
 
   function simulate() {
-    push('UserOperation created (callData = execute(target,value,data)).');
-    push('Signed by smart account owner (or by session key depending on mode).');
-    push('Bundler includes UserOperation in an EntryPoint.handleOps call.');
-    if (hasPaymaster) push('Paymaster sponsors gas (or validates a token-based payment).');
-    push('EntryPoint calls validateUserOp then executes the account call.');
+    push(tr('UserOperation created (callData = execute(target,value,data)).'));
+    push(tr('Signed by smart account owner (or by session key depending on mode).'));
+    push(tr('Bundler includes UserOperation in an EntryPoint.handleOps call.'));
+    if (hasPaymaster) push(tr('Paymaster sponsors gas (or validates a token-based payment).'));
+    push(tr('EntryPoint calls validateUserOp then executes the account call.'));
   }
 
   return (
     <div className="space-y-6">
       <Card>
         <SectionTitle>
-          ERC-4337: Account Abstraction <T text={def('ERC-4337')} />
+          {tr('ERC-4337')}: {tr('Account Abstraction')} <T text={def('ERC-4337')} />
         </SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          ERC-4337 lets users have smart contract accounts without changing L1 consensus. Users submit a UserOperation
-          to a mempool; bundlers package them; EntryPoint verifies and executes.
+          {tr('ERC-4337 lets users have smart contract accounts without changing L1 consensus.')}
+          {tr('Users submit a UserOperation to a mempool; the Bundler packages them; the EntryPoint verifies and executes.')}
         </p>
 
         <ImplementationSection
           bullets={[
-            'Core contract: EntryPoint. Smart accounts implement validation logic (validateUserOp) and execution (execute).',
-            'Bundlers submit handleOps(UserOperation[]) to EntryPoint - no EOA transaction per user action required.',
-            'Paymasters can sponsor gas or accept ERC-20 payments; aggregators can bundle signatures.'
+            tr('Core contract: EntryPoint. Smart accounts implement validation logic (validateUserOp) and execution (execute).'),
+            tr('Bundlers submit handleOps(UserOperation[]) to EntryPoint - no EOA transaction per user action required.'),
+            tr('Paymasters can sponsor gas or accept ERC-20 payments; aggregators can bundle signatures.')
           ]}
           api={[
             { kind: 'contract', sig: 'EntryPoint (handleOps, getUserOpHash, deposit/stake)' },
@@ -1763,33 +1840,33 @@ function ERC4337Demo() {
 
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
           <label className="text-sm text-slate-300 flex flex-col gap-1">
-            <span className="text-slate-400">Auth mode</span>
+            <span className="text-slate-400">{tr('Auth mode')}</span>
             <select
               value={mode}
               onChange={(e) => setMode(e.target.value as any)}
               className="bg-slate-900 border border-slate-700 rounded px-3 py-2"
             >
-              <option value="passwordless">Passkeys / social login</option>
-              <option value="sessionKey">Session key (limited permissions)</option>
+              <option value="passwordless">{tr('Passkeys / social login')}</option>
+              <option value="sessionKey">{tr('Session key (limited permissions)')}</option>
             </select>
           </label>
 
           <label className="text-sm text-slate-300 flex items-center gap-2 mt-6">
             <input type="checkbox" checked={hasPaymaster} onChange={(e) => setHasPaymaster(e.target.checked)} />
-            <span>Use paymaster sponsorship</span>
+            <span>{tr('Use paymaster sponsorship')}</span>
           </label>
 
           <button
             onClick={simulate}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold h-11 self-end"
           >
-            Simulate user op
+            {tr('Simulate user op')}
           </button>
         </div>
 
         <div className="mt-4 bg-slate-900 rounded p-4 border border-slate-700">
-          <div className="text-xs text-slate-400 mb-2">Event log</div>
-          {log.length === 0 ? <div className="text-sm text-slate-400">Run a simulation to see steps.</div> : null}
+          <div className="text-xs text-slate-400 mb-2">{tr('Event log')}</div>
+          {log.length === 0 ? <div className="text-sm text-slate-400">{tr('Run a simulation to see steps.')}</div> : null}
           <div className="space-y-1">
             {log.map((l, i) => (
               <div key={i} className="text-sm text-slate-200">- {l}</div>
@@ -1848,6 +1925,7 @@ function ERC4337Demo() {
 }
 
 function ERC864Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   const [owner, setOwner] = useState<Address>('Alice');
   const [delegate, setDelegate] = useState<Address>('Dex');
   const [limit, setLimit] = useState(100);
@@ -1856,10 +1934,10 @@ function ERC864Demo() {
   return (
     <div className="space-y-6">
       <Card>
-        <SectionTitle>ERC-864: Delegated Transfers</SectionTitle>
+        <SectionTitle>{tr('ERC-864')}: {tr('Delegated Transfers')}</SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          ERC-864 proposes a pattern for reusable delegated approvals. Think: a delegation object with constraints
-          (limit, expiry, nonce) that a delegate can use to move tokens on your behalf.
+          {tr('ERC-864 proposes a pattern for reusable delegated approvals.')}
+          {tr('Think: a delegation object with constraints (limit, expiry, nonce) that a delegate can use to move tokens on your behalf.')}
         </p>
 
         <ImplementationSection
@@ -1875,42 +1953,42 @@ function ERC864Demo() {
         />
 
         <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-          <AddressSelect value={owner} onChange={setOwner} label="Owner" />
-          <AddressSelect value={delegate} onChange={setDelegate} label="Delegate" />
-          <AmountInput value={limit} onChange={setLimit} label="Delegation limit" />
+          <AddressSelect value={owner} onChange={setOwner} label={tr('Owner')} />
+          <AddressSelect value={delegate} onChange={setDelegate} label={tr('Delegate')} />
+          <AmountInput value={limit} onChange={setLimit} label={tr('Delegation limit')} />
           <button
             onClick={() => setSpent((s) => Math.min(limit, s + 25))}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold h-11"
           >
-            Spend 25
+            {tr('Spend 25')}
           </button>
         </div>
 
         <div className="mt-4 bg-slate-900 rounded p-4 border border-slate-700">
-          <div className="text-sm text-slate-200">{delegate} can spend up to {limit} from {owner}.</div>
-          <div className="text-sm text-slate-400 mt-1">Spent so far: {spent} (remaining: {Math.max(0, limit - spent)})</div>
+          <div className="text-sm text-slate-200">{tr('{{delegate}} can spend up to {{limit}} from {{owner}}.', { delegate, limit, owner })}</div>
+          <div className="text-sm text-slate-400 mt-1">{tr('Spent so far: {{spent}} (remaining: {{remaining}})', { spent, remaining: Math.max(0, limit - spent) })}</div>
         </div>
       </Card>
 
       <RealWorldApplications
         items={[
           {
-            title: 'Spending limits',
+            title: tr('Spending limits'),
             href: 'https://eips.ethereum.org/',
             color: 'text-blue-300',
-            body: 'Wallets implement similar ideas via session keys and policy modules (limits, allowlists). Adoption mostly happens through AA wallets instead of ERC-864.'
+            body: tr('Wallets implement similar ideas via session keys and policy modules (limits, allowlists). Adoption mostly happens through AA wallets instead of ERC-864.')
           },
           {
-            title: 'Safer approvals',
+            title: tr('Safer approvals'),
             href: 'https://eips.ethereum.org/EIPS/eip-2612',
             color: 'text-purple-300',
-            body: 'The ecosystem adopted permit-style signatures for gasless approval, but still struggles with overly-broad approvals in ERC-20 allowances.'
+            body: tr('The ecosystem adopted permit-style signatures for gasless approval, but still struggles with overly-broad approvals in ERC-20 allowances.')
           },
           {
-            title: 'Batching / intent systems',
+            title: tr('Batching / intent systems'),
             href: 'https://docs.safe.global/',
             color: 'text-pink-300',
-            body: 'Smart accounts can enforce delegation rules in contract logic today. Drawback: standards fragmentation across implementations.'
+            body: tr('Smart accounts can enforce delegation rules in contract logic today. Drawback: standards fragmentation across implementations.')
           }
         ]}
       />
@@ -1918,16 +1996,16 @@ function ERC864Demo() {
       <FurtherReading
         links={[
           {
-            label: 'EIP index (search ERC-864)',
+            label: tr('EIP index (search ERC-864)'),
             href: 'https://eips.ethereum.org/',
             summary:
-              'ERC-864 is less commonly used; the EIP index is the most reliable place to find the original proposal and related discussions.'
+              tr('ERC-864 is less commonly used; the EIP index is the most reliable place to find the original proposal and related discussions.')
           },
           {
             label: 'EIP-2612: ERC-20 Permit',
             href: 'https://eips.ethereum.org/EIPS/eip-2612',
             summary:
-              'The widely adopted signature-based approval mechanism. Shows how the ecosystem evolved to reduce approval friction without new token standards.'
+              tr('The widely adopted signature-based approval mechanism. Shows how the ecosystem evolved to reduce approval friction without new token standards.')
           }
         ]}
       />
@@ -1936,6 +2014,7 @@ function ERC864Demo() {
 }
 
 function ERC865Demo() {
+  const { tr } = useDemoI18n('erc-standards');
   const [from, setFrom] = useState<Address>('Alice');
   const [to, setTo] = useState<Address>('Bob');
   const [amount, setAmount] = useState(10);
@@ -1946,17 +2025,16 @@ function ERC865Demo() {
   return (
     <div className="space-y-6">
       <Card>
-        <SectionTitle>ERC-865: Meta-Transactions for ERC-20</SectionTitle>
+        <SectionTitle>{tr('ERC-865')}: {tr('Meta-Transactions for ERC-20')}</SectionTitle>
         <p className="text-sm text-slate-300 leading-relaxed">
-          ERC-865 proposes a meta-transaction flow: the user signs a transfer message off-chain, and a relayer submits
-          it on-chain paying gas. Useful for onboarding and gas abstraction.
+          {tr('ERC-865 proposes a meta-transaction flow: the user signs a transfer message off-chain, and a relayer submits it on-chain paying gas. Useful for onboarding and gas abstraction.')}
         </p>
 
         <ImplementationSection
           bullets={[
-            'Defines a signed message format for token transfers (and possibly approvals).',
-            'A relayer submits the signature to the token contract which verifies it and executes the transfer.',
-            'Modern ecosystems often use permit (EIP-2612) + relayers, or ERC-4337 paymasters instead.'
+            tr('Defines a signed message format for token transfers (and possibly approvals).'),
+            tr('A relayer submits the signature to the token contract which verifies it and executes the transfer.'),
+            tr('Modern ecosystems often use permit (EIP-2612) + relayers, or ERC-4337 paymasters instead.')
           ]}
           api={[
             { kind: 'concept', sig: 'SignedTransfer { from, to, value, fee, nonce, signature }' },
@@ -1965,10 +2043,10 @@ function ERC865Demo() {
         />
 
         <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-          <AddressSelect value={from} onChange={setFrom} label="From (signer)" />
-          <AddressSelect value={to} onChange={setTo} label="To" />
-          <AmountInput value={amount} onChange={setAmount} label="Amount" />
-          <AddressSelect value={relayer} onChange={setRelayer} label="Relayer" />
+          <AddressSelect value={from} onChange={setFrom} label={tr('From (signer)')} />
+          <AddressSelect value={to} onChange={setTo} label={tr('To')} />
+          <AmountInput value={amount} onChange={setAmount} label={tr('Amount')} />
+          <AddressSelect value={relayer} onChange={setRelayer} label={tr('Relayer')} />
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3">
@@ -1979,7 +2057,7 @@ function ERC865Demo() {
             }}
             className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded font-semibold"
           >
-            Sign off-chain
+            {tr('Sign off-chain')}
           </button>
           <button
             onClick={() => {
@@ -1988,14 +2066,19 @@ function ERC865Demo() {
             }}
             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded font-semibold"
           >
-            Relayer executes
+            {tr('Relayer executes')}
           </button>
         </div>
 
         <div className="mt-4 bg-slate-900 rounded p-4 border border-slate-700">
-          <div className="text-sm text-slate-200">Signed: {signed ? 'yes' : 'no'}; Executed on-chain: {executed ? 'yes' : 'no'}</div>
+          <div className="text-sm text-slate-200">
+            {tr('Signed status phrase', {
+              signed: signed ? tr('yes') : tr('no'),
+              executed: executed ? tr('yes') : tr('no')
+            })}
+          </div>
           <div className="text-xs text-slate-400 mt-2">
-            In production this requires replay protection (nonce) and careful fee design. Relayers also need anti-abuse protections.
+            {tr('In production this requires replay protection (nonce) and careful fee design. Relayers also need anti-abuse protections.')}
           </div>
         </div>
       </Card>
@@ -2003,22 +2086,22 @@ function ERC865Demo() {
       <RealWorldApplications
         items={[
           {
-            title: 'Gasless onboarding',
+            title: tr('Gasless onboarding'),
             href: 'https://eips.ethereum.org/EIPS/eip-2612',
             color: 'text-blue-300',
-            body: 'Meta-tx flows help new users interact without holding ETH. Today this is often achieved via permit + relayers or ERC-4337 paymasters.'
+            body: tr('Meta-tx flows help new users interact without holding ETH. Today this is often achieved via permit + relayers or ERC-4337 paymasters.')
           },
           {
-            title: 'Sponsored actions',
+            title: tr('Sponsored actions'),
             href: 'https://eips.ethereum.org/EIPS/eip-4337',
             color: 'text-purple-300',
-            body: 'Apps sponsor specific actions (claim rewards, mint) with policy controls. Drawback: sponsorship can be abused without rate limits.'
+            body: tr('Apps sponsor specific actions (claim rewards, mint) with policy controls. Drawback: sponsorship can be abused without rate limits.')
           },
           {
-            title: 'Replay protection',
+            title: tr('Replay protection'),
             href: 'https://consensys.io/diligence/',
             color: 'text-pink-300',
-            body: 'Meta-tx design must handle nonces and signature malleability. Many historical issues came from weak replay protection.'
+            body: tr('Meta-tx design must handle nonces and signature malleability. Many historical issues came from weak replay protection.')
           }
         ]}
       />
@@ -2026,22 +2109,22 @@ function ERC865Demo() {
       <FurtherReading
         links={[
           {
-            label: 'EIP index (search ERC-865)',
+            label: tr('EIP index (search ERC-865)'),
             href: 'https://eips.ethereum.org/',
             summary:
-              'ERC-865 is an older proposal; use the EIP index to locate the exact draft and discussions. Modern practice often superseded it.'
+              tr('ERC-865 is an older proposal; use the EIP index to locate the exact draft and discussions. Modern practice often superseded it.')
           },
           {
             label: 'EIP-2612: Permit',
             href: 'https://eips.ethereum.org/EIPS/eip-2612',
             summary:
-              'Shows the mainstream signature-based approval method used with relayers for gasless UX.'
+              tr('Shows the mainstream signature-based approval method used with relayers for gasless UX.')
           },
           {
             label: 'EIP-4337',
             href: 'https://eips.ethereum.org/EIPS/eip-4337',
             summary:
-              'Modern account abstraction approach: bundlers + paymasters can accomplish gasless UX in a standardized way.'
+              tr('Modern account abstraction approach: bundlers + paymasters can accomplish gasless UX in a standardized way.')
           }
         ]}
       />
