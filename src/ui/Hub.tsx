@@ -41,6 +41,7 @@ export default function Hub({
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [hoveredThumbnailDemoId, setHoveredThumbnailDemoId] = useState<string | null>(null);
+  const [areFiltersVisible, setAreFiltersVisible] = useState(true);
 
   const searchWrapRef = useRef<HTMLDivElement | null>(null);
   const [isSuggestOpen, setIsSuggestOpen] = useState(false);
@@ -203,30 +204,48 @@ export default function Hub({
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="relative text-center mb-12">
-          <div className="absolute right-0 top-0">
-            <LanguageSwitcher />
-          </div>
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            {t('app.title')}
-          </h1>
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            {t('app.subtitle')}
-          </p>
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <div className="px-4 py-2 bg-slate-800 rounded-full text-sm">
-              <span className="text-slate-400">{t('app.totalDemos')}</span>{' '}
-              <span className="font-bold text-blue-400">{demos.length}</span>
+        <div className="mb-12">
+          <div className="flex items-start justify-between gap-4">
+            <div className="shrink-0 pt-1">
+              <button
+                type="button"
+                onClick={() => setAreFiltersVisible((v) => !v)}
+                className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm font-semibold"
+              >
+                {areFiltersVisible ? t('hub.hideFilters') : t('hub.showFilters')}
+              </button>
             </div>
-            <div className="px-4 py-2 bg-slate-800 rounded-full text-sm">
-              <span className="text-slate-400">{t('app.categories')}</span>{' '}
-              <span className="font-bold text-purple-400">{Object.keys(categories).length - 1}</span>
+
+            <div className="flex-1 min-w-0 text-center">
+              <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                {t('app.title')}
+              </h1>
+              <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+                {t('app.subtitle')}
+              </p>
+              {areFiltersVisible && (
+                <div className="flex items-center justify-center gap-4 mt-6">
+                  <div className="px-4 py-2 bg-slate-800 rounded-full text-sm">
+                    <span className="text-slate-400">{t('app.totalDemos')}</span>{' '}
+                    <span className="font-bold text-blue-400">{demos.length}</span>
+                  </div>
+                  <div className="px-4 py-2 bg-slate-800 rounded-full text-sm">
+                    <span className="text-slate-400">{t('app.categories')}</span>{' '}
+                    <span className="font-bold text-purple-400">{Object.keys(categories).length - 1}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="shrink-0">
+              <LanguageSwitcher />
             </div>
           </div>
         </div>
 
-        {/* Search */}
-        <div className="mb-8">
+        {/* Filters */}
+        {areFiltersVisible && (
+          <div className="mb-8">
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div ref={searchWrapRef} className="flex-1 relative">
               <Search
@@ -355,6 +374,7 @@ export default function Hub({
             })}
           </div>
         </div>
+        )}
 
         {/* Results Count */}
         <div className="mb-6 text-sm text-slate-400">

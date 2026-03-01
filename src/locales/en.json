@@ -39,6 +39,8 @@
     "keyTakeaways": "Key Takeaways",
     "viewDetails": "View Details",
     "noDemosFound": "No demos found",
-    "tryAdjustingSearch": "Try adjusting your search or filters"
+    "tryAdjustingSearch": "Try adjusting your search or filters",
+    "hideFilters": "Hide filters",
+    "showFilters": "Show filters"
   }
 }

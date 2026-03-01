@@ -2,23 +2,48 @@
   "demos": {
     "amm-demo": {
       "title": "Matemáticas AMM y pérdida impermanente",
-      "description": "AMM interactivo de producto constante (x × y = k) con impacto en el precio, slippage y cálculos de pérdida impermanente."
+      "description": "AMM interactivo de producto constante (x × y = k) con impacto en el precio, slippage y cálculos de pérdida impermanente.",
+      "keyTakeaways": {
+        "0": "La fórmula x × y = k permite market making automatizado sin libros de órdenes",
+        "1": "El impacto en el precio aumenta con el tamaño del trade relativo a las reservas del pool",
+        "2": "La pérdida impermanente ocurre cuando cambian las proporciones de precio; con un cambio de precio ×2, la IL es ~ -5,7%"
+      }
     },
     "parallel-executor": {
       "title": "Ejecutor de transacciones en paralelo",
-      "description": "Compara estrategias de ejecución paralela conservadoras (Solana) vs optimistas (Aptos Block-STM)."
+      "description": "Compara estrategias de ejecución paralela conservadoras (Solana) vs optimistas (Aptos Block-STM).",
+      "keyTakeaways": {
+        "0": "La planificación conservadora evita trabajo desperdiciado analizando dependencias por adelantado",
+        "1": "La ejecución optimista maximiza el paralelismo pero puede re-ejecutar transacciones en conflicto",
+        "2": "Compromisos entre predictibilidad y throughput"
+      }
     },
     "dag-consensus": {
       "title": "Consenso DAG (Tangle)",
-      "description": "Visualización interactiva de DAG que muestra cómo las transacciones referencian tips y logran consenso sin bloques tradicionales."
+      "description": "Visualización interactiva de DAG que muestra cómo las transacciones referencian tips y logran consenso sin bloques tradicionales.",
+      "keyTakeaways": {
+        "0": "No se necesitan mineros: los usuarios confirman las transacciones de otros",
+        "1": "El procesamiento paralelo de transacciones permite alto throughput",
+        "2": "La acumulación de peso proporciona finalidad probabilística"
+      }
     },
     "rollup-simulation": {
       "title": "Rollup de capa 2",
-      "description": "Mira cómo las transacciones L2 se agrupan y se publican en L1 para grandes ahorros de gas."
+      "description": "Mira cómo las transacciones L2 se agrupan y se publican en L1 para grandes ahorros de gas.",
+      "keyTakeaways": {
+        "0": "Agrupa cientos de transacciones en una sola transacción de L1",
+        "1": "Los usuarios obtienen confirmación instantánea en L2 con seguridad eventual de L1",
+        "2": "Reducción de coste de ×10 a ×100 frente a publicar directamente en L1"
+      }
     },
     "eigenlayer-demo": {
       "title": "Restaking de EigenLayer",
-      "description": "Reutiliza el stake de ETH para asegurar múltiples protocolos (AVS) y obtener recompensas adicionales."
+      "description": "Reutiliza el stake de ETH para asegurar múltiples protocolos (AVS) y obtener recompensas adicionales.",
+      "keyTakeaways": {
+        "0": "Eficiencia de capital: un solo stake asegura varios servicios",
+        "1": "Gana recompensas base de staking + rendimientos adicionales de AVS",
+        "2": "Mayores recompensas conllevan riesgos de slashing acumulados"
+      }
     },
     "peerdas-demo": {
       "title": "Muestreo PeerDAS",
@@ -26,20 +51,35 @@
       "keyTakeaways": {
         "0": "Los nodos almacenan solo ~25% de los datos en lugar de 100%",
         "1": "El muestreo aleatorio prueba la disponibilidad de datos con alta confianza",
-        "2": "Credtico para escalar la capa de datos de Ethereum para rollups"
+        "2": "Crítico para escalar la capa de datos de Ethereum para rollups"
       }
     },
     "ethereum-blockchain": {
       "title": "Blockchain mínima de Ethereum",
-      "description": "Construye una blockchain funcional desde cero con Proof of Work, cuentas y transiciones de estado."
+      "description": "Construye una blockchain funcional desde cero con Proof of Work, cuentas y transiciones de estado.",
+      "keyTakeaways": {
+        "0": "Los bloques se enlazan mediante hashes criptográficos formando una cadena inmutable",
+        "1": "La minería ajusta la dificultad para encontrar hashes de bloque válidos",
+        "2": "El modelo basado en cuentas rastrea balances y nonces"
+      }
     },
     "erc-standards": {
       "title": "Playground de estándares ERC",
-      "description": "Explora varios estándares ERC en una sola página con acciones interactivas, tooltips y contexto del mundo real."
+      "description": "Explora varios estándares ERC en una sola página con acciones interactivas, tooltips y contexto del mundo real.",
+      "keyTakeaways": {
+        "0": "Los estándares ERC definen interfaces interoperables para que wallets, dApps y exchanges soporten activos de forma consistente",
+        "1": "ERC-20 es fungible, ERC-721 es no fungible y ERC-1155 es multi-token (fungible + NFTs) en un solo contrato",
+        "2": "Las aprobaciones/allowances son una superficie clave de UX y seguridad en estos estándares"
+      }
     },
     "blockchain-interop": {
       "title": "Protocolos cross-chain",
-      "description": "Compara IBC, CCIP y LayerZero: distintos modelos de confianza para mensajería entre cadenas."
+      "description": "Compara IBC, CCIP y LayerZero: distintos modelos de confianza para mensajería entre cadenas.",
+      "keyTakeaways": {
+        "0": "IBC usa light clients para verificación trustless",
+        "1": "CCIP se basa en consenso descentralizado de oráculos",
+        "2": "LayerZero requiere el acuerdo de un Oracle y un Relayer independientes"
+      }
     }
   },
   "glossary": {
@@ -121,6 +161,8 @@
     "keyTakeaways": "Puntos clave",
     "viewDetails": "Ver detalles",
     "noDemosFound": "No se encontraron demos",
-    "tryAdjustingSearch": "Prueba ajustando tu búsqueda o filtros"
+    "tryAdjustingSearch": "Prueba ajustando tu búsqueda o filtros",
+    "hideFilters": "Ocultar filtros",
+    "showFilters": "Mostrar filtros"
   }
 }
